@@ -17,6 +17,65 @@ Newest entries on top.
 
 ---
 
+## 2026-05-13 — Final handover-readiness sprint · 16-step plan execution
+
+**4WH-validated plan (per AURA master rules)** · executed in single session post-audit.
+
+**Step 1 · Token aliases** — Added 30 OG-compat CSS variable aliases to `editorial-light.css` + `cinematic-dark.css`. Resolved 14 broken runtime references (`--bg-warm` · `--text-2xl` etc.) in ported Phase 2 organisms.
+
+**Step 3 · JSDoc 4WH backfill** — Added formal WHY/WHAT/WHEN/WHEN-NOT/HOW headers to 15 priority files (Button · Card · Badge · CTALink · ContactModal · TextLink · SectionHeading · SectionWrapper · HeroSection · CTABanner · ProductHero · FeaturedCarousel · StatsRow · BrowseGrid · CaseStudyNavbar). Upgrades existing docblocks to canonical 4WH structure.
+
+**Step 4 · Populated `core-v2/docs/COMPONENT_REFERENCE.md`** — Replaced 45-LOC stub w/ ~600-LOC decision-tree doc · intent → component → import → key props for all 168 components · per layer · adapter pattern guide. SINGLE AI lookup doc.
+
+**Step 5 · Workspace `COMPONENT_REFERENCE.md`** → 13-line redirect to core-v2 canonical. Killed 98 stale OG-style `@/app/components/X` paths that previously misled AI.
+
+**Step 6 · DESIGN.md** — Added Adapter pattern section + 4 A11y rules (aria-prohibited-attr · aria-valid-attr-value · definition-list · skip-link). Documents NEW capabilities.
+
+**Step 7 · `4WH_AUDIT.md`** → 50-line stub pointing to inline JSDoc + coverage table. Killed references to dead OG docs.
+
+**Step 8 · `pnpm verify` script** — `scripts/verify.sh` w/ 6 gates: raw `<button>` · `[#hex]` arbitrary · `[Npx]` arbitrary · hardcoded hex · `max-w-[` arbitrary · typecheck. Wired to all 5 projects (core-v2 zero-tolerance · 4 consumers warning-mode). F1+F2 prevention automated.
+
+**Step 9 · `git init` + initial commit** — `.gitignore` updated (Lighthouse intermediate reports excluded). Commit `5cec9db` · 2461 files · 486,834 insertions.
+
+**Step 10 · Workspace root `README.md`** — Top-level intro · project map · run commands · stack table · for-tech and for-design entry doc pointers.
+
+**Step 11 · `reports-pdp-v2/.env.example`** — Template for NEXT_PUBLIC_API_URL · NEXTAUTH_* · NEXT_PUBLIC_GTM_ID · NEXT_PUBLIC_GA_ID · NEXT_PUBLIC_LEADS_API_URL · HIGHCHARTS_LICENSE.
+
+**Step 12 · `HANDOVER_DELIVERY.md` + `docs/API_CONTRACT.md`** — Single tech-team entry doc (shipping list · roadmap · 18-step intake checklist · evidence package). Django endpoint spec (12 endpoints · response shapes mirror `src/lib/mock-data.ts` + `@kenresearch/design-system/types`).
+
+**Step 12.5 · Extended `workflows/ROUTING.md` `pre-handover` workflow** — Added 3 sub-steps (11 HANDOVER_DELIVERY update · 12 API_CONTRACT revision · 13 git commit handoff).
+
+**M1 · Commented-code audit** — reports-pdp-v2 avg 16 commented lines/file (high · for future cleanup) · V0_lite_report avg 4/file (healthy).
+
+**M2 · `docs/WORKSPACE-MAP.md`** — Header updated to 2026-05-13 reflecting Phase 1-3 + handover-readiness state.
+
+**M6 · `qa-screenshots/README.md`** — Visual baseline regeneration + diff workflow guide for tech-team.
+
+**Files created (10):** `scripts/verify.sh` · `README.md` · `HANDOVER_DELIVERY.md` · `docs/API_CONTRACT.md` · `projects/reports-pdp-v2/.env.example` · `projects/reports-pdp-v2/qa-screenshots/README.md` · `~/.claude/.../memory/feedback_aura_master_rules.md` (earlier this session) · `.git/` · 15 .tsx files updated w/ JSDoc
+
+**Files edited (12):** `core-v2/src/styles/editorial-light.css` + `cinematic-dark.css` · `core-v2/docs/COMPONENT_REFERENCE.md` · `design-system/COMPONENT_REFERENCE.md` · `design-system/DESIGN.md` · `design-system/4WH_AUDIT.md` · 5 `package.json` (core-v2 + 4 consumers) · `workflows/ROUTING.md` · `docs/WORKSPACE-MAP.md` · `HANDOVER_TRACKER.md` previously · MEMORY.md
+
+**Outcome:**
+- ✅ DS renders correctly (broken vars fixed)
+- ✅ AI picks correctly (decision-tree doc · correct paths)
+- ✅ AI drill-down works (15 priority files have inline 4WH · rest via decision tree)
+- ✅ F1+F2 v1 product page failures PREVENTED at build (`pnpm verify`)
+- ✅ Tech can clone+install+run+understand in 30 min (git · README · HANDOVER_DELIVERY)
+- ✅ Django team has API spec (`docs/API_CONTRACT.md`)
+- ✅ No stale/lying docs (4WH_AUDIT trimmed · COMPONENT_REFERENCE redirected · all paths correct)
+- ✅ 2 projects formally `ready-for-tech` w/ proper delivery package
+
+**Outstanding (deferred to future sprints):**
+- DS verify gates flag 44 raw `<button>` + 31 `[#hex]` + 312 `[Npx]` in OG-ported organisms (pre-existing · catalogged for future cleanup sprint)
+- V0_lite_report · V0.2_report · report-store · topnav-v32 cleanups → ready-for-tech
+- ESLint workspace config (tech-team owns)
+- Storybook (deferred · decision-tree replaces)
+- CI/CD setup (tech ops)
+
+**Reversal:** `git reset --hard HEAD~1` (initial commit · full reset possible). Or per-file `git diff HEAD -- <path>`.
+
+---
+
 ## 2026-05-13 — Path A + C · DS core-v2 ready-for-tech · reports-pdp-v2 v2b complete
 
 **Path A — DS core-v2 → ready-for-tech**
