@@ -1,0 +1,89 @@
+/* ============================================================
+   BASE — @kenresearch/design-system v2
+   Import this file in the consumer root (layout.tsx / main.tsx).
+   Order: layers → tokens → resets → base defaults → variant overrides
+
+   USAGE (Next 15 consumer):
+     import '@kenresearch/design-system/styles/base.css';
+     import '@kenresearch/design-system/styles/utilities.css';
+     import '@kenresearch/design-system/styles/editorial-light.css';
+     // OR cinematic-dark.css if pre-flagged
+
+   VARIANT (cookie + RSC read pattern):
+     // app/layout.tsx
+     import { cookies } from 'next/headers';
+     const variant = cookies().get('ds-variant')?.value ?? 'editorial-light';
+     return <html data-variant={variant}>...</html>;
+   ============================================================ */
+
+@import "./layers.css";
+@import "tailwindcss";
+
+/* Canonical token source — W3C DTCG, built by Style Dictionary v4 */
+@import "@kenresearch/tokens/build/tokens.css";
+
+/* ── Reset ─────────────────────────────────────────────────── */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ── Base defaults ──────────────────────────────────────────── */
+@layer base {
+  html {
+    /* NO scroll-behavior:smooth — Lenis owns scroll (ANTI_PATTERNS.md Cat 14 + B2 deep-map).
+       Consumer must mount Lenis in client root layout. Reduced-motion fallback handled in Lenis config. */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    /* Variant tokens supply --surface-bg + --surface-text via [data-variant] selector */
+    background-color: var(--surface-bg, var(--color-foundation-white, #ffffff));
+    color: var(--surface-text, var(--color-foundation-black, #000000));
+    font-family: var(--typography-family-body, 'DM Sans', sans-serif);
+    font-size: var(--typography-size-sm, 1rem);
+    line-height: var(--typography-lineheight-relaxed, 1.6);
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Focus visible — never disable rings (ANTI_PATTERNS.md Cat 8.5) */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-red, #b01f24);
+    outline-offset: 2px;
+  }
+
+  /* Native smooth scroll (replaces Lenis as of 2026-05-08 stack lock-in) */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Reduced motion — global opt-out (consumers must respect via Framer Motion useReducedMotion()) */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

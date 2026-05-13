@@ -1,0 +1,210 @@
+/* Ken Research Design System — canonical foundation (matches V0_lite_report + V0.2_report + report-store) */
+/* base.css brings @import tailwindcss + tokens + global resets — do NOT re-import tailwind here */
+@import '@kenresearch/design-system/styles/base.css';
+@import '@kenresearch/design-system/styles/utilities.css';
+@import '@kenresearch/design-system/styles/editorial-light.css';
+@import '@kenresearch/design-system/styles/cinematic-dark.css';
+@import "tw-animate-css";
+
+/* Safelist: ensure text-white is always generated (used in Button/Navbar JS object, not inline JSX) */
+@source inline("text-white");
+
+/* Safelist DS typography utilities — SectionHeading + other DS atoms use these.
+   DS source is in workspace node_modules (symlinked) — Tailwind v4 skips node_modules by default.
+   @source inline() forces generation regardless of scanning. (LEARNINGS 2026-05-11) */
+@source inline("text-2xs text-xs text-compact text-nav text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl");
+@source inline("sm:text-base sm:text-lg sm:text-xl sm:text-2xl sm:text-3xl sm:text-4xl");
+@source inline("font-display font-body font-mono");
+@source inline("focus-visible:ring-2 focus-visible:ring-offset-1 rounded-sm");
+
+@custom-variant dark (&:is(.dark *));
+
+/* Font variables wired from Next.js font loader → token names */
+:root {
+  --typography-family-display: var(--font-noto-serif, 'Noto Serif', Georgia, serif);
+  --typography-family-body: var(--font-dm-sans, 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+/* ── Tailwind v4 @theme registration ──────────────────────────────────────
+   Maps DS tokens → Tailwind utility names so text-*, font-* classes work.
+   NEVER use arbitrary text/font utilities with typography CSS vars —
+   use the registered names below instead. (LEARNINGS 2026-05-06)
+
+   IMPORTANT: @theme variables CANNOT reference :root CSS custom properties via
+   var() — Tailwind v4 processes @theme at build time. Use hard-coded values
+   that MIRROR tokens.css. Keep in sync when tokens change. (LEARNINGS 2026-05-11)
+   ──────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Font families — mirrored from tokens.css --typography-family-* */
+  --font-display: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+
+  /* Text sizes — mirrored from tokens.css Major-Third 1.25× scale (16px base) */
+  --text-2xs:     0.75rem;   /* 12px */
+  --text-xs:      0.8rem;    /* 12.8px */
+  --text-compact: 0.875rem;  /* 14px */
+  --text-nav:     0.875rem;  /* 14px */
+  --text-sm:      1rem;      /* 16px — standard body */
+  --text-base:    1.25rem;   /* 20px — large body */
+  --text-lg:      1.563rem;  /* 25px */
+  --text-xl:      1.953rem;  /* 31.25px — h3 / subsection */
+  --text-2xl:     2.441rem;  /* 39px — h2 / section heading */
+  --text-3xl:     3.052rem;  /* 48.8px — h1 / hero */
+  --text-4xl:     3.815rem;  /* 61px */
+  --text-5xl:     4.768rem;  /* 76.3px */
+
+  /* Font weights — mirrored from tokens.css --typography-weight-* */
+  --font-weight-light:  300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold:   700;
+  --font-weight-black:  900;
+}
+
+/* Motion + spacing tokens not in tokens.css — defined here */
+:root {
+  /* Duration */
+  --duration-base: 300ms;
+  --duration-medium: 500ms;
+  --duration-slow: 800ms;
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Spacing scale (section vertical rhythm) */
+  --space-sm: 2rem;       /* 32px */
+  --space-md: 3rem;       /* 48px */
+  --space-lg: 4rem;       /* 64px */
+  --space-xl: 6rem;       /* 96px editorial section gap */
+  --space-2xl: 8rem;      /* 128px cinematic */
+
+  /* Section bg shorthand tokens */
+  --bg-section-warm: var(--variant-editorial-bg-warm);
+  --bg-section-white: var(--variant-editorial-bg-white);
+  --bg-section-black: var(--variant-editorial-bg-black-pure);
+
+  /* Native smooth scroll — Lenis removed 2026-05-08 per workspace parity */
+  scroll-behavior: smooth;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-ramp-warm-100);
+  --secondary-foreground: #000000;
+  --muted: var(--color-ramp-warm-200);
+  --muted-foreground: rgba(0, 0, 0, 0.6);
+  --accent: var(--color-accent-purple);
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --border: var(--color-ramp-warm-400);
+  --input: var(--color-ramp-warm-300);
+  --ring: var(--color-accent-purple);
+  --chart-1: var(--color-accent-purple);
+  --chart-2: var(--color-accent-periwinkle);
+  --chart-3: var(--color-accent-perano);
+  --chart-4: var(--color-accent-coral, #ea7a5f);
+  --chart-5: var(--color-accent-warm);
+  --radius: 0.625rem;
+  --sidebar: var(--color-ramp-warm-100);
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-ramp-warm-200);
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: var(--color-ramp-warm-400);
+  --sidebar-ring: var(--color-accent-purple);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent-purple);
+    outline-offset: 2px;
+  }
+
+  body {
+    background-color: var(--variant-editorial-bg-warm);
+    color: var(--variant-editorial-text-primary);
+    font-family: var(--typography-family-body);
+    font-size: var(--typography-size-sm);
+    line-height: var(--typography-line-height-relaxed);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--typography-family-display);
+    line-height: var(--typography-line-height-tight);
+  }
+}
+
+/* Section background utility classes */
+.section-bg-warm { background-color: var(--variant-editorial-bg-warm); }
+.section-bg-white { background-color: var(--variant-editorial-bg-white); }
+.section-bg-black { background-color: var(--variant-editorial-bg-black-pure); color: #ffffff; }
+
+/* Reduced motion — final states immediately */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

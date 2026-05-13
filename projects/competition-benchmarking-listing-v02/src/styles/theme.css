@@ -1,0 +1,830 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ── Ken Bold DS v3.2 Font System ── */
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+
+  /* ── Ken Bold DS Typography Scale (Major Third 1.25) ── */
+  --text-xs: 0.8rem;        /* 12.8px */
+  --text-sm: 1rem;          /* 16px */
+  --text-base: 1.25rem;     /* 20px */
+  --text-lg: 1.563rem;      /* 25px */
+  --text-xl: 1.953rem;      /* 31.25px */
+  --text-2xl: 2.441rem;     /* 39px */
+  --text-3xl: 3.052rem;     /* 48.8px */
+  --text-4xl: 3.815rem;     /* 61px */
+  --text-5xl: 4.768rem;     /* 76.3px */
+  --text-2xs: 0.75rem;      /* 12px */
+  --text-compact: 0.875rem; /* 14px */
+  --text-nav: 0.875rem;     /* 14px */
+
+  /* ── Ken Bold DS Brand Colors ── */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f181d;
+  --brand-red-active: #771419;
+
+  /* ── Ken Bold DS Warm Palette ── */
+  --warm-50: #fefdfd;
+  --warm-100: #fcfbfa;
+  --warm-200: #f9f7f6;
+  --warm-300: #f5f2f1;
+  --warm-400: #f0ebe9;
+  --warm-500: #eae5e3;
+  --warm-600: #d9d1ce;
+  --warm-700: #c8bcb8;
+  --warm-800: #b7a9a3;
+  --warm-900: #a6968e;
+
+  /* ── Ken Bold DS Semantic Text Colors ── */
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.60);
+  --label-on-black: rgba(255, 255, 255, 0.40);
+  --label-on-white: rgba(0, 0, 0, 0.40);
+
+  /* ── Project semantic tokens (added 2026-05-06) ──
+     Intent-named tokens for editorial-light + cinematic-dark surface use.
+     Replaces ad-hoc rgba literals across page. Alpha values mirror DS canonical usage. */
+
+  /* Ink on light (text/icon hierarchy on white/warm surfaces) */
+  --ink-strong: rgba(0, 0, 0, 0.90);   /* primary headings, hover state */
+  --ink-body: rgba(0, 0, 0, 0.80);     /* body text, list-card titles */
+  --ink-muted: rgba(0, 0, 0, 0.60);    /* secondary text */
+  --ink-subtle: rgba(0, 0, 0, 0.45);   /* meta lines, eyebrow color */
+  --ink-faint: rgba(0, 0, 0, 0.35);    /* counts, ranks, very-muted */
+  --ink-whisper: rgba(0, 0, 0, 0.18);  /* dividers as text-color, dot separators */
+
+  /* Hairlines + borders on light */
+  --hairline-strong: rgba(0, 0, 0, 0.18);  /* hover-state borders */
+  --hairline: rgba(0, 0, 0, 0.12);         /* default card border emphasized */
+  --hairline-soft: rgba(0, 0, 0, 0.08);    /* default card border */
+  --hairline-faint: rgba(0, 0, 0, 0.07);   /* very subtle dividers */
+
+  /* Surface tints on light (hover, selected) */
+  --surface-tint-soft: rgba(0, 0, 0, 0.025);  /* hover row */
+  --surface-tint: rgba(0, 0, 0, 0.04);        /* selected row */
+  --surface-tint-strong: rgba(0, 0, 0, 0.06); /* active row */
+
+  /* Ink on dark (text/icon hierarchy on black/cinematic surfaces) */
+  --ink-on-dark-strong: rgba(255, 255, 255, 0.92);  /* headings */
+  --ink-on-dark-body: rgba(255, 255, 255, 0.75);    /* body text */
+  --ink-on-dark-muted: rgba(255, 255, 255, 0.62);   /* dek, secondary */
+  --ink-on-dark-subtle: rgba(255, 255, 255, 0.45);  /* eyebrows, counts */
+  --ink-on-dark-faint: rgba(255, 255, 255, 0.30);   /* very muted */
+  --ink-on-dark-whisper: rgba(255, 255, 255, 0.18); /* dot separators */
+
+  /* Hairlines + borders on dark */
+  --hairline-on-dark: rgba(255, 255, 255, 0.12);
+  --hairline-on-dark-soft: rgba(255, 255, 255, 0.10);
+  --hairline-on-dark-faint: rgba(255, 255, 255, 0.06);
+
+  /* Pure surfaces */
+  --surface-black: #000000;
+  --surface-white: #ffffff;
+
+  /* Accent-tinted surfaces (badge/chip bg) — used in ContextBanner pillar chips */
+  --accent-purple-bg: rgba(128, 108, 224, 0.06);
+  --accent-purple-border: rgba(128, 108, 224, 0.14);
+  --accent-emerald-bg: rgba(16, 185, 129, 0.06);
+  --accent-emerald-border: rgba(16, 185, 129, 0.14);
+  --accent-blue-bg: rgba(134, 179, 229, 0.06);
+  --accent-blue-border: rgba(134, 179, 229, 0.14);
+  --accent-amber-bg: rgba(245, 158, 11, 0.06);
+  --accent-amber-border: rgba(245, 158, 11, 0.14);
+
+  /* Cinematic dark accents (toast bg, dark surface tint) */
+  --surface-cinematic-1: #1a1a1c;
+  --surface-cinematic-2: #111113;
+
+  /* Brand red alpha — for chip borders, faint accents */
+  --brand-red-30: rgba(176, 31, 36, 0.30);
+  --brand-red-12: rgba(176, 31, 36, 0.12);
+
+  /* Glassy surfaces — for sticky bars w/ backdrop-filter blur */
+  --surface-white-glass: rgba(255, 255, 255, 0.95);
+  --surface-white-glass-soft: rgba(255, 255, 255, 0.85);
+
+  /* Scrim — modal/sheet backdrop overlay */
+  --scrim: rgba(0, 0, 0, 0.50);
+
+  /* ── Ken Bold DS Container Widths ── */
+  --container-page: 75rem;
+  --container-content: 62.5rem;
+  --container-narrow: 56.25rem;
+  --container-prose: 43.75rem;
+  --container-compact: 37.5rem;
+
+  /* ── Ken Bold DS Section Spacing ── */
+  --section-py-standard: 3.5rem;
+  --section-header-mb: 2.5rem;
+  --pair-label-heading: 0.75rem;
+  --pair-heading-description: 0.75rem;
+  --text-measure: 43.75rem;
+
+  /* ── Ken Bold DS Spacing Scale (Base-10, 4px increments) ── */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* ── Ken Bold DS Responsive Padding ── */
+  --padding-mobile: 1rem;      /* 16px */
+  --padding-tablet: 1.5rem;    /* 24px */
+  --padding-desktop: 2rem;     /* 32px */
+
+  /* ── Ken Bold DS Background Compositions ── */
+  --bg-composition-warm-editorial: linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%);
+
+  /* ── Ken Bold DS Button Size Tokens ── */
+  --button-height-sm: 2.5rem;    /* 40px */
+  --button-height-md: 3rem;      /* 48px */
+  --button-height-lg: 3.5rem;    /* 56px */
+  --button-height-xl: 4rem;      /* 64px */
+  --button-font-sm: 0.875rem;    /* 14px */
+  --button-font-md: 1rem;        /* 16px */
+  --button-font-lg: 1.125rem;    /* 18px */
+  --button-px-sm: 1.25rem;       /* 20px */
+  --button-px-md: 1.75rem;       /* 28px */
+  --button-px-lg: 2.25rem;       /* 36px */
+  --button-px-xl: 2.5rem;        /* 40px */
+  --button-min-width-sm: 5rem;   /* 80px */
+  --button-min-width-md: 7rem;   /* 112px */
+  --button-min-width-lg: 9rem;   /* 144px */
+
+  /* ── Ken Bold DS ResourceCard Mode Tokens ── */
+  --rc-content-px: 1rem;
+  --rc-content-pt: 1rem;
+  --rc-content-pb: 1.25rem;
+  --rc-image-mb: 1rem;
+  --rc-meta-mb: 0.75rem;
+  --rc-title-mb: 0.5rem;
+  --rc-aspect-ratio: 4 / 3;
+
+  /* Dark mode card tokens */
+  --rc-dark-title: rgba(255, 255, 255, 1);
+  --rc-dark-title-hover: rgba(255, 255, 255, 0.80);
+  --rc-dark-category: rgba(255, 255, 255, 0.30);
+  --rc-dark-date: rgba(255, 255, 255, 0.40);
+  --rc-dark-description: rgba(255, 255, 255, 0.50);
+  --rc-dark-description-hover: rgba(255, 255, 255, 0.60);
+  --rc-dark-card-bg: rgba(255, 255, 255, 0.03);
+  --rc-dark-card-border: rgba(255, 255, 255, 0.08);
+  --rc-dark-card-border-hover: rgba(255, 255, 255, 0.16);
+  --rc-dark-card-blur: 8px;
+  --rc-dark-image-placeholder: rgba(255, 255, 255, 0.05);
+  --rc-dark-focus-ring: rgba(255, 255, 255, 1);
+  --rc-dark-focus-offset: rgba(0, 0, 0, 1);
+
+  /* Light mode card tokens */
+  --rc-light-title: rgba(0, 0, 0, 0.90);
+  --rc-light-title-hover: rgba(0, 0, 0, 0.70);
+  --rc-light-category: #a6968e;
+  --rc-light-date: rgba(0, 0, 0, 0.60);
+  --rc-light-description: rgba(0, 0, 0, 0.70);
+  --rc-light-description-hover: rgba(0, 0, 0, 0.90);
+  --rc-light-card-bg: rgba(255, 255, 255, 0.70);
+  --rc-light-card-border: rgba(0, 0, 0, 0.08);
+  --rc-light-card-border-hover: rgba(0, 0, 0, 0.15);
+  --rc-light-card-blur: 12px;
+  --rc-light-image-placeholder: rgba(0, 0, 0, 0.04);
+  --rc-light-focus-ring: #b01f24;
+  --rc-light-focus-offset: rgba(255, 255, 255, 1);
+
+  /* Badge overlay tokens (universal) */
+  --rc-badge-bg: rgba(0, 0, 0, 0.65);
+  --rc-badge-blur: 24px;
+  --rc-badge-border: rgba(255, 255, 255, 0.10);
+  --rc-badge-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --rc-badge-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --rc-image-overlay-hover: rgba(0, 0, 0, 0.20);
+
+  /* ── Ken Bold DS Utility Colors ── */
+  --green-50: #ecfdf5;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+  --green-300: #6ee7b7;
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --green-600: #059669;
+  --green-700: #15803d;
+  --green-800: #065f46;
+  --green-900: #064e3b;
+  --amber-50: #fffbeb;
+  --amber-100: #fef3c7;
+  --amber-200: #fde68a;
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-200: #fecdd3;
+  --rose-300: #fda4af;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --rose-800: #9f1239;
+  --rose-900: #881337;
+
+  /* ── Ken Bold DS Accent: Purple ── */
+  --purple-50: #f7f6fe;
+  --purple-100: #efedfd;
+  --purple-200: #dfdcfb;
+  --purple-300: #c4bef7;
+  --purple-400: #a89ff2;
+  --purple-500: #9488ec;
+  --purple-600: #806ce0;
+  --purple-700: #6c5bc0;
+  --purple-800: #5a4ba0;
+  --purple-900: #483c80;
+
+  /* ── Ken Bold DS Accent: Periwinkle ── */
+  --periwinkle-50: #fafbfe;
+  --periwinkle-100: #f5f6fd;
+  --periwinkle-200: #ebedfb;
+  --periwinkle-300: #dfe1f9;
+  --periwinkle-400: #d3d5f9;
+  --periwinkle-500: #c3c6f9;
+  --periwinkle-600: #a7abf0;
+  --periwinkle-700: #8b90e0;
+  --periwinkle-800: #7075c8;
+  --periwinkle-900: #5a5fa0;
+
+  /* ── Ken Bold DS Accent: Coral/Terracotta ── */
+  --coral-50: #fffbf9;
+  --coral-100: #fff5f1;
+  --coral-200: #ffebe4;
+  --coral-300: #fdd7cb;
+  --coral-400: #fbb8a7;
+  --coral-500: #f99b85;
+  --coral-600: #ea7a5f;
+  --coral-700: #d96548;
+  --coral-800: #c15138;
+  --coral-900: #a23f2d;
+
+  /* ── Ken Bold DS Accent: Perano (Light Blue) ── */
+  --perano-50: #fcfdfe;
+  --perano-100: #f9fbfe;
+  --perano-200: #f4f8fd;
+  --perano-300: #eff5fc;
+  --perano-400: #e9f2fb;
+  --perano-500: #dfeafa;
+  --perano-600: #c8dff5;
+  --perano-700: #a7c9ed;
+  --perano-800: #86b3e5;
+  --perano-900: #6b94c0;
+
+  /* ── Ken Bold DS Red Scale (Full) ── */
+  --red-50: #fef2f2;
+  --red-100: #fee2e2;
+  --red-200: #fecaca;
+  --red-300: #fca5a7;
+  --red-400: #f87176;
+  --red-500: #dc3238;
+  --red-600: #b01f24;
+  --red-700: #8f181d;
+  --red-800: #771419;
+  --red-900: #5f1014;
+
+  /* ── Ken Bold DS Black Tints ── */
+  --black-50: #fafafa;
+  --black-100: #f5f5f5;
+  --black-200: #e5e5e5;
+  --black-300: #d4d4d4;
+  --black-400: #a3a3a3;
+  --black-500: #737373;
+  --black-600: #525252;
+  --black-700: #404040;
+  --black-800: #262626;
+  --black-900: #171717;
+
+  /* ── Ken Bold DS Border Radius ── */
+  --rc-radius-image: 2.5px;
+  --rc-radius-card: 10px;
+  --rc-radius-card-inner: 9px;
+  --radius-element: 5px;      /* General UI elements: buttons, inputs, pills, tags, icon containers */
+  --radius-inner: 2.5px;      /* Sub-element corners: skeleton shims, checkbox marks, inner details */
+
+  /* ── Badge Size & Shape System ── */
+  --badge-xs-font: clamp(9px, 0.8vw, 10px);
+  --badge-xs-py: 4px;
+  --badge-xs-px: 12px;
+  --badge-xs-tracking: 1.2px;
+
+  --badge-sm-font: var(--text-xs);
+  --badge-sm-py: 6px;
+  --badge-sm-px: 14px;
+  --badge-sm-tracking: 1.8px;
+
+  --badge-md-font: 13px;
+  --badge-md-py: 8px;
+  --badge-md-px: 18px;
+  --badge-md-tracking: 2px;
+
+  --badge-lg-font: 15px;
+  --badge-lg-py: 10px;
+  --badge-lg-px: 22px;
+  --badge-lg-tracking: 2.2px;
+
+  --badge-radius-minimal: 0px;
+  --badge-radius-rounded: 5px;
+  --badge-radius-pill: 9999px;
+
+  --badge-transition-duration: 300ms;
+  --badge-shimmer-duration: 700ms;
+
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #030213;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f0f5;
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: #e5e5e5;
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-light: 300;     /* DS v3.5: matches :root */
+  --font-weight-medium: 500;    /* DS v3.5: matches :root */
+  --font-weight-heading: 600;   /* DS v3.5: matches :root */
+  --font-weight-normal: 400;
+  --chart-1: #2563eb;
+  --chart-2: #9333ea;
+  --chart-3: #3b7a87;
+  --chart-4: #e5a832;
+  --chart-5: #d97706;
+  --radius: 0.625rem;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #171717;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #a3a3a3;
+  --ring: #a3a3a3;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #0a0a0a;
+  --card-foreground: #fafafa;
+  --popover: #0a0a0a;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #171717;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  --accent: #262626;
+  --accent-foreground: #fafafa;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #ef4444;
+  --border: #262626;
+  --input: #262626;
+  --ring: #525252;
+  --font-weight-light: 300;     /* DS v3.5: matches :root */
+  --font-weight-medium: 500;    /* DS v3.5: matches :root */
+  --font-weight-heading: 600;   /* DS v3.5: matches :root */
+  --font-weight-normal: 400;
+  --chart-1: #2563eb;
+  --chart-2: #dc2626;
+  --chart-3: #d97706;
+  --chart-4: #e5a832;
+  --chart-5: #9333ea;
+  --sidebar: #171717;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #262626;
+  --sidebar-ring: #525252;
+}
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0a0a0a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0a0a0a;
+  --color-primary: #030213;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0f0f5;
+  --color-secondary-foreground: #030213;
+  --color-muted: #ececf0;
+  --color-muted-foreground: #717182;
+  --color-accent: #e9ebef;
+  --color-accent-foreground: #030213;
+  --color-destructive: #d4183d;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e5e5e5;
+  --color-input: transparent;
+  --color-input-background: #f3f3f5;
+  --color-switch-background: #cbced4;
+  --color-ring: #a3a3a3;
+  --color-chart-1: #2563eb;
+  --color-chart-2: #9333ea;
+  --color-chart-3: #3b7a87;
+  --color-chart-4: #e5a832;
+  --color-chart-5: #d97706;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: #fafafa;
+  --color-sidebar-foreground: #0a0a0a;
+  --color-sidebar-primary: #030213;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #f5f5f5;
+  --color-sidebar-accent-foreground: #171717;
+  --color-sidebar-border: #e5e5e5;
+  --color-sidebar-ring: #a3a3a3;
+
+  /* Custom Ken Research colors */
+  --color-coral: #b01f24;
+  --color-coral-light: #fef2f2;
+  --color-coral-foreground: #ffffff;
+  --color-charcoal: #111827;
+  --color-charcoal-dark: #0B0F19;
+  --color-charcoal-foreground: #F9FAFB;
+  --color-charcoal-muted: #9CA3AF;
+  --color-charcoal-subtle: #6B7280;
+  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-overlay-foreground: #ffffff;
+  --color-overlay-muted: #e0e0e0;
+  --color-overlay-subtle: #b0b0b0;
+  --color-overlay-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* B2B Professional tokens */
+  --color-navy: #1E293B;
+  --color-navy-light: #334155;
+  --color-navy-foreground: #F8FAFC;
+  --color-slate-50: #F8FAFC;
+  --color-slate-100: #F1F5F9;
+  --color-slate-200: #E2E8F0;
+  --color-slate-300: #CBD5E1;
+  --color-slate-400: #94A3B8;
+  --color-slate-500: #64748B;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1E293B;
+  --color-slate-900: #0F172A;
+  --color-emerald: #059669;
+  --color-emerald-light: #ECFDF5;
+}
+
+@layer base {
+  * {
+    outline-color: var(--ring);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-heading);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-heading);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+
+  /* ═══ Badge System — Color Application & Interactive States ═══ */
+
+  .badge {
+    color: var(--badge-text);
+    border-style: solid;
+    border-color: var(--badge-border, transparent);
+    border-width: var(--badge-border-width, 0px);
+  }
+
+  .badge:not(.badge-minimal) {
+    background-color: var(--badge-bg, transparent);
+  }
+
+  .badge-shimmer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform: translateX(-100%);
+    z-index: 5;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--badge-shimmer, rgba(255, 255, 255, 0.75)) 50%,
+      transparent 100%);
+    width: 50%;
+    height: 100%;
+  }
+
+  .badge:hover .badge-shimmer {
+    transform: translateX(200%);
+    transition: transform var(--badge-shimmer-duration, 700ms) ease-out;
+  }
+
+  .group:hover .badge-shimmer {
+    transform: translateX(200%);
+    transition: transform var(--badge-shimmer-duration, 700ms) ease-out;
+  }
+
+  .badge:not(.badge-minimal):hover {
+    background-color: var(--badge-hover-bg);
+    border-color: var(--badge-hover-border);
+    transition: background-color var(--badge-transition-duration, 300ms) ease-out,
+                border-color var(--badge-transition-duration, 300ms) ease-out;
+  }
+
+  .badge-interactive {
+    cursor: pointer;
+  }
+
+  .badge-interactive:hover {
+    transform: scale(1.02);
+    background-color: var(--badge-hover-bg);
+    border-color: var(--badge-hover-border);
+  }
+
+  .badge-interactive:active {
+    transform: scale(0.98);
+  }
+
+  .badge-pill {
+    border-radius: var(--badge-radius-pill, 9999px) !important;
+  }
+
+  .badge-rounded {
+    border-radius: var(--badge-radius-rounded, 5px) !important;
+  }
+
+  .badge-minimal {
+    border-radius: var(--badge-radius-minimal, 0) !important;
+    background-color: transparent !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge-shimmer {
+      transition: none !important;
+      transform: translateX(-100%) !important;
+    }
+
+    .badge:hover .badge-shimmer,
+    .group:hover .badge-shimmer {
+      transform: translateX(-100%) !important;
+    }
+
+    .badge-interactive:hover,
+    .badge-interactive:active {
+      transform: none;
+    }
+  }
+
+  .badge svg,
+  .badge-xs svg { width: 12px; height: 12px; }
+  .badge-sm svg { width: 14px; height: 14px; }
+  .badge-md svg { width: 16px; height: 16px; }
+  .badge-lg svg { width: 18px; height: 18px; }
+
+  .badge svg {
+    flex-shrink: 0;
+  }
+}
+
+/* ─── Focus-visible accessibility ring ─── */
+/* DS-compliant focus indicator: brand-red offset ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--brand-red);
+  outline-offset: 2px;
+}
+
+/* Suppress focus ring on mouse clicks for clean visual */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Dark background focus variant */
+[data-dark] :focus-visible,
+.bg-black :focus-visible {
+  outline-color: white;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Image hover zoom ──
+   Apply .img-zoom to an <img> inside a .group ancestor.
+   The image container MUST have overflow-hidden to clip the scale.
+   Zoom: 1 → 1.05 over 500ms cubic-bezier ease-out.
+*/
+.img-zoom {
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+:is(.group:hover, .group:focus-visible) .img-zoom {
+  transform: scale(1.05);
+}
+@media (prefers-reduced-motion: reduce) {
+  .img-zoom {
+    transition: none;
+  }
+  :is(.group:hover, .group:focus-visible) .img-zoom {
+    transform: none;
+  }
+}
+
+/* Container responsive padding — consumes DS tokens */
+.container-padding {
+  padding-left: var(--padding-mobile);
+  padding-right: var(--padding-mobile);
+}
+@media (min-width: 640px) {
+  .container-padding {
+    padding-left: var(--padding-tablet);
+    padding-right: var(--padding-tablet);
+  }
+}
+@media (min-width: 768px) {
+  .container-padding {
+    padding-left: var(--padding-desktop);
+    padding-right: var(--padding-desktop);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Ken Bold DS — Animation Keyframes
+   ═══════════════════════════════════════════════════════════ */
+
+/* fadeUp: cards, skeletons, status text entrance */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ripple: Button click ripple effect */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* marquee: Testimonials trust-logo infinite scroll */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Ken Bold DS — Component CSS Classes
+   ═══════════════════════════════════════════════════════════ */
+
+/* Glass Header — sticky nav glassmorphism */
+.glass-header {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+}
+
+/* CardReveal — viewport-aware card entrance */
+.card-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Skeleton Shimmer — loading placeholder pulse */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--warm-300) 25%,
+    var(--warm-400) 50%,
+    var(--warm-300) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Reduced motion: disable all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  .card-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .skeleton-shimmer {
+    animation: none;
+    background: var(--warm-300);
+  }
+
+  .glass-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.96);
+  }
+}

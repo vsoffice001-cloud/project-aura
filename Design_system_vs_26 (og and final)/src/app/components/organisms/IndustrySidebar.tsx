@@ -1,0 +1,92 @@
+/**
+ * IndustrySidebar — Organism (DS v4.3)
+ *
+ * WHAT: Desktop filter sidebar wrapping SidebarPanel (card variant) + FiltersPanel.
+ * WHY:  Composes the sidebar container with header, footer, and filter content
+ *       into a single organism the template can drop in.
+ * WHEN: Left column of the Report Store listing layout (hidden < lg).
+ * HOW:  SidebarPanel card variant with header (icon + "Filters" + count + clear),
+ *       scrollable body (FiltersPanel), and footer (catalog count).
+ *
+ * COLOR SYSTEM: All colors via inline style rgba(). No Tailwind color classes.
+ * FONT TOKENS: Header label → var(--text-xs), counts → var(--text-card-micro)
+ */
+import { SlidersHorizontal, X } from 'lucide-react';
+import { Badge } from '@/app/components/Badge';
+import { SidebarPanel } from '@/app/components/molecules/SidebarPanel';
+import { FiltersPanel } from '@/app/components/organisms/FiltersPanel';
+import { TOTAL_REPORTS_IN_CATALOG } from '@/app/components/data';
+import type { ReportFilters } from '@/app/hooks/useReportFilters';
+
+interface IndustrySidebarProps {
+  filters: ReportFilters;
+}
+
+export function IndustrySidebar({ filters }: IndustrySidebarProps) {
+  const { activeFilterCount, clearAllFilters } = filters;
+
+  return (
+    <SidebarPanel
+      visible={true}
+      variant="card"
+      width="15rem"
+      stickyTop={24}
+      header={
+        <div className="p-4" style={{ backgroundColor: 'rgba(250,250,250,1)' }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-7 h-7 flex items-center justify-center"
+                style={{
+                  borderRadius: 'var(--radius-element)',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'rgba(0,0,0,0.08)',
+                  backgroundColor: 'rgba(255,255,255,1)',
+                }}
+              >
+                <SlidersHorizontal size={14} style={{ color: 'rgba(0,0,0,0.45)' }} />
+              </div>
+              <h3
+                className="uppercase tracking-[0.1em]"
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'rgba(0,0,0,0.5)',
+                }}
+              >
+                Filters
+              </h3>
+              {activeFilterCount > 0 && (
+                <Badge variant="pill" size="xs" theme="neutral" mode="dark">
+                  {activeFilterCount}
+                </Badge>
+              )}
+            </div>
+            {activeFilterCount > 0 && (
+              <button
+                onClick={clearAllFilters}
+                className="flex items-center gap-1 transition-colors cursor-pointer"
+                style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.4)' }}
+              >
+                <X size={12} />
+                Clear all
+              </button>
+            )}
+          </div>
+        </div>
+      }
+      footer={
+        <div className="p-3">
+          <p className="text-center" style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.35)' }}>
+            <span className="tabular-nums" style={{ color: 'rgba(0,0,0,0.55)' }}>
+              {TOTAL_REPORTS_IN_CATALOG.toLocaleString()}+
+            </span>{' '}
+            reports available
+          </p>
+        </div>
+      }
+    >
+      <FiltersPanel filters={filters} />
+    </SidebarPanel>
+  );
+}

@@ -1,0 +1,239 @@
+{
+  "communities": {
+    "0": [
+      "design_system_component_reference_md",
+      "design_system_voice_foundations_md",
+      "design_system_voice_readme_md",
+      "docs_aura_sprint_2026_05_01_md",
+      "docs_decisions_md",
+      "docs_learnings_md",
+      "docs_sprint_learnings_2026_05_08_md",
+      "docs_system_architecture_md",
+      "docs_workspace_map_md",
+      "skills_page_skill_md",
+      "skills_skill_routing_md",
+      "workflows_agents_aura_builder_md",
+      "workflows_agents_aura_mech_md",
+      "workflows_agents_aura_qa_md",
+      "workflows_routing_md"
+    ],
+    "1": [
+      "skills_aura_design_decisions_chart_picker_md",
+      "skills_aura_design_decisions_surface_picker_md",
+      "skills_aura_design_skill_md",
+      "skills_aura_design_surfaces_01_discovery_md",
+      "skills_aura_design_surfaces_02_report_store_md",
+      "skills_aura_design_surfaces_03_report_viewer_md",
+      "skills_aura_design_surfaces_04_dashboards_md",
+      "skills_aura_design_surfaces_05_engagement_md"
+    ],
+    "2": [
+      "design_system_4wh_audit_md",
+      "docs_aura_sprint_2026_05_07_port_a1_v0_lite_report_audit_md",
+      "docs_aura_sprint_2026_05_07_port_a2_report_store_audit_md",
+      "docs_aura_sprint_2026_05_07_port_a3_v0_2_report_audit_md",
+      "docs_aura_sprint_2026_05_07_port_a_synthesis_cross_project_md",
+      "docs_aura_sprint_2026_05_07_port_b2_ds_patterns_backgrounds_deep_map_md",
+      "docs_aura_sprint_2026_05_07_port_b_ds_forensic_v1_and_heal_plan_md",
+      "docs_aura_sprint_2026_05_07_port_resume_note_md"
+    ],
+    "3": [
+      "design_system_anti_patterns_md",
+      "design_system_motion_motion_spec_md",
+      "design_system_recipes_ds_doc_page_md",
+      "design_system_recipes_survey_detail_md",
+      "design_system_recipes_survey_listing_md",
+      "design_system_voice_surveys_md"
+    ],
+    "4": [
+      "docs_plan_2026_05_08_aura_tightening_md",
+      "skills_aura_design_decisions_brand_variant_md",
+      "skills_aura_design_decisions_density_picker_md",
+      "skills_aura_design_decisions_motion_router_md",
+      "skills_aura_design_variants_cinematic_dark_md",
+      "skills_aura_design_variants_editorial_light_md"
+    ],
+    "5": [
+      "design_system_recipes_report_detail_md",
+      "design_system_recipes_report_store_home_md",
+      "design_system_recipes_report_store_listing_md",
+      "design_system_recipes_sector_landing_md",
+      "design_system_voice_research_md"
+    ],
+    "6": [
+      "design_system_recipes_case_study_md",
+      "design_system_recipes_methodology_md",
+      "design_system_recipes_readme_md",
+      "design_system_recipes_service_overview_md",
+      "design_system_voice_consulting_md"
+    ],
+    "7": [
+      "docs_changelog_md",
+      "docs_design_system_evolution_md",
+      "docs_kenresearch_design_system_phase1_md",
+      "docs_visual_gap_matrix_md"
+    ],
+    "8": [
+      "skills_aura_design_anti_patterns_md",
+      "skills_aura_design_chains_page_build_md",
+      "skills_aura_design_voice_md"
+    ]
+  },
+  "cohesion": {
+    "0": 0.44,
+    "1": 0.57,
+    "2": 0.32,
+    "3": 0.67,
+    "4": 0.73,
+    "5": 1.1,
+    "6": 0.9,
+    "7": 0.83,
+    "8": 1.0
+  },
+  "gods": [
+    {
+      "id": "docs_changelog_md",
+      "label": "CHANGELOG",
+      "degree": 45
+    },
+    {
+      "id": "skills_aura_design_skill_md",
+      "label": "SKILL",
+      "degree": 32
+    },
+    {
+      "id": "docs_plan_2026_05_08_aura_tightening_md",
+      "label": "PLAN-2026-05-08-aura-tightening",
+      "degree": 29
+    },
+    {
+      "id": "design_system_anti_patterns_md",
+      "label": "ANTI_PATTERNS",
+      "degree": 26
+    },
+    {
+      "id": "docs_decisions_md",
+      "label": "DECISIONS",
+      "degree": 25
+    },
+    {
+      "id": "docs_learnings_md",
+      "label": "LEARNINGS",
+      "degree": 20
+    },
+    {
+      "id": "design_system_motion_motion_spec_md",
+      "label": "MOTION_SPEC",
+      "degree": 18
+    },
+    {
+      "id": "skills_aura_design_decisions_surface_picker_md",
+      "label": "surface-picker",
+      "degree": 18
+    },
+    {
+      "id": "design_system_voice_readme_md",
+      "label": "README",
+      "degree": 16
+    },
+    {
+      "id": "design_system_recipes_case_study_md",
+      "label": "case-study",
+      "degree": 15
+    }
+  ],
+  "surprises": [
+    {
+      "source": "AURA_SPRINT_2026-05-01",
+      "target": "4WH_AUDIT",
+      "source_files": [
+        "docs/AURA_SPRINT_2026-05-01.md",
+        "design-system/4WH_AUDIT.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "CHANGELOG",
+      "target": "ANTI_PATTERNS",
+      "source_files": [
+        "docs/CHANGELOG.md",
+        "design-system/ANTI_PATTERNS.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "RESUME-NOTE",
+      "target": "ANTI_PATTERNS",
+      "source_files": [
+        "docs/aura-sprint-2026-05-07-port/RESUME-NOTE.md",
+        "design-system/ANTI_PATTERNS.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "B-DS-FORENSIC-v1-and-heal-plan",
+      "target": "COMPONENT_REFERENCE",
+      "source_files": [
+        "docs/aura-sprint-2026-05-07-port/B-DS-FORENSIC-v1-and-heal-plan.md",
+        "design-system/COMPONENT_REFERENCE.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "aura-builder",
+      "target": "MOTION_SPEC",
+      "source_files": [
+        "workflows/agents/aura-builder.md",
+        "design-system/motion/MOTION_SPEC.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `CHANGELOG` connect `Community 7` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 8`?",
+      "why": "High betweenness centrality (0.318) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `SKILL` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`?",
+      "why": "High betweenness centrality (0.136) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `ANTI_PATTERNS` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`?",
+      "why": "High betweenness centrality (0.093) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 9 inferred relationships involving `CHANGELOG` (e.g. with `ANTI_PATTERNS` and `cinematic-dark`) actually correct?",
+      "why": "`CHANGELOG` has 9 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `SKILL` (e.g. with `cinematic-dark` and `editorial-light`) actually correct?",
+      "why": "`SKILL` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 15 inferred relationships involving `PLAN-2026-05-08-aura-tightening` (e.g. with `README` and `05-engagement`) actually correct?",
+      "why": "`PLAN-2026-05-08-aura-tightening` has 15 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `ANTI_PATTERNS` (e.g. with `CHANGELOG` and `RESUME-NOTE`) actually correct?",
+      "why": "`ANTI_PATTERNS` has 2 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}

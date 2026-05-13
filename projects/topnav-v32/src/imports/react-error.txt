@@ -1,0 +1,30 @@
+Unexpected Application Error!
+Should have a queue. This is likely a bug in React. Please file an issue.
+Error: Should have a queue. This is likely a bug in React. Please file an issue.
+    at mm (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:70003)
+    at mC (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:73472)
+    at Object.useState (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:82847)
+    at e3 (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:105:27779)
+    at useAuthPopover (https://app-yg3jxac2hoikw4h7a3tcwn73yq2go6tkbkzy4o3wlbcvalrcyuua.makeproxy-c.figma.site/src/app/components/navbar/hooks/useAuthPopover.ts:3:31)
+    at NavLayout (https://app-yg3jxac2hoikw4h7a3tcwn73yq2go6tkbkzy4o3wlbcvalrcyuua.makeproxy-c.figma.site/src/app/components/layout/NavLayout.tsx?t=1772307723298:39:23)
+    at ms (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:68027)
+    at _c (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:110700)
+    at _5 (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:127859)
+    at ep (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:166810)
+    at SX (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:160942)
+    at Sz (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:160557)
+    at Sj (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:160323)
+    at SI (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:156868)
+    at SO (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:158222)
+    at pC (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:36290)
+    at SL (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:158998)
+    at IO (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:89:169939)
+    at r.scheduleRefresh (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:69:53181)
+    at https://app-yg3jxac2hoikw4h7a3tcwn73yq2go6tkbkzy4o3wlbcvalrcyuua.makeproxy-c.figma.site/@react-refresh:228:17
+    at Set.forEach (<anonymous>)
+    at performReactRefresh (https://app-yg3jxac2hoikw4h7a3tcwn73yq2go6tkbkzy4o3wlbcvalrcyuua.makeproxy-c.figma.site/@react-refresh:217:26)
+    at https://app-yg3jxac2hoikw4h7a3tcwn73yq2go6tkbkzy4o3wlbcvalrcyuua.makeproxy-c.figma.site/@react-refresh:608:3
+    at i (https://www.figma.com/webpack-artifacts/assets/code_components_preview_iframe-45c712baf9cbf8c8.min.js.br:28:4861)
+💿 Hey developer 👋
+
+You can provide a way better UX than this when your app throws errors by providing your own ErrorBoundary or errorElement prop on your route.

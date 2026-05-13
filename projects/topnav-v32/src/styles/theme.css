@@ -1,0 +1,514 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  
+  /* ============================================
+     FONT SCALE SYSTEM - Major Third (1.250)
+     ============================================ */
+  
+  /* Base Scale Values */
+  --font-scale-xs: 10px;      /* -3 steps from base */
+  --font-scale-sm: 12px;      /* -2 steps from base */
+  --font-scale-base: 13px;    /* -1 step from base */
+  --font-scale-md: 16px;      /* BASE (1rem) */
+  --font-scale-lg: 20px;      /* +1 step from base */
+  --font-scale-xl: 25px;      /* +2 steps from base */
+  --font-scale-2xl: 31px;     /* +3 steps from base */
+  
+  /* ============================================
+     NAVIGATION SEMANTIC TOKENS
+     Based on: Option 2 - Modern Balanced Approach
+     Research Date: 2024
+     
+     Industry Research:
+     - Airbnb: 14px main nav, 14px dropdowns, 10px headers
+     - Stripe: 15px main nav, 14px dropdowns, 11px headers
+     - Shopify: 14px main nav, 13px dropdowns, 11px headers
+     - Figma: 13px main nav, 13px dropdowns, 11px headers
+     - Notion: 14px main nav, 14px dropdowns, 11px headers
+     
+     Hierarchy Pattern (Industry Standard):
+     - Section Headers: 10-11px, lighter color (#999), uppercase, 0.08-0.1em spacing
+     - Menu Items: 13-14px, darker color (#656565 → #141016), sentence case
+     
+     Accessibility: WCAG 2.1 AA Compliant
+     - 14px minimum for primary navigation
+     - 13px acceptable for secondary elements
+     - 11px acceptable for non-interactive labels (headers)
+     
+     Scale Adherence: 87.5% (7/8 tokens on scale)
+     Exception: 14px main nav (accessibility priority)
+     ============================================ */
+  
+  /* Font Sizes */
+  --nav-primary-text: 14px;                           /* Main nav items (Reports, Surveys, Industries) - WCAG exception */
+  --nav-menu-item: var(--font-scale-base);            /* 13px - Dropdown menu items (Featured Analysis) */
+  --nav-section-header: 11px;                         /* 11px - Section headers (CAPABILITIES) - uppercase, non-interactive labels */
+  --nav-featured-title: var(--font-scale-md);         /* 16px - Featured card titles */
+  --nav-featured-desc: var(--font-scale-base);        /* 13px - Featured descriptions */
+  --nav-cta-text: var(--font-scale-base);             /* 13px - CTA links (Read more, View all) */
+  --nav-metadata: var(--font-scale-xs);               /* 10px - Badges, tags (CASE STUDY, LATEST) */
+  --nav-helper-text: var(--font-scale-sm);            /* 12px - Helper text (Subscribe to Updates, Schedule Consultation) */
+  
+  /* Line Heights - Optimized for each font size */
+  --nav-lh-primary: 1.43;            /* 20px at 14px - Main navigation items */
+  --nav-lh-menu: 1.38;               /* 18px at 13px - Menu items, CTAs, descriptions */
+  --nav-lh-header: 1.27;             /* 14px at 11px - Section headers (updated for 11px) */
+  --nav-lh-featured: 1.375;          /* 22px at 16px - Featured card titles */
+  --nav-lh-metadata: 1.2;            /* 12px at 10px - Metadata badges */
+  --nav-lh-helper: 1.33;             /* 16px at 12px - Helper text links */
+  
+  /* Letter Spacing */
+  --nav-ls-tight: 0;                 /* Regular text */
+  --nav-ls-normal: 0.08em;           /* Section headers - increased for better readability */
+  --nav-ls-wide: 0.1em;              /* Metadata/tags - increased */
+  
+  /* ============================================
+     NAVIGATION SPACING TOKENS
+     ============================================ */
+  
+  --nav-column-gap: 24px;            /* Space between columns */
+  --nav-item-gap: 8px;               /* Space between menu items - REDUCED */
+  --nav-section-gap: 14px;           /* Space between sections - REDUCED */
+  --nav-item-padding-x: 10px;        /* Horizontal padding for items - REDUCED */
+  --nav-item-padding-y: 6px;         /* Vertical padding for items - REDUCED */
+
+  /* ============================================
+     DESIGN SYSTEM TOKENS
+     Complete token system for consistent design
+     ============================================ */
+
+  /* --- COLOR PALETTE --- */
+  --color-primary-black: #141016;        /* Primary text, dark backgrounds */
+  --color-secondary-grey: #656565;       /* Secondary text, muted elements */
+  --color-light-grey: #999999;           /* Section headers, tertiary text */
+  --color-border-grey: #e6e6e6;          /* Dividers, borders */
+  --color-bg-light: #fcfcfc;             /* Light backgrounds, cards */
+  --color-bg-grey: #f7f7f7;              /* Featured card backgrounds */
+  --color-white: #ffffff;                /* Pure white */
+  --color-purple: #806ce0;               /* Accent color, highlights */
+  --color-red: #b01f24;                  /* Links, hover states, CTAs */
+
+  /* --- BORDER RADIUS SYSTEM --- */
+  --radius-2xs: 2.5px;                   /* Smallest unit - tiny borders, subtle rounding */
+  --radius-xs: 5px;                      /* Extra small - buttons, inputs, nav items, small UI */
+  --radius-sm: 10px;                     /* Small - cards, dropdowns, default components */
+  --radius-md: 15px;                     /* Medium - featured cards, medium containers */
+  --radius-lg: 20px;                     /* Large - hero images, large containers */
+  --radius-xl: 25px;                     /* Extra large - prominent containers */
+  --radius-2xl: 30px;                    /* Double extra large - massive sections */
+  --radius-full: 9999px;                 /* Full round - pills, avatars, circular elements */
+
+  /* --- SPACING SCALE (8px base grid) --- */
+  --spacing-1: 4px;                      /* 0.5 units */
+  --spacing-2: 8px;                      /* 1 unit */
+  --spacing-3: 12px;                     /* 1.5 units */
+  --spacing-4: 16px;                     /* 2 units */
+  --spacing-5: 20px;                     /* 2.5 units */
+  --spacing-6: 24px;                     /* 3 units */
+  --spacing-8: 32px;                     /* 4 units */
+  --spacing-10: 40px;                    /* 5 units */
+  --spacing-12: 48px;                    /* 6 units */
+  --spacing-16: 64px;                    /* 8 units */
+
+  /* --- COMPONENT SIZE SYSTEM --- */
+  
+  /* Button Sizes - Design System (from Design-System-vs-26) */
+  --button-height-sm: 32px;              /* Small button height - utility, nav */
+  --button-height-md: 40px;              /* Medium button height - standard */
+  --button-height-lg: 48px;              /* Large button height - primary CTA */
+  --button-height-xl: 56px;              /* Extra large - hero/emphasis CTAs */
+  --button-padding-x-sm: 12px;           /* Small button horizontal padding */
+  --button-padding-x-md: 16px;           /* Medium button horizontal padding */
+  --button-padding-x-lg: 24px;           /* Large button horizontal padding */
+  --button-padding-y-sm: 6px;            /* Small button vertical padding */
+  --button-padding-y-md: 10px;           /* Medium button vertical padding */
+  --button-padding-y-lg: 14px;           /* Large button vertical padding */
+  --button-px-sm: 16px;                  /* DS: Compact horizontal padding */
+  --button-px-md: 24px;                  /* DS: Standard horizontal padding */
+  --button-px-lg: 32px;                  /* DS: Spacious horizontal padding */
+  --button-px-xl: 32px;                  /* DS: XL horizontal padding */
+  --button-font-sm: 14px;               /* DS: Small button font */
+  --button-font-md: 16px;               /* DS: Standard button font */
+  --button-font-lg: 18px;               /* DS: Large button font */
+  --button-min-width-sm: 80px;           /* DS: Small button min width */
+  --button-min-width-md: 100px;          /* DS: Medium button min width */
+  --button-min-width-lg: 120px;          /* DS: Large button min width */
+
+  /* Nav Item Sizes (for VerticalNavItem, HorizontalNavItem, etc.) */
+  --nav-item-height-sm: 32px;            /* Small nav item (compact) */
+  --nav-item-height-md: 36px;            /* Medium nav item (default) */
+  --nav-item-height-lg: 44px;            /* Large nav item (prominent) */
+  --nav-item-padding-x-sm: 8px;          /* Small nav item horizontal padding */
+  --nav-item-padding-x-md: 12px;         /* Medium nav item horizontal padding */
+  --nav-item-padding-x-lg: 16px;         /* Large nav item horizontal padding */
+  --nav-item-padding-y-sm: 6px;          /* Small nav item vertical padding */
+  --nav-item-padding-y-md: 10px;         /* Medium nav item vertical padding */
+  --nav-item-padding-y-lg: 14px;         /* Large nav item vertical padding */
+
+  /* Input Sizes */
+  --input-height-sm: 32px;               /* Small input height */
+  --input-height-md: 40px;               /* Medium input height */
+  --input-height-lg: 48px;               /* Large input height */
+  --input-padding-x: 12px;               /* Input horizontal padding */
+
+  /* Icon Sizes */
+  --icon-size-xs: 12px;                  /* Extra small icons */
+  --icon-size-sm: 16px;                  /* Small icons */
+  --icon-size-md: 20px;                  /* Medium icons */
+  --icon-size-lg: 24px;                  /* Large icons */
+  --icon-size-xl: 32px;                  /* Extra large icons */
+
+  /* Logo Sizes (height-driven, width scales proportionally) */
+  --logo-height-xs: 16px;               /* Favicon, breadcrumbs, inline mentions */
+  --logo-height-sm: 20px;               /* Navbar (mobile + desktop), sidebar */
+  --logo-height-md: 24px;               /* Sticky headers, email templates */
+  --logo-height-lg: 32px;               /* Footer, about page, partner sections */
+  --logo-height-xl: 48px;               /* Hero sections, splash, marketing */
+
+  /* Tag/Badge Sizes */
+  --tag-padding-x-sm: 8px;               /* Small tag horizontal padding */
+  --tag-padding-x-md: 12px;              /* Medium tag horizontal padding */
+  --tag-padding-x-lg: 16px;              /* Large tag horizontal padding */
+  --tag-padding-y-sm: 4px;               /* Small tag vertical padding */
+  --tag-padding-y-md: 6px;               /* Medium tag vertical padding */
+  --tag-padding-y-lg: 8px;               /* Large tag vertical padding */
+
+  /* --- SHADOW SYSTEM --- */
+  --shadow-xs: 0px 1px 2px 0px rgba(20, 16, 22, 0.05);                      /* Subtle elevation */
+  --shadow-sm: 0px 2px 4px 0px rgba(20, 16, 22, 0.08);                      /* Small cards */
+  --shadow-md: 0px 2px 8px 0px rgba(128, 108, 224, 0.12);                   /* Medium elevation (purple tint) */
+  --shadow-lg: 0px 4px 16px 0px rgba(20, 16, 22, 0.12);                     /* Large cards, modals */
+  --shadow-xl: 0px 8px 32px 0px rgba(20, 16, 22, 0.16);                     /* Popovers, dropdowns */
+  --shadow-glow-purple: 0px 1px 30px -5px rgba(128, 108, 224, 0.2);         /* Purple glow for selected states */
+  --shadow-glow-red: 0px 2px 12px 0px rgba(176, 31, 36, 0.15);              /* Red glow for hover states */
+
+  /* --- TRANSITION SYSTEM --- */
+  --transition-fast: 150ms ease-in-out;                                      /* Quick interactions */
+  --transition-base: 200ms ease-in-out;                                      /* Default transitions */
+  --transition-slow: 300ms ease-in-out;                                      /* Smooth, deliberate */
+  --transition-slower: 400ms ease-in-out;                                    /* Dramatic effects */
+
+  /* --- Z-INDEX SCALE --- */
+  --z-dropdown: 1000;                    /* Dropdown menus */
+  --z-sticky: 1020;                      /* Sticky elements */
+  --z-modal: 1040;                       /* Modals */
+  --z-popover: 1060;                     /* Popovers */
+  --z-tooltip: 1080;                     /* Tooltips */
+
+  /* ============================================
+     SEMANTIC COMPONENT TOKENS
+     Mapping design tokens to specific components
+     ============================================ */
+
+  /* Vertical Nav Item - Size Variants */
+  
+  /* Small (Compact) - For Insights/Consulting browse menus (fewer items, less space) */
+  --vertical-nav-sm-radius: var(--radius-sm);                                /* 10px */
+  --vertical-nav-sm-padding-x: var(--spacing-2);                             /* 8px */
+  --vertical-nav-sm-padding-y: 6px;                                          /* 6px */
+  --vertical-nav-sm-gap: 6px;                                                /* 6px between icon and text */
+  --vertical-nav-sm-icon-size: var(--icon-size-xs);                          /* 12px */
+  --vertical-nav-sm-font-size: var(--font-scale-sm);                         /* 12px */
+  --vertical-nav-sm-height: 28px;                                            /* Total height ~28-30px */
+  
+  /* Medium (Default) - For Industry/Survey listings (many items, scrollable) */
+  --vertical-nav-md-radius: var(--radius-sm);                                /* 10px */
+  --vertical-nav-md-padding-x: var(--spacing-3);                             /* 12px */
+  --vertical-nav-md-padding-y: var(--spacing-2);                             /* 8px - comfortable, not too large */
+  --vertical-nav-md-gap: var(--spacing-2);                                   /* 8px between icon and text */
+  --vertical-nav-md-icon-size: var(--icon-size-sm);                          /* 16px */
+  --vertical-nav-md-font-size: var(--nav-menu-item);                         /* 13px */
+  --vertical-nav-md-height: 34px;                                            /* Total height ~34px */
+  
+  /* Large - For prominent navigation (NOT USED - removed) */
+  /* We determined medium is sufficient, large was too big */
+
+  /* Default tokens (backward compatibility - points to medium) */
+  --vertical-nav-radius: var(--vertical-nav-md-radius);                      /* 10px */
+  --vertical-nav-padding-x: var(--vertical-nav-md-padding-x);                /* 12px */
+  --vertical-nav-padding-y: var(--vertical-nav-md-padding-y);                /* 8px */
+  --vertical-nav-gap: var(--vertical-nav-md-gap);                            /* 8px between icon and text */
+  --vertical-nav-icon-size: var(--vertical-nav-md-icon-size);                /* 16px */
+  --vertical-nav-shadow-selected: var(--shadow-glow-purple);                 /* Purple glow when selected */
+  --vertical-nav-shadow-hover: var(--shadow-md);                             /* Purple tint on hover */
+  --vertical-nav-transition: var(--transition-base);                         /* 200ms */
+
+  /* Popular Tags (Pills) */
+  --tag-radius: var(--radius-full);                                          /* Full rounded pills */
+  --tag-padding-x: var(--tag-padding-x-sm);                                  /* 8px - compact tags */
+  --tag-padding-y: var(--tag-padding-y-sm);                                  /* 4px - compact tags */
+  --tag-font-size: var(--font-scale-sm);                                     /* 12px - small text */
+  --tag-shadow-hover: var(--shadow-md);                                      /* Purple shadow on hover */
+  --tag-transition: var(--transition-base);                                  /* 200ms */
+
+  /* Quick Access Cards */
+  --card-radius: var(--radius-sm);                                           /* 10px */
+  --card-padding: var(--spacing-3);                                          /* 12px */
+  --card-shadow-hover: var(--shadow-md);                                     /* Purple shadow on hover */
+  --card-transition: var(--transition-base);                                 /* 200ms */
+
+  /* Buttons (General) */
+  --button-radius: var(--radius-xs);                                         /* 5px - base for buttons */
+  --button-transition: var(--transition-base);                               /* 200ms */
+  --button-shadow-hover: var(--shadow-md);                                   /* Purple shadow on hover */
+
+  /* Dropdown Menus */
+  --dropdown-radius: var(--radius-md);                                       /* 15px */
+  --dropdown-shadow: var(--shadow-xl);                                       /* Large shadow */
+  --dropdown-padding: var(--spacing-4);                                      /* 16px */
+
+  /* Existing theme tokens */
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+   * Navbar font family utility
+   * Extracts the repeated font-['DM_Sans',sans-serif] declaration
+   * used 13+ times across navbar atoms, molecules, and organisms.
+   */
+  .font-nav {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /**
+  * Shimmer animation for selected navigation items
+  */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+
+  /**
+  * Beam orbit animation - circular motion around search bar
+  */
+  @keyframes beamOrbit {
+    0% {
+      left: -22.77px;
+      top: 3.68px;
+    }
+    12.5% {
+      left: -10px;
+      top: -10px;
+    }
+    25% {
+      left: 20%;
+      top: -15px;
+    }
+    37.5% {
+      left: 50%;
+      top: -15px;
+      transform: translateX(-50%);
+    }
+    50% {
+      left: 80%;
+      top: -10px;
+      transform: translateX(0);
+    }
+    62.5% {
+      left: calc(100% - 10px);
+      top: 5px;
+    }
+    75% {
+      left: 80%;
+      top: 20px;
+    }
+    87.5% {
+      left: 50%;
+      top: 22px;
+      transform: translateX(-50%);
+    }
+    100% {
+      left: -22.77px;
+      top: 3.68px;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-beam-orbit {
+    animation: beamOrbit 6s linear infinite;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}

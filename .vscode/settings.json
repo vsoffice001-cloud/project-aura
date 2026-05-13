@@ -1,0 +1,7 @@
+{
+    "files.autoSave": "afterDelay",
+    "python.analysis.extraPaths": [
+        "./projects/ken-research-backend"
+    ],
+    "python.defaultInterpreterPath": "./projects/ken-research-backend/venv/bin/python"
+}

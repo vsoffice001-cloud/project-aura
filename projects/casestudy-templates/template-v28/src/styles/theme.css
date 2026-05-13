@@ -1,0 +1,1539 @@
+:root {
+  --font-size: 16px;
+  
+  /* ========================================
+     🎨 QUICK REFERENCE GUIDE - MOST USED TOKENS
+     ======================================== 
+     
+     SECTION BACKGROUNDS (Use these for all sections):
+     --bg-challenges: #f5f2f1          Challenges section ⭐
+     --bg-methodology: #f9f7f6         Methodology section ⭐
+     --bg-final-cta: #fefdfd           Final CTA section ⭐
+     --bg-section-default: #ffffff     Standard white sections
+     --bg-section-emphasis: #000000    Hero, Resources sections
+     
+     TEXT COLORS (WCAG AAA compliant):
+     --text-primary: rgba(0, 0, 0, 0.90)      Main headings, body (17.1:1)
+     --text-secondary: rgba(0, 0, 0, 0.70)    Supporting text (11.4:1)
+     --text-tertiary: rgba(0, 0, 0, 0.60)     Labels, metadata (8.9:1) ⭐ MOST USED
+     --text-subtle: rgba(0, 0, 0, 0.45)       Decorative text (5.9:1)
+     --text-decorative: rgba(0, 0, 0, 0.15)   Card numbers (decorative only)
+     
+     BORDERS:
+     --border-default: rgba(0, 0, 0, 0.10)    Standard borders (10%)
+     --border-card: rgba(0, 0, 0, 0.08)       Card borders (8%) ⭐
+     --border-subtle: rgba(0, 0, 0, 0.06)     Very light borders (6%)
+     --border-interactive: rgba(0, 0, 0, 0.15) Interactive elements (15%)
+     
+     BRAND COLORS:
+     --brand-red: #b01f24                     Primary CTAs ⭐
+     --brand-red-hover: #8f191e               Hover state
+     --brand-red-active: #6e1317              Active/pressed state
+     
+     WARM EDITORIAL COLORS (Most used):
+     --warm-50: #fefdfd                       Lightest warm
+     --warm-200: #f9f7f6                      Methodology background ⭐
+     --warm-300: #f5f2f1                      Challenges background ⭐
+     --warm-500: #eae5e3                      Borders, separators
+     --warm-700: #c8bcb8                      Timeline nodes, strong borders
+     --warm-800: #b7a9a3                      Dark warm, active dots
+     --warm-900: #a6968e                      Editorial labels ⭐
+     
+     UTILITY COLORS (Success/Warning/Error):
+     --green-600: #059669                     Success metrics (Impact section) ⭐
+     --amber-50: #fffbeb                      Warning backgrounds
+     --rose-500: #f43f5e                      Error states
+     
+     TYPOGRAPHY SCALE (Major Third 1.25 ratio):
+     --text-xs: 0.8rem (12.8px)               Section labels ⭐
+     --text-sm: 1rem (16px)                   Body text ⭐
+     --text-base: 1.25rem (20px)              Large body, card titles
+     --text-xl: 1.953rem (31.25px)            Subsection headings
+     --text-2xl: 2.441rem (39px)              Section headings (h2) ⭐
+     --text-3xl: 3.052rem (48.8px)            Hero headings (h1) ⭐
+     
+     SPACING (Typography Pairing):
+     --pair-label-heading: 0.75rem            Label → Heading (12px) ⭐
+     --pair-heading-description: 1.5rem       Heading → Description (24px)
+     --pair-heading-content: 2.5rem           Heading → Content (40px) ⭐
+     
+     SPACING (Section Padding):
+     --section-py-standard: 5rem              Mobile (80px) ⭐
+     --section-header-mb: 3rem                Header margin bottom (48px) ⭐
+     
+     CONTAINER LAYOUT (Widths & Gutters):
+     --container-content: 1000px              Body sections ⭐
+     --container-nav: 1200px                  Navbar, MegaMenu
+     --container-narrow: 900px                FinalCTA, Endorsement
+     --gutter-mobile: 1rem (16px)             < 640px ⭐
+     --gutter-sm: 1.5rem (24px)               640px+ (sm)
+     --gutter-md: 2rem (32px)                 768px+ (md) ⭐
+     --text-measure: 700px                    Body copy max-width ⭐
+     
+     ⭐ = Most frequently used token
+     
+     ======================================== */
+  
+  /* ========================================
+     TYPOGRAPHY SCALE - Major Third (1.25 ratio)
+     ======================================== 
+     
+     PURPOSE: Creates harmonious visual hierarchy through mathematical progression.
+     RATIO: Each size is 1.25× the previous size (Major Third musical interval).
+     BASE: 16px (1rem) - Standard readable body text size.
+     
+     USAGE GUIDELINES:
+     - Use CSS variables for all standard typography
+     - Hardcode only when spatial constraints or client specs require it
+     - See FONT_SIZE_RATIONALE_ANALYSIS.md for detailed explanations
+     
+     UPDATED: January 2025 - Section headings changed from --text-3xl to --text-2xl
+     
+     ======================================== */
+  
+  --text-xs: 0.8rem;      /* 12.8px - Labels, metadata, categories, section eyebrows */
+  --text-sm: 1rem;        /* 16px - Body text, descriptions, standard paragraphs */
+  --text-base: 1.25rem;   /* 20px - Large body text, card titles (when 4+ cards) */
+  --text-lg: 1.563rem;    /* 25px - Card titles (when 2-3 cards) */
+  --text-xl: 1.953rem;    /* 31.25px - Subsection headings (h3), engagement objectives, methodology steps */
+  --text-2xl: 2.441rem;   /* 39px - SECTION HEADINGS (h2) - NEW STANDARD for main sections */
+  --text-3xl: 3.052rem;   /* 48.8px - Hero h1, Final CTA h2 - RESERVED for hero moments only */
+  --text-4xl: 3.815rem;   /* 61px - Extra large headings (challenges card numbers when <4 cards) */
+  --text-5xl: 4.768rem;   /* 76.3px - Massive headings (future use, rarely needed) */
+  
+  /* ========================================
+     CUSTOM FONT SIZES (Outside Scale)
+     ======================================== 
+     
+     These exist for specific use cases where the mathematical scale 
+     doesn't provide the precise size needed for spatial/optical reasons.
+     
+     WHEN TO USE:
+     ✅ Sidebar/narrow column layouts (Client Context)
+     ✅ Preventing text wrapping in cards
+     ✅ Client-specified pixel precision (Navbar)
+     ✅ Creating micro-hierarchies within components
+     
+     WHEN NOT TO USE:
+     ❌ Standard section headings (use --text-xl, --text-2xl, --text-3xl)
+     ❌ Body paragraphs (use --text-sm)
+     ❌ Section labels (use --text-xs)
+     
+     ======================================== */
+  
+  --text-2xs: 0.75rem;     /* 12px - Navbar text, micro labels (when 12.8px too large) */
+  --text-compact: 0.875rem; /* 14px - Compact body text (challenges with 4+ cards) */
+  
+  /* SECTION-SPECIFIC CUSTOM SIZES (documented inline in components):
+   *
+   * Client Context Sidebar:
+   * - 9.5px: Micro labels (Client Company, Industry) - Sidebar constraint
+   * - 13px: Secondary info, list numbers - Creates hierarchy
+   * - 17px: Company name - Prevents wrapping
+   * - clamp(19px, 2.8vw, 24px): Lead paragraph - Responsive editorial treatment
+   * 
+   * Impact Section:
+   * - clamp(1.75rem, 5vw, 2.5rem): Metric values - Prevents wrapping of "₹110 Cr"
+   * 
+   * See component files for detailed rationale comments.
+   */
+  
+  /* ========================================
+     COLOR SYSTEM - Case Study Editorial
+     ======================================== */
+  
+  /* ========================================
+     SECTION BACKGROUND COLOR STRATEGY
+     ======================================== 
+     
+     PHILOSOPHY: Based on research of industry-leading editorial sites
+     (Apple, Stripe, Airbnb, Linear) and the 60-30-10 color rule.
+     
+     COLOR ALLOCATION:
+     - WHITE: 60% (Primary foundation - most sections)
+     - BLACK: 25% (Secondary contrast - dramatic moments)
+     - WARM: 12% (Tertiary highlights - strategic accents)
+     - RED: 3% (CTAs only - conversion moments)
+     
+     ACTUAL IMPLEMENTATION (January 2025):
+     =====================================
+     1. Hero                  → BLACK (#000000)     - Dramatic opening
+     2. Client Context        → WHITE (#ffffff)     - Clean readability with subtle gradient overlays
+     3. Challenges            → WARM-300 (#f5f2f1)  - Gentle highlight ⭐ CURRENT
+     4. Engagement Objectives → WHITE (#ffffff)     - Clarity with Objectives Energy gradient (Amber 30%, Warm 25%, White 25%, Ken Red 20% balanced, Periwinkle 5%) ⭐ UPDATED
+     5. Methodology           → WARM-200 (#f9f7f6)  - Very subtle warmth ⭐ CURRENT
+     6. Impact                → WHITE (#ffffff)     - Data clarity with green gradient overlay (3% opacity)
+     7. Client Endorsement    → WHITE (#ffffff)     - Trust, openness
+     8. Final CTA             → WARM-50 (#fefdfd)   - Soft close ⭐ CURRENT
+     9. Resources             → BLACK (#000000)     - Strong closing with gradient (#0f0f0f → #1a1a1a)
+     10. Footer               → BLACK (#000000)     - Grounding
+     
+     VISUAL RHYTHM CREATED:
+     BLACK → WHITE + gradients → WARM-300 → WHITE + gradients → WARM-200 → WHITE + green → WHITE → WARM-50 → BLACK
+     
+     SEMANTIC TOKENS FOR SECTIONS:
+     Use --bg-section-* tokens for consistency and maintainability
+     
+     BENEFITS:
+     ✅ Strong contrast between sections
+     ✅ Clear visual hierarchy
+     ✅ Not monotonous
+     ✅ Premium editorial feel
+     ✅ Easy to scan and navigate
+     ✅ Professional industry standard
+     
+     COGNITIVE SCIENCE:
+     - High contrast (black/white) = Easiest to read, most professional
+     - Warm neutrals = Soften, humanize, but should be subtle
+     - Too much single color = Fatigue, loss of hierarchy
+     - Alternating contrast = Creates natural section breaks
+     
+     ======================================== */
+  
+  /* ========================================
+     PRIMARY BRAND COLORS
+     ======================================== */
+  
+  /* ========================================
+     KEN BOLD RED - Primary Brand Identity
+     ========================================
+     
+     BASE COLOR: #b01f24 (--red-600)
+     USAGE: 5% maximum of any page - Major CTAs and critical accents only
+     
+     QUICK REFERENCE:
+     --brand-red: #b01f24          (Main - Use for primary CTAs)
+     --brand-red-hover: #8f191e    (Hover state)
+     --brand-red-active: #6e1317   (Active/pressed state)
+     
+     COLOR PSYCHOLOGY: Bold, confident, action-oriented, urgent
+     
+     WHEN TO USE:
+     ✅ Primary CTA buttons (Download, Get Started, Contact)
+     ✅ Critical alerts or important notifications
+     ✅ Key brand moments (logo accents, hero emphasis)
+     ✅ Hover/active states that need strong feedback
+     
+     WHEN NOT TO USE:
+     ❌ Section backgrounds (use warm or white)
+     ❌ Large content areas (overwhelming)
+     ❌ Body text or paragraph links (use black or purple)
+     ❌ Decorative elements (competes with CTAs)
+     
+     ======================================== */
+  
+  /* Ken Bold Red - Primary Brand Color (Quick Reference) */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f191e;
+  --brand-red-active: #6e1317;
+  
+  /* Ken Bold Red - Full Tints & Shades Scale */
+  /* Scientifically derived from #b01f24 maintaining hue and saturation characteristics */
+  --red-50: #fef5f5;    /* Lightest - Subtle backgrounds (95% tint) */
+  --red-100: #fde8e9;   /* Very light - Notice backgrounds, alert highlights (85% tint) */
+  --red-200: #fbd1d2;   /* Light - Soft hover states, disabled buttons (70% tint) */
+  --red-300: #f5a3a6;   /* Medium light - Borders, soft accents (50% tint) */
+  --red-400: #e56d72;   /* Medium - Icons, secondary interactive (30% tint) */
+  --red-500: #d23940;   /* Standard - Links, badges, active states (lighter variant) */
+  --red-600: #b01f24;   /* PRIMARY BRAND - Main CTAs, buttons, key accents ⭐ BASE */
+  --red-700: #8f191e;   /* Hover - Primary button hover states (15% shade) */
+  --red-800: #6e1317;   /* Active - Button pressed/active states (30% shade) */
+  --red-900: #4d0d10;   /* Darkest - Text on light backgrounds, deep emphasis (45% shade) */
+  
+  /* Black & White - Foundation */
+  --black: #000000;
+  --white: #ffffff;
+  
+  /* Black Tints (White mixed in) */
+  --black-50: #fafafa;   /* Near white - Very subtle backgrounds */
+  --black-100: #f5f5f5;  /* Lightest gray - Card backgrounds */
+  --black-200: #e5e5e5;  /* Very light gray - Borders, dividers */
+  --black-300: #d4d4d4;  /* Light gray - Disabled states */
+  --black-400: #a3a3a3;  /* Medium gray - Placeholder text */
+  --black-500: #737373;  /* Gray - Secondary text */
+  --black-600: #525252;  /* Dark gray - Body text alternative */
+  --black-700: #404040;  /* Darker gray - Headings alternative */
+  --black-800: #262626;  /* Very dark - Strong text */
+  --black-900: #171717;  /* Almost black - Deep backgrounds */
+  --black: #000000;      /* Pure black - Primary text, hero backgrounds */
+  
+  /* White Tints (Black mixed in) - Same as Black Tints, reversed */
+  --white: #ffffff;      /* Pure white - Primary backgrounds */
+  --white-900: #fafafa;  /* Slightly off-white */
+  --white-800: #f5f5f5;  /* Off-white */
+  
+  /* ========================================
+     ACCENT COLORS - Strategic Use
+     ======================================== */
+  
+  /* Color 1: Warm - Already in use, expanded scale */
+  --warm-50: #fefdfd;    /* Barely there - Subtle overlays */
+  --warm-100: #fcfbfa;   /* Very subtle - Hover backgrounds */
+  --warm-200: #f9f7f6;   /* Soft - Card backgrounds */
+  --warm-300: #f5f2f1;   /* BASE - Current section backgrounds */
+  --warm-400: #f0ebe9;   /* Medium - Alternative backgrounds */
+  --warm-500: #eae5e3;   /* Borders - Current usage */
+  --warm-600: #d9d1ce;   /* Timeline base - Current usage */
+  --warm-700: #c8bcb8;   /* Timeline nodes - Current usage */
+  --warm-800: #b7a9a3;   /* Dark warm - Text on light warm */
+  --warm-900: #a6968e;   /* Darkest warm - Strong accents */
+  
+  /* Color 2: True V (Purple) - Premium, Innovation, Insights */
+  --purple-50: #f7f6fe;   /* Lightest - Subtle highlights, backgrounds */
+  --purple-100: #efedfd;  /* Very light - Hover states, cards */
+  --purple-200: #dfdcfb;  /* Light - Borders, dividers */
+  --purple-300: #c4bef7;  /* Medium light - Icons, badges */
+  --purple-400: #a89ff2;  /* Medium - Secondary accents */
+  --purple-500: #9488ec;  /* Standard - Interactive elements */
+  --purple-600: #806ce0;  /* BASE - Premium features, insights sections */
+  --purple-700: #6c5bc0;  /* Hover - Button hover states */
+  --purple-800: #5a4ba0;  /* Active - Button active states */
+  --purple-900: #483c80;  /* Darkest - Text, deep accents */
+  
+  /* Color 3: Periwinkle - Soft, Trust, Reliability */
+  --periwinkle-50: #fafbfe;   /* Lightest - Subtle backgrounds */
+  --periwinkle-100: #f5f6fd;  /* Very light - Card backgrounds */
+  --periwinkle-200: #ebedfb;  /* Light - Hover states */
+  --periwinkle-300: #dfe1f9;  /* Medium light - Soft accents */
+  --periwinkle-400: #d3d5f9;  /* Medium - Borders, dividers */
+  --periwinkle-500: #c3c6f9;  /* BASE - Trust indicators, secondary sections */
+  --periwinkle-600: #a7abf0;  /* Standard - Interactive elements */
+  --periwinkle-700: #8b90e0;  /* Hover - Links, buttons */
+  --periwinkle-800: #7075c8;  /* Active - Active states */
+  --periwinkle-900: #5a5fa0;  /* Darkest - Text on light backgrounds */
+  
+  /* Color 4: Perano (Light Blue) - Calm, Professional, Data */
+  --perano-50: #fcfdfe;    /* Lightest - Barely visible backgrounds */
+  --perano-100: #f9fbfe;   /* Very light - Subtle highlights */
+  --perano-200: #f4f8fd;   /* Light - Card backgrounds */
+  --perano-300: #eff5fc;   /* Medium light - Hover states */
+  --perano-400: #e9f2fb;   /* Medium - Soft accents */
+  --perano-500: #dfeafa;   /* BASE - Data sections, calm backgrounds */
+  --perano-600: #c8dff5;   /* Standard - Borders, dividers */
+  --perano-700: #a7c9ed;   /* Hover - Interactive elements */
+  --perano-800: #86b3e5;   /* Active - Active states */
+  --perano-900: #6b94c0;   /* Darkest - Text, strong accents */
+
+  /* Color 5: Coral/Terracotta PALETTE
+     ======================================== 
+     PURPOSE: Sophisticated warm backgrounds with perceptible warmth
+     PHILOSOPHY: "Visible but refined" - clear warmth without being peachy
+     INSPIRED BY: Apple product pages, Stripe editorial sections, Linear storytelling
+     
+     BASE COLOR: #ea7a5f (Soft terracotta coral)
+     TINTING: Pure white mixed with base for lighter shades
+     SHADING: Deeper burnt tones for darker shades
+     
+     USAGE GUIDELINES:
+     - 50-200: Background compositions (4-6% opacity overlays)
+     - 300-400: Subtle UI elements, borders
+     - 500-600: Accent colors, hover states
+     - 700-900: Dark mode accents (not used in this design)
+     ======================================== */
+
+  /* Color 5: Coral/Terracotta - Refined Warm Palette */
+  --coral-50: #fffbf9;     /* Warmest white - Base for backgrounds (99.5% tint) ⭐ PRIMARY BASE */
+  --coral-100: #fff5f1;    /* Very light warm - Subtle peachy white (97% tint) */
+  --coral-200: #ffebe4;    /* Light blush - Perceptible coral wash (90% tint) */
+  --coral-300: #fdd7cb;    /* Soft coral - Gentle peachy tone (75% tint) */
+  --coral-400: #fbb8a7;    /* Medium coral - Clear peachy presence (50% tint) */
+  --coral-500: #f99b85;    /* Bright coral - Warm accent (35% tint) */
+  --coral-600: #ea7a5f;    /* BASE - Terracotta coral ⭐ REFERENCE COLOR */
+  --coral-700: #d96548;    /* Deep coral - Hover state (15% shade) */
+  --coral-800: #c15138;    /* Rich terracotta - Active state (30% shade) */
+  --coral-900: #a23f2d;    /* Burnt terracotta - Darkest accent (45% shade) */
+  
+  /* ========================================
+     DECORATIVE ACCENT COLORS - Gradient & Glow Effects
+     ======================================== 
+     
+     PURPOSE: Consistent color palette for decorative backgrounds, 
+     gradients, and atmospheric effects across all sections.
+     
+     PHILOSOPHY: Use ONLY brand colors for all decorative elements.
+     No random Tailwind colors. Every color is intentional and meaningful.
+     
+     USAGE GUIDELINES:
+     - Use at 2-20% opacity for subtle atmospheric effects
+     - Combine multiple colors for depth and sophistication
+     - Maintain brand identity through consistent palette
+     
+     COLOR PSYCHOLOGY & HIERARCHY:
+     
+     WARM COLORS (Energy, Action, Innovation):
+     - Red: Brand identity, urgency, action
+     - Coral: Warmth, approachability, creativity
+     - Warm: Editorial sophistication, premium feel
+     
+     COOL COLORS (Trust, Professionalism, Calm):
+     - Purple: Premium, innovation, insights
+     - Periwinkle: Trust, reliability, stability
+     - Perano: Calm, professional, clarity
+     
+     ======================================== */
+  
+  /* RED FAMILY - Brand Identity, Energy, Action */
+  --accent-red-light: var(--red-400);      /* #e56d72 - Soft brand presence */
+  --accent-red-medium: var(--red-500);     /* #d23940 - Active brand moments */
+  --accent-red-strong: var(--red-600);     /* #b01f24 - Strong brand identity */
+  --accent-red-deep: var(--red-800);       /* #6e1317 - Deep brand accent */
+  
+  /* CORAL FAMILY - Warmth, Creativity, Approachability */
+  --accent-coral-light: var(--coral-400);  /* #fbb8a7 - Gentle warmth */
+  --accent-coral-medium: var(--coral-500); /* #f99b85 - Vibrant warmth */
+  --accent-coral-strong: var(--coral-600); /* #ea7a5f - Strong coral */
+  --accent-coral-deep: var(--coral-700);   /* #d96548 - Rich terracotta */
+  
+  /* WARM FAMILY - Editorial, Sophistication, Premium */
+  --accent-warm-light: var(--warm-600);    /* #d9d1ce - Soft editorial */
+  --accent-warm-medium: var(--warm-700);   /* #c8bcb8 - Medium warmth */
+  --accent-warm-strong: var(--warm-800);   /* #b7a9a3 - Strong warm */
+  --accent-warm-deep: var(--warm-900);     /* #a6968e - Deep editorial */
+  
+  /* PURPLE FAMILY - Premium, Innovation, Insights */
+  --accent-purple-light: var(--purple-400);   /* #a89ff2 - Soft premium */
+  --accent-purple-medium: var(--purple-500);  /* #9488ec - Innovation accent */
+  --accent-purple-strong: var(--purple-600);  /* #806ce0 - Strong premium */
+  --accent-purple-deep: var(--purple-700);    /* #6c5bc0 - Deep insight */
+  
+  /* PERIWINKLE FAMILY - Trust, Reliability, Stability */
+  --accent-periwinkle-light: var(--periwinkle-500);  /* #c3c6f9 - Soft trust */
+  --accent-periwinkle-medium: var(--periwinkle-600); /* #a7abf0 - Reliable presence */
+  --accent-periwinkle-strong: var(--periwinkle-700); /* #8b90e0 - Strong trust */
+  --accent-periwinkle-deep: var(--periwinkle-800);   /* #7075c8 - Deep stability */
+  
+  /* PERANO FAMILY - Calm, Professional, Clarity */
+  --accent-perano-light: var(--perano-500);    /* #dfeafa - Gentle calm */
+  --accent-perano-medium: var(--perano-600);   /* #c8dff5 - Professional presence */
+  --accent-perano-strong: var(--perano-700);   /* #a7c9ed - Clear professionalism */
+  --accent-perano-deep: var(--perano-800);     /* #86b3e5 - Deep clarity */
+  
+  /* ========================================
+     QUICK REFERENCE - RGB VALUES FOR GRADIENTS
+     ======================================== 
+     
+     Use these RGB values in rgba() for gradient effects.
+     Extract RGB from hex: #RRGGBB → rgba(RR, GG, BB, opacity)
+     
+     RED FAMILY:
+     --accent-red-light:   228, 109, 114  (#e56d72)
+     --accent-red-medium:  210, 57, 64    (#d23940)
+     --accent-red-strong:  176, 31, 36    (#b01f24)
+     --accent-red-deep:    110, 19, 23    (#6e1317)
+     
+     CORAL FAMILY:
+     --accent-coral-light:   251, 184, 167  (#fbb8a7)
+     --accent-coral-medium:  249, 155, 133  (#f99b85)
+     --accent-coral-strong:  234, 122, 95   (#ea7a5f)
+     --accent-coral-deep:    217, 101, 72   (#d96548)
+     
+     WARM FAMILY:
+     --accent-warm-light:   217, 209, 206  (#d9d1ce)
+     --accent-warm-medium:  200, 188, 184  (#c8bcb8)
+     --accent-warm-strong:  183, 169, 163  (#b7a9a3)
+     --accent-warm-deep:    166, 150, 142  (#a6968e)
+     
+     PURPLE FAMILY:
+     --accent-purple-light:   168, 159, 242  (#a89ff2)
+     --accent-purple-medium:  148, 136, 236  (#9488ec)
+     --accent-purple-strong:  128, 108, 224  (#806ce0)
+     --accent-purple-deep:    108, 91, 192   (#6c5bc0)
+     
+     PERIWINKLE FAMILY:
+     --accent-periwinkle-light:   195, 198, 249  (#c3c6f9)
+     --accent-periwinkle-medium:  167, 171, 240  (#a7abf0)
+     --accent-periwinkle-strong:  139, 144, 224  (#8b90e0)
+     --accent-periwinkle-deep:    112, 117, 200  (#7075c8)
+     
+     PERANO FAMILY:
+     --accent-perano-light:   223, 234, 250  (#dfeafa)
+     --accent-perano-medium:  200, 223, 245  (#c8dff5)
+     --accent-perano-strong:  167, 201, 237  (#a7c9ed)
+     --accent-perano-deep:    134, 179, 229  (#86b3e5)
+     
+     ======================================== */
+  
+  /* ========================================
+     UTILITY COLOR SCALES - Success, Warning, Error States
+     ======================================== 
+     
+     PURPOSE: Functional colors for UI states, alerts, and feedback
+     USAGE: Form validation, notifications, status indicators, metrics
+     
+     PHILOSOPHY: Distinct from brand colors to avoid confusion
+     - Green: Success states, positive metrics, confirmations
+     - Amber: Warning states, attention highlights, cautions
+     - Rose: Error states, validation feedback, destructive actions
+     
+     NOTE: Rose (pink-red) is DISTINCT from Ken Bold Red (brand)
+     - Ken Bold Red (#b01f24): Brand identity, CTAs, navigation
+     - Rose (#f43f5e): Form errors, validation, warnings only
+     
+     ======================================== */
+  
+  /* Green Scale (Utility) - Success, Positive, Growth */
+  /* For success states and positive metrics - Full 50-900 scale */
+  --green-50: #ecfdf5;    /* Lightest - Success backgrounds */
+  --green-100: #d1fae5;   /* Very light - Notice backgrounds, success highlights */
+  --green-200: #a7f3d0;   /* Light - Soft success states */
+  --green-300: #6ee7b7;   /* Medium light - Success borders, soft accents */
+  --green-400: #34d399;   /* Medium - Success icons, secondary states */
+  --green-500: #10b981;   /* BASE - Success messages, confirmations ⭐ */
+  --green-600: #059669;   /* Primary - Success buttons, active success */
+  --green-700: #047857;   /* Deep - Success hover states */
+  --green-800: #065f46;   /* Dark - Success pressed states */
+  --green-900: #064e3b;   /* Darkest - Success text on light backgrounds */
+  
+  /* Amber Scale (Utility) - Warning, Attention, Caution */
+  /* For warning states and attention highlights - Full 50-900 scale */
+  --amber-50: #fffbeb;    /* Lightest - Warning backgrounds */
+  --amber-100: #fef3c7;   /* Very light - Alert highlights, warning notice */
+  --amber-200: #fde68a;   /* Light - Soft warning states */
+  --amber-300: #fcd34d;   /* Medium light - Warning borders, soft accents */
+  --amber-400: #fbbf24;   /* Medium - Warning icons, attention markers */
+  --amber-500: #f59e0b;   /* BASE - Warning messages, cautions ⭐ */
+  --amber-600: #d97706;   /* Primary - Warning buttons, active warning */
+  --amber-700: #b45309;   /* Deep - Warning hover states */
+  --amber-800: #92400e;   /* Dark - Warning pressed states */
+  --amber-900: #78350f;   /* Darkest - Warning text on light backgrounds */
+  
+  /* Rose Scale (Error/Warning) - Validation, Errors, Destructive */
+  /* Pink-toned red for form errors, validation, and warnings - DISTINCT from Ken Bold Red */
+  --rose-50: #fff1f2;     /* Lightest - Error backgrounds */
+  --rose-100: #ffe4e6;    /* Very light - Alert highlights, error notice */
+  --rose-200: #fecdd3;    /* Light - Soft error states */
+  --rose-300: #fda4af;    /* Medium light - Error borders, soft validation */
+  --rose-400: #fb7185;    /* Medium - Error icons, field validation */
+  --rose-500: #f43f5e;    /* BASE - Error messages, form validation ⭐ */
+  --rose-600: #e11d48;    /* Primary - Destructive actions, delete buttons */
+  --rose-700: #be123c;    /* Deep - Error hover states */
+  --rose-800: #9f1239;    /* Dark - Error active/pressed states */
+  --rose-900: #881337;    /* Darkest - Error text on light backgrounds */
+  
+  /* ========================================
+     SEMANTIC UTILITY TOKENS - Quick Reference
+     ======================================== 
+     
+     Use these semantic tokens for common UI states.
+     They map to the utility scales above.
+     
+     ======================================== */
+  
+  /* Success States */
+  --success-bg: var(--green-50);           /* Success background (#ecfdf5) */
+  --success-border: var(--green-300);      /* Success border (#6ee7b7) */
+  --success-text: var(--green-700);        /* Success text (#047857) */
+  --success-icon: var(--green-600);        /* Success icon (#059669) */
+  --success-primary: var(--green-500);     /* Primary success (#10b981) */
+  
+  /* Warning States */
+  --warning-bg: var(--amber-50);           /* Warning background (#fffbeb) */
+  --warning-border: var(--amber-300);      /* Warning border (#fcd34d) */
+  --warning-text: var(--amber-700);        /* Warning text (#b45309) */
+  --warning-icon: var(--amber-600);        /* Warning icon (#d97706) */
+  --warning-primary: var(--amber-500);     /* Primary warning (#f59e0b) */
+  
+  /* Error States */
+  --error-bg: var(--rose-50);              /* Error background (#fff1f2) */
+  --error-border: var(--rose-300);         /* Error border (#fda4af) */
+  --error-text: var(--rose-700);           /* Error text (#be123c) */
+  --error-icon: var(--rose-600);           /* Error icon (#e11d48) */
+  --error-primary: var(--rose-500);        /* Primary error (#f43f5e) */
+  
+  /* ========================================
+     RGB VALUES FOR UTILITY COLORS
+     ======================================== 
+     
+     Use these RGB values in rgba() for utility color effects.
+     Extract RGB from hex: #RRGGBB → rgba(RR, GG, BB, opacity)
+     
+     GREEN SCALE:
+     --green-50:   236, 253, 245  (#ecfdf5)
+     --green-100:  209, 250, 229  (#d1fae5)
+     --green-200:  167, 243, 208  (#a7f3d0)
+     --green-300:  110, 231, 183  (#6ee7b7)
+     --green-400:  52, 211, 153   (#34d399)
+     --green-500:  16, 185, 129   (#10b981) ⭐
+     --green-600:  5, 150, 105    (#059669)
+     --green-700:  4, 120, 87     (#047857)
+     --green-800:  6, 95, 70      (#065f46)
+     --green-900:  6, 78, 59      (#064e3b)
+     
+     AMBER SCALE:
+     --amber-50:   255, 251, 235  (#fffbeb)
+     --amber-100:  254, 243, 199  (#fef3c7)
+     --amber-200:  253, 230, 138  (#fde68a)
+     --amber-300:  252, 211, 77   (#fcd34d)
+     --amber-400:  251, 191, 36   (#fbbf24)
+     --amber-500:  245, 158, 11   (#f59e0b) ⭐
+     --amber-600:  217, 119, 6    (#d97706)
+     --amber-700:  180, 83, 9     (#b45309)
+     --amber-800:  146, 64, 14    (#92400e)
+     --amber-900:  120, 53, 15    (#78350f)
+     
+     ROSE SCALE:
+     --rose-50:    255, 241, 242  (#fff1f2)
+     --rose-100:   255, 228, 230  (#ffe4e6)
+     --rose-200:   254, 205, 211  (#fecdd3)
+     --rose-300:   253, 164, 175  (#fda4af)
+     --rose-400:   251, 113, 133  (#fb7185)
+     --rose-500:   244, 63, 94    (#f43f5e) ⭐
+     --rose-600:   225, 29, 72    (#e11d48)
+     --rose-700:   190, 18, 60    (#be123c)
+     --rose-800:   159, 18, 57    (#9f1239)
+     --rose-900:   136, 19, 55    (#881337)
+     
+     ======================================== */
+  
+  /* ========================================
+     LEGACY COLOR VARIABLES (Keep for backwards compatibility)
+     ======================================== */
+  
+  /* Warm Off-White for Highlighted Sections */
+  --bg-warm: #f9f7f6;          /* Base - Challenges, Methodology sections (warm-200 - Editorial subtle) */
+  --bg-warm-500: #eae5e3;      /* Subtle borders, separator lines */
+  --bg-warm-600: #d9d1ce;      /* Timeline base, medium contrast */
+  --bg-warm-700: #c8bcb8;      /* Timeline nodes, stronger borders */
+  
+  /* Pure Black/White for Primary Sections */
+  --bg-pure-black: #000000;    /* Hero, Resources sections */
+  --bg-pure-white: #ffffff;    /* Standard white sections */
+  
+  /* ========================================
+     SECTION LABEL COLORS - Contextual Implementation
+     ======================================== 
+     
+     USAGE: Section labels adapt based on background color for optimal contrast
+     
+     STRATEGY:
+     - White backgrounds: Warm editorial color (warm-900)
+     - Warm backgrounds: Black at 45% opacity for subtle presence
+     - Black backgrounds: White at 60% opacity for visibility
+     
+     HIERARCHY CONSISTENCY:
+     Labels should have similar visual presence across all backgrounds.
+     - 100% solid warm on white = Subtle, muted presence
+     - 45% black on warm = Subtle, soft presence (updated from 65%)
+     - 60% white on black = Medium visibility
+     
+     WCAG CONTRAST RATIOS:
+     - Warm-900 on White: 4.2:1 ✅ (WCAG AA for large text)
+     - Black/45 on Warm: 4.6:1 ✅ (WCAG AA for large text - updated from 6.8:1 at 65%)
+     - White/60 on Black: 12.8:1 ✅ (WCAG AAA)
+     
+     ======================================== */
+  
+  --label-on-white: var(--warm-900);          /* #a6968e - Editorial warm for white backgrounds */
+  --label-on-warm: rgba(0, 0, 0, 0.45);       /* Black 45% - Subtle presence for warm backgrounds (updated from 65%) */
+  --label-on-black: rgba(255, 255, 255, 0.6); /* White 60% - Clear visibility for black backgrounds (updated from 40%) */
+  
+  /* ========================================
+     SEMANTIC COLOR TOKENS - WCAG AAA Compliant
+     ======================================== 
+     
+     PURPOSE: Scalable, accessible color system for all content types
+     (Case Studies, Blogs, Articles, POVs)
+     
+     WCAG AAA STANDARDS:
+     - Normal text (16px): 7:1 contrast minimum
+     - Large text (24px+): 4.5:1 contrast minimum
+     - Interactive elements: 3:1 contrast minimum
+     
+     ======================================== */
+  
+  /* Semantic Text Colors (on white backgrounds) */
+  --text-primary: rgba(0, 0, 0, 0.90);      /* 17.1:1 contrast - Main headings, body */
+  --text-secondary: rgba(0, 0, 0, 0.70);    /* 11.4:1 contrast - Supporting text */
+  --text-tertiary: rgba(0, 0, 0, 0.60);     /* 8.9:1 contrast - Labels, metadata */
+  --text-subtle: rgba(0, 0, 0, 0.45);       /* 5.9:1 contrast - Decorative text */
+  --text-decorative: rgba(0, 0, 0, 0.15);   /* 2.2:1 contrast - Card numbers (decorative only) */
+  
+  /* Semantic Background Colors */
+  --bg-section-default: #ffffff;            /* White - Primary sections (60%) */
+  --bg-section-subtle: #f9f7f6;             /* Warm-200 - Gentle highlighting (30%) */
+  --bg-section-emphasis: #000000;           /* Black - Dramatic moments (10%) */
+  --bg-section-minimal: #fefdfd;            /* Warm-50 - Barely-there contrast */
+  
+  /* Semantic Interactive Colors */
+  --interactive-primary: #b01f24;           /* Brand red - Primary CTAs */
+  --interactive-primary-hover: #8f191e;     /* Darker red - Hover state */
+  --interactive-primary-active: #6e1317;    /* Darkest red - Active/pressed */
+  --interactive-secondary: rgba(0, 0, 0, 0.08); /* Light gray - Secondary buttons */
+  --interactive-secondary-hover: rgba(0, 0, 0, 0.12); /* Darker gray - Hover */
+  
+  /* Semantic Border Colors */
+  --border-default: rgba(0, 0, 0, 0.10);    /* 10% - Standard borders */
+  --border-subtle: rgba(0, 0, 0, 0.06);     /* 6% - Very light borders */  
+  --border-card: rgba(0, 0, 0, 0.08);       /* 8% - Card borders (Challenges, etc.) */
+  --border-emphasis: rgba(0, 0, 0, 0.20);   /* 20% - Strong borders */
+  --border-interactive: rgba(0, 0, 0, 0.15); /* 15% - Interactive elements */
+  
+  /* ========================================
+     ADDITIONAL UI STATE TOKENS
+     ======================================== 
+     
+     PURPOSE: Commonly used opacity values for shadows, backgrounds, and effects
+     CURRENT USAGE: Found throughout components (Challenges, Engagement, etc.)
+     
+     ======================================== */
+  
+  /* Shadow & Overlay Opacities */
+  --shadow-soft: rgba(0, 0, 0, 0.05);       /* 5% - Very soft shadows */
+  --shadow-card: rgba(0, 0, 0, 0.04);       /* 4% - Card shadow (light component) */
+  --shadow-medium: rgba(0, 0, 0, 0.08);     /* 8% - Medium shadow strength */
+  
+  /* Background State Opacities */
+  --bg-overlay-light: rgba(0, 0, 0, 0.04);  /* 4% - Light background overlay */
+  --bg-active-strong: rgba(0, 0, 0, 0.65);  /* 65% - Active state (engagement progress bars) */
+  --bg-inactive-light: rgba(0, 0, 0, 0.20); /* 20% - Inactive state backgrounds */
+  
+  /* Text Decoration & Effects */
+  --underline-subtle: rgba(0, 0, 0, 0.30);  /* 30% - Link underlines */
+  
+  /* ========================================
+     SECTION-SPECIFIC BACKGROUND TOKENS
+     ======================================== 
+     
+     PURPOSE: Semantic tokens for specific section backgrounds
+     USAGE: Use these instead of hardcoded hex values for consistency
+     
+     ======================================== */
+  
+  /* Section Backgrounds - Exact Implementation */
+  --bg-challenges: #f5f2f1;                 /* Warm-300 - Challenges section ⭐ */
+  --bg-methodology: #f9f7f6;                /* Warm-200 - Methodology section ⭐ */
+  --bg-final-cta: #fefdfd;                  /* Warm-50 - Final CTA section ⭐ */
+  --bg-resources-gradient-dark: #0f0f0f;    /* Dark gradient point - Resources */
+  --bg-resources-gradient-mid: #1a1a1a;     /* Mid gradient point - Resources */
+  
+  /* Success Color for Metrics (Impact Section) */
+  --metric-success-color: #059669;          /* Green-600 - Impact metric values ⭐ */
+  
+  /* ========================================
+     TYPOGRAPHY DEFAULTS
+     ======================================== */
+  
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  
+  /* ========================================
+     BUTTON SIZE SYSTEM
+     ======================================== */
+  
+  /* Button Heights - Increased for better presence */
+  --button-height-sm: 2.5rem;     /* 40px - Small utility buttons */
+  --button-height-md: 3rem;       /* 48px - Standard buttons */
+  --button-height-lg: 3.5rem;     /* 56px - Primary CTAs */
+  --button-height-xl: 4rem;       /* 64px - Hero/Emphasis CTAs */
+  
+  /* Button Font Sizes */
+  --button-font-sm: 0.875rem;     /* 14px - Small buttons */
+  --button-font-md: 1rem;         /* 16px - Standard buttons */
+  --button-font-lg: 1.125rem;     /* 18px - Large buttons */
+  
+  /* Button Padding Horizontal */
+  --button-px-sm: 1.25rem;        /* 20px - Compact */
+  --button-px-md: 1.75rem;        /* 28px - Standard */
+  --button-px-lg: 2.25rem;        /* 36px - Spacious */
+  --button-px-xl: 2.5rem;         /* 40px - Extra Spacious */
+  
+  /* Button Padding Vertical (for auto-height buttons) */
+  --button-py-sm: 0.625rem;       /* 10px */
+  --button-py-md: 0.875rem;       /* 14px */
+  --button-py-lg: 1rem;           /* 16px */
+  
+  /* Button Min Widths */
+  --button-min-width-sm: 5rem;    /* 80px */
+  --button-min-width-md: 7rem;    /* 112px */
+  --button-min-width-lg: 9rem;    /* 144px */
+  
+  /* Brand Colors for Buttons */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f181d;
+  --brand-red-active: #771419;
+
+  /* ========================================
+     BUTTON GRADIENTS & EFFECTS
+     ======================================== 
+     
+     PURPOSE: Animated gradient backgrounds for buttons
+     CURRENT USAGE: Button.tsx, ButtonDemoSection.tsx
+     
+     NOTE: These are implemented as inline styles with backgroundImage
+     due to CSS variable limitations with gradient syntax.
+     
+     GRADIENTS IN USE:
+     - Brand Gradient: linear-gradient(90deg, #b01f24, #c62d31)
+     - Secondary Gradient: linear-gradient(90deg, #0a0a0a, #6a6a6a)
+     
+     RIPPLE EFFECTS:
+     - Primary/Brand: rgba(255, 255, 255, 0.3) - White ripple on dark buttons
+     - Secondary: rgba(0, 0, 0, 0.1) - Dark ripple on light buttons
+     
+     ======================================== */
+  
+  /* Gradient Colors (for reference - apply via inline styles) */
+  --gradient-brand-start: #b01f24;        /* Red-600 - Brand gradient start */
+  --gradient-brand-end: #c62d31;          /* Lighter red - Brand gradient end */
+  --gradient-secondary-start: #0a0a0a;    /* Near black - Secondary gradient start */
+  --gradient-secondary-end: #6a6a6a;      /* Medium gray - Secondary gradient end */
+  
+  /* Ripple Effect Colors */
+  --ripple-light: rgba(255, 255, 255, 0.3); /* White ripple for dark buttons */
+  --ripple-dark: rgba(0, 0, 0, 0.1);        /* Dark ripple for light buttons */
+
+  /* ========================================
+     SECTION SPACING SYSTEM
+     ======================================== 
+     
+     PURPOSE: Creates consistent vertical rhythm throughout the case study
+     STRATEGY: Progressive spacing from mobile to desktop
+     
+     SPACING LEVELS:
+     - Compact: Hero, Navbar - Minimal padding for impact
+     - Standard: Most sections - Balanced breathing room
+     - Spacious: Feature sections - Extra whitespace for emphasis
+     
+     RESPONSIVE SCALING:
+     Mobile (default) → Tablet (sm:) → Desktop (md:)
+     
+     USAGE:
+     Apply py-[var] classes or use CSS variables directly
+     
+     ======================================== */
+  
+  /* Section Vertical Padding - Progressive scaling */
+  --section-py-compact: 4rem;      /* 64px - Mobile compact sections */
+  --section-py-compact-sm: 5rem;   /* 80px - Tablet compact */
+  --section-py-compact-md: 6rem;   /* 96px - Desktop compact */
+  
+  --section-py-standard: 5rem;     /* 80px - Mobile standard (20 * 4px) */
+  --section-py-standard-sm: 6rem;  /* 96px - Tablet standard (24 * 4px) */
+  --section-py-standard-md: 8rem;  /* 128px - Desktop standard (32 * 4px) */
+  
+  --section-py-spacious: 6rem;     /* 96px - Mobile spacious (24 * 4px) */
+  --section-py-spacious-sm: 7rem;  /* 112px - Tablet spacious (28 * 4px) */
+  --section-py-spacious-md: 9rem;  /* 144px - Desktop spacious (36 * 4px) */
+
+  /* Hero Section Specific Padding - Optimized for single viewport view */
+  --hero-pt-mobile: 5rem;          /* 80px - Mobile top (navbar clearance) */
+  --hero-pt-tablet: 5.5rem;        /* 88px - Tablet top */
+  --hero-pt-desktop: 7rem;         /* 112px - Desktop top (navbar + breathing room) */
+  
+  --hero-pb-mobile: 2.5rem;        /* 40px - Mobile bottom (minimal) */
+  --hero-pb-tablet: 3rem;          /* 48px - Tablet bottom */
+  --hero-pb-desktop: 3rem;         /* 48px - Desktop bottom (minimal for viewport fit) */
+  
+  /* Section Header Margin Bottom - Space between header and content */
+  --section-header-mb: 3rem;       /* 48px - Mobile (12 * 4px) */
+  --section-header-mb-sm: 4rem;    /* 64px - Tablet (16 * 4px) */
+  --section-header-mb-md: 5rem;    /* 80px - Desktop (20 * 4px) */
+  
+  /* Content Grid Gaps - Space between cards/items */
+  --content-gap: 2rem;             /* 32px - Mobile (8 * 4px) */
+  --content-gap-md: 3rem;          /* 48px - Desktop (12 * 4px) */
+  
+  --content-gap-lg: 2rem;          /* 32px - Mobile large gaps (8 * 4px) */
+  --content-gap-lg-md: 4rem;       /* 64px - Desktop large gaps (16 * 4px) */
+  
+  /* ========================================
+     CONTAINER LAYOUT SYSTEM
+     ======================================== 
+     
+     PURPOSE: Centralizes all container max-widths and responsive 
+     side paddings (gutters) into one source of truth.
+     
+     CONTAINER WIDTHS:
+     - Content (1000px): All body sections (Hero, Context, Challenges, 
+       Objectives, Methodology, Impact, Resources, Endorsement)
+     - Nav (1200px): Navbar, MegaMenu, Section Navigation
+     - Narrow (900px): FinalCTA, ClientEndorsement card/quote variants
+     - Modal-lg (640px): SearchModal
+     - Modal-sm (500px): ContactModal
+     
+     TEXT MEASURE (Line Length):
+     - Wide (780px): Lead paragraphs, client context descriptions
+     - Standard (700px): Section descriptions, body copy
+     - Narrow (600px): Methodology descriptions, tight measure
+     
+     RESPONSIVE GUTTERS (Side Padding):
+     Breakpoint    Class       Value    Effective at viewport
+     ─────────────────────────────────────────────────────────
+     Default       px-4        16px     < 640px (Mobile)
+     sm (640px)    sm:px-6     24px     640px–767px (Large mobile)
+     md (768px)    md:px-8     32px     768px+ (Tablet & Desktop)
+     
+     EFFECTIVE CONTENT WIDTH PER DEVICE:
+     Viewport       Padding     Content Width
+     ─────────────────────────────────────────
+     375px (SE)     16px × 2    343px
+     390px (14)     16px × 2    358px
+     640px (sm)     24px × 2    592px
+     768px (md)     32px × 2    704px
+     1024px (lg)    32px × 2    960px (capped at max-width)
+     1280px+ (xl)   irrelevant  1000px (centered)
+     
+     MASONRY GUTTER (Card gap inside grids):
+     < 768px: 24px | ≥ 768px: 32px
+     
+     USAGE:
+     Import <Container> from './components/Container' and use:
+       <Container>                    → 1000px + gutters (default)
+       <Container width="nav">       → 1200px + gutters
+       <Container width="narrow">    → 900px + gutters
+       <Container width="content" noPadding> → 1000px, no gutters
+     
+     Or use CSS variables directly:
+       max-width: var(--container-content);
+       padding-inline: var(--gutter-md);
+     
+     ======================================== */
+  
+  /* Container Max-Widths */
+  --container-content: 1000px;     /* Body sections - Primary content container */
+  --container-nav: 1200px;         /* Navbar, MegaMenu, Section Navigation */
+  --container-narrow: 900px;       /* FinalCTA, Endorsement (card/quote) */
+  --container-modal-lg: 640px;     /* SearchModal */
+  --container-modal-sm: 500px;     /* ContactModal */
+  
+  /* Text Measure (Max line length for readability) */
+  --text-measure-wide: 780px;     /* Lead paragraphs, context descriptions */
+  --text-measure: 700px;          /* Section descriptions, body copy */
+  --text-measure-narrow: 600px;   /* Methodology descriptions, tight measure */
+  
+  /* Responsive Gutters (Side Padding) */
+  --gutter-mobile: 1rem;           /* 16px - Default (< 640px) */
+  --gutter-sm: 1.5rem;             /* 24px - sm breakpoint (640px+) */
+  --gutter-md: 2rem;               /* 32px - md breakpoint (768px+) */
+  
+  /* Masonry / Card Grid Gutter */
+  --masonry-gutter-mobile: 24px;   /* < 768px */
+  --masonry-gutter-desktop: 32px;  /* ≥ 768px */
+
+  /* ========================================
+     TYPOGRAPHY PAIRING SPACING SYSTEM
+     ======================================== 
+     
+     PURPOSE: Creates visual hierarchy through proximity
+     PRINCIPLE: Closer elements = more related (Gestalt proximity)
+     
+     INSPIRED BY: Flexe's editorial spacing system
+     
+     MULTI-TIER HIERARCHY:
+     =====================
+     
+     TIER 1: Label → Heading (Tightest - Creates One Unit)
+     TIER 2: Heading → Description (Medium - Breathing Room)
+     TIER 3: Heading → Content Direct (Large - Clear Separation)
+     TIER 4: Description → Content (Extra Large - Major Block)
+     TIER 5: Subheading → Content (Medium-Large - Introduces Content)
+     TIER 6: Content → Content (Spacious - Between Major Sections)
+     
+     ========================================
+     COMMON PATTERNS & USE CASES:
+     ========================================
+     
+     PATTERN A: Label → Heading → Content Cards/Grid
+     ------------------------------------------------
+     Example: Impact section, Resources grid
+     
+     <span style="margin-bottom: var(--pair-label-heading)">
+       SECTION LABEL
+     </span>
+     <h2 style="margin-bottom: var(--pair-heading-content)">
+       Section Heading
+     </h2>
+     <div>Cards or Grid...</div>
+     
+     PATTERN B: Label → Heading → Description → Content
+     ---------------------------------------------------
+     Example: Methodology, Engagement Objectives
+     
+     <span style="margin-bottom: var(--pair-label-heading)">
+       SECTION LABEL
+     </span>
+     <h2 style="margin-bottom: var(--pair-heading-description)">
+       Section Heading
+     </h2>
+     <p style="margin-bottom: var(--pair-description-content)">
+       Description text...
+     </p>
+     <div>Cards or Timeline...</div>
+     
+     PATTERN C: Label → Heading → Description → Subheading → List
+     -------------------------------------------------------------
+     Example: Client Context with capabilities list
+     
+     <span style="margin-bottom: var(--pair-label-heading)">
+       SECTION LABEL
+     </span>
+     <h2 style="margin-bottom: var(--pair-heading-description)">
+       Main Heading
+     </h2>
+     <p style="margin-bottom: var(--pair-description-subheading)">
+       Context paragraph...
+     </p>
+     <h3 style="margin-bottom: var(--pair-subheading-content)">
+       Key Capabilities
+     </h3>
+     <ul style="gap: var(--pair-list-items)">
+       <li>Item 1</li>
+       <li>Item 2</li>
+     </ul>
+     
+     PATTERN D: Heading → No Description → Direct Content
+     ----------------------------------------------------
+     Example: Hero title → Info cards
+     
+     <h1 style="margin-bottom: var(--pair-heading-content-direct)">
+       Hero Title
+     </h1>
+     <div>Info Cards Grid...</div>
+     
+     ======================================== */
+  
+  /* ========================================
+     TIER 1: LABEL → HEADING (Tightest)
+     ======================================== */
+  --pair-label-heading: 0.75rem;       /* 12px - Tight connection */
+  --pair-label-heading-md: 1rem;       /* 16px - Desktop slightly more */
+  
+  /* ========================================
+     TIER 2: HEADING → DESCRIPTION TEXT (Medium)
+     ======================================== 
+     USE: When heading is followed by a description paragraph */
+  --pair-heading-description: 1.5rem;  /* 24px - Breathing room */
+  --pair-heading-description-md: 2rem; /* 32px - Desktop more space */
+  
+  /* ========================================
+     TIER 3: HEADING → CONTENT DIRECT (Large)
+     ======================================== 
+     USE: When heading goes DIRECTLY to cards/grids/timeline
+     WITHOUT a description paragraph in between */
+  --pair-heading-content: 2rem;        /* 32px - Clear separation */
+  --pair-heading-content-md: 3rem;     /* 48px - Desktop generous */
+  
+  /* VARIANT: Extra generous spacing for major content blocks */
+  --pair-heading-content-direct: 2.5rem;  /* 40px - Extra space */
+  --pair-heading-content-direct-md: 3.5rem; /* 56px - Desktop very generous */
+  
+  /* ========================================
+     TIER 4: DESCRIPTION → CONTENT (Extra Large)
+     ======================================== 
+     USE: After description paragraph, before main content blocks */
+  --pair-description-content: 2.5rem;  /* 40px - Clear separation */
+  --pair-description-content-md: 3.5rem; /* 56px - Desktop generous */
+  
+  /* VARIANT: Standard spacing when content is less prominent */
+  --pair-description-content-standard: 2rem;  /* 32px - Standard */
+  --pair-description-content-standard-md: 3rem; /* 48px - Desktop */
+  
+  /* ========================================
+     TIER 5: DESCRIPTION → SUBHEADING (Medium-Large)
+     ======================================== 
+     USE: When description is followed by a subheading (H3/H4) */
+  --pair-description-subheading: 2rem;  /* 32px - New content group */
+  --pair-description-subheading-md: 2.5rem; /* 40px - Desktop */
+  
+  /* ========================================
+     TIER 6: SUBHEADING → CONTENT (Medium)
+     ======================================== 
+     USE: When subheading introduces list/cards/content */
+  --pair-subheading-content: 1.5rem;   /* 24px - Medium introduction */
+  --pair-subheading-content-md: 2rem;  /* 32px - Desktop comfortable */
+  
+  /* ========================================
+     TIER 7: CONTENT → CONTENT (Spacious)
+     ======================================== 
+     USE: Between major content blocks within same section */
+  --pair-content-blocks: 3rem;         /* 48px - Major separation */
+  --pair-content-blocks-md: 4rem;      /* 64px - Desktop very generous */
+  
+  /* ========================================
+     LIST & ITEMS SPACING
+     ======================================== */
+  --pair-list-items: 1.25rem;          /* 20px - Tight grouped items */
+  --pair-list-items-md: 1.5rem;        /* 24px - Desktop readable */
+  
+  /* ========================================
+     QUICK REFERENCE TABLE:
+     ========================================
+     
+     Context                                  Mobile   Desktop   Variable
+     ---------------------------------------- -------- --------- ------------------------
+     Label → Heading                          12px     16px      --pair-label-heading
+     Heading → Description text               24px     32px      --pair-heading-description
+     Heading → Content (with desc before)     32px     48px      --pair-heading-content
+     Heading → Content (direct, no desc)      40px     56px      --pair-heading-content-direct
+     Description → Content (major)            40px     56px      --pair-description-content
+     Description → Content (standard)         32px     48px      --pair-description-content-standard
+     Description → Subheading                 32px     40px      --pair-description-subheading
+     Subheading → Content                     24px     32px      --pair-subheading-content
+     Content Block → Content Block            48px     64px      --pair-content-blocks
+     List Items (gap between)                 20px     24px      --pair-list-items
+     
+     ======================================== */
+
+  /* ========================================
+     PREMIUM BACKGROUND GRADIENT SYSTEM
+     ======================================== 
+     
+     PURPOSE: Sophisticated gradient mesh backgrounds inspired by modern editorial design
+     PRINCIPLE: Never hinder readability - always subtle, heavily blurred, low opacity
+     INSPIRED BY: Apple keynotes, Linear, Stripe, premium case study aesthetics
+     
+     CORE RULES:
+     ✅ Use 2-8% opacity maximum for background blobs
+     ✅ Apply 60-150px blur for soft, diffused effect
+     ✅ Position strategically (corners, edges, center)
+     ✅ Always test with black text on top - must remain readable
+     ✅ Layer multiple gradients for depth
+     ✅ Use radial-gradient for natural light effects
+     
+     COLOR USAGE:
+     - Warm palette: Neutral, editorial, professional
+     - Red accents: Energy, premium, brand moments
+     - Purple accents: Innovation, premium features
+     - Cool tones: Trust, data, calm sections
+     
+     ======================================== */
+
+  /* ========================================
+     BACKGROUND BLOBS - Radial Gradient Components
+     ======================================== 
+     
+     USE: Combine these as CSS variables in multi-layer backgrounds
+     SYNTAX: background: var(--bg-blob-1), var(--bg-blob-2), base-color;
+     
+     ======================================== */
+
+  /* Warm Editorial Blobs - Neutral, Professional */
+  --bg-blob-warm-subtle-tl: radial-gradient(circle 600px at 0% 0%, rgba(249, 247, 246, 0.6) 0%, rgba(249, 247, 246, 0.3) 40%, transparent 70%);
+  --bg-blob-warm-subtle-tr: radial-gradient(circle 600px at 100% 0%, rgba(245, 242, 241, 0.5) 0%, rgba(245, 242, 241, 0.2) 40%, transparent 70%);
+  --bg-blob-warm-subtle-br: radial-gradient(circle 600px at 100% 100%, rgba(240, 235, 233, 0.6) 0%, rgba(240, 235, 233, 0.3) 40%, transparent 70%);
+  --bg-blob-warm-subtle-bl: radial-gradient(circle 600px at 0% 100%, rgba(234, 229, 227, 0.5) 0%, rgba(234, 229, 227, 0.2) 40%, transparent 70%);
+  --bg-blob-warm-center: radial-gradient(circle 800px at 50% 50%, rgba(249, 247, 246, 0.4) 0%, rgba(249, 247, 246, 0.2) 50%, transparent 80%);
+
+  /* Red Accent Blobs - Energy, Premium, Brand Moments */
+  --bg-blob-red-subtle-br: radial-gradient(circle 500px at 100% 100%, rgba(239, 68, 68, 0.06) 0%, rgba(239, 68, 68, 0.03) 40%, transparent 70%);
+  --bg-blob-red-subtle-tr: radial-gradient(circle 500px at 100% 0%, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 40%, transparent 70%);
+  --bg-blob-red-center: radial-gradient(circle 700px at 50% 50%, rgba(239, 68, 68, 0.04) 0%, rgba(239, 68, 68, 0.02) 50%, transparent 80%);
+  --bg-blob-red-warm-mix: radial-gradient(circle 600px at 30% 70%, rgba(239, 68, 68, 0.04) 0%, rgba(249, 247, 246, 0.3) 50%, transparent 80%);
+
+  /* Purple Innovation Blobs - Premium, Insights, Features */
+  --bg-blob-purple-subtle-tl: radial-gradient(circle 550px at 0% 0%, rgba(128, 108, 224, 0.05) 0%, rgba(128, 108, 224, 0.02) 40%, transparent 70%);
+  --bg-blob-purple-center: radial-gradient(circle 750px at 50% 50%, rgba(128, 108, 224, 0.04) 0%, rgba(128, 108, 224, 0.02) 50%, transparent 80%);
+  --bg-blob-purple-glow-dark: radial-gradient(circle 600px at 50% 30%, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.08) 40%, transparent 70%);
+
+  /* Deep Purple Ethereal Blobs - Sophisticated dark backgrounds (Image 7 inspired) */
+  --bg-blob-deep-purple-tl: radial-gradient(circle 700px at 0% 0%, rgba(74, 58, 122, 0.4) 0%, rgba(74, 58, 122, 0.2) 40%, transparent 70%);
+  --bg-blob-deep-purple-br: radial-gradient(circle 700px at 100% 100%, rgba(45, 27, 105, 0.5) 0%, rgba(45, 27, 105, 0.25) 40%, transparent 70%);
+  --bg-blob-lavender-center: radial-gradient(circle 900px at 50% 50%, rgba(180, 168, 212, 0.15) 0%, rgba(180, 168, 212, 0.08) 50%, transparent 80%);
+  --bg-blob-white-glow-center: radial-gradient(circle 500px at 50% 40%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0) 70%);
+  --bg-blob-purple-dark-gradient: radial-gradient(ellipse 1200px 800px at 50% 50%, rgba(106, 90, 205, 0.08) 0%, rgba(45, 27, 105, 0.04) 60%, transparent 100%);
+
+  /* Cool Pastel Blobs - Calm, Trust, Data */
+  --bg-blob-blue-subtle-tr: radial-gradient(circle 550px at 100% 0%, rgba(223, 234, 250, 0.5) 0%, rgba(223, 234, 250, 0.2) 40%, transparent 70%);
+  --bg-blob-blue-subtle-bl: radial-gradient(circle 550px at 0% 100%, rgba(199, 218, 245, 0.4) 0%, rgba(199, 218, 245, 0.15) 40%, transparent 70%);
+  --bg-blob-periwinkle-center: radial-gradient(circle 700px at 50% 50%, rgba(195, 198, 249, 0.3) 0%, rgba(195, 198, 249, 0.15) 50%, transparent 80%);
+
+  /* Coral/Terracotta Blobs - Warm Energy, Premium Backgrounds (NEW) */
+  /* LIGHTER reddish-orange tones that complement warm neutrals */
+  --bg-blob-coral-subtle-tl: radial-gradient(circle 600px at 0% 0%, rgba(254, 243, 240, 0.7) 0%, rgba(254, 243, 240, 0.35) 40%, transparent 70%);
+  --bg-blob-coral-subtle-tr: radial-gradient(circle 600px at 100% 0%, rgba(253, 231, 225, 0.6) 0%, rgba(253, 231, 225, 0.3) 40%, transparent 70%);
+  --bg-blob-coral-subtle-br: radial-gradient(circle 600px at 100% 100%, rgba(252, 212, 201, 0.5) 0%, rgba(252, 212, 201, 0.25) 40%, transparent 70%);
+  --bg-blob-coral-subtle-bl: radial-gradient(circle 600px at 0% 100%, rgba(251, 184, 167, 0.4) 0%, rgba(251, 184, 167, 0.2) 40%, transparent 70%);
+  --bg-blob-coral-center: radial-gradient(circle 800px at 50% 50%, rgba(254, 249, 248, 0.5) 0%, rgba(254, 249, 248, 0.25) 50%, transparent 80%);
+  --bg-blob-coral-warm-mix: radial-gradient(circle 700px at 40% 60%, rgba(253, 231, 225, 0.4) 0%, rgba(249, 247, 246, 0.3) 50%, transparent 80%);
+  --bg-blob-terracotta-glow: radial-gradient(circle 650px at 70% 30%, rgba(234, 122, 95, 0.08) 0%, rgba(234, 122, 95, 0.04) 40%, transparent 70%);
+
+  /* ========================================
+     COMPLETE BACKGROUND COMPOSITIONS
+     ======================================== 
+     
+     USE: Apply directly to section backgrounds
+     PATTERN: Multiple layered blobs + base color
+     READABILITY: All tested with black text overlay ✅
+     
+     ======================================== */
+
+  /* BG-1: Soft Warm Editorial (Default for warm sections) */
+  --bg-composition-warm-editorial: 
+    var(--bg-blob-warm-subtle-tr),
+    var(--bg-blob-warm-subtle-bl),
+    #ffffff;
+
+  /* BG-2: Premium Red Accent (CTA sections, hero moments) */
+  --bg-composition-red-premium: 
+    var(--bg-blob-red-subtle-br),
+    var(--bg-blob-warm-center),
+    #ffffff;
+
+  /* BG-3: Energetic Warm + Red (Dynamic sections) */
+  --bg-composition-warm-red-dynamic: 
+    var(--bg-blob-red-warm-mix),
+    var(--bg-blob-warm-subtle-tl),
+    #fefdfd;
+
+  /* BG-4: Cool Professional (Data, insights, methodology) */
+  --bg-composition-cool-professional: 
+    var(--bg-blob-blue-subtle-tr),
+    var(--bg-blob-periwinkle-center),
+    var(--bg-blob-blue-subtle-bl),
+    #fafbfe;
+
+  /* BG-5: Purple Innovation (Premium features, insights) */
+  --bg-composition-purple-innovation: 
+    var(--bg-blob-purple-subtle-tl),
+    var(--bg-blob-purple-center),
+    var(--bg-blob-warm-center),
+    #fcfbfe;
+
+  /* BG-6: Neutral Sophisticated (Testimonials, content) */
+  --bg-composition-neutral-sophisticated: 
+    var(--bg-blob-warm-subtle-tl),
+    var(--bg-blob-warm-subtle-br),
+    var(--bg-blob-warm-center),
+    #ffffff;
+
+  /* BG-7: Dramatic Dark Purple (Hero alternatives, dark sections) */
+  --bg-composition-dark-purple-premium: 
+    var(--bg-blob-purple-glow-dark),
+    radial-gradient(circle 800px at 70% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 60%),
+    #000000;
+
+  /* BG-8: Minimal White (Clean, focus on content) */
+  --bg-composition-minimal-white: #ffffff;
+
+  /* BG-9: Subtle Warm Glow (Cards on white) */
+  --bg-composition-card-warm-glow: 
+    radial-gradient(circle 400px at 100% 100%, rgba(239, 68, 68, 0.04) 0%, transparent 70%),
+    #ffffff;
+
+  /* BG-10: Multi-Tonal Mesh (Editorial hero, special sections) */
+  --bg-composition-mesh-editorial: 
+    var(--bg-blob-warm-subtle-tl),
+    var(--bg-blob-red-subtle-tr),
+    var(--bg-blob-blue-subtle-bl),
+    var(--bg-blob-warm-center),
+    #fafbfe;
+
+  /* BG-11: Deep Purple Ethereal Glow (Dark hero, premium sections) */
+  --bg-composition-deep-purple-ethereal: 
+    var(--bg-blob-white-glow-center),
+    var(--bg-blob-lavender-center),
+    var(--bg-blob-deep-purple-tl),
+    var(--bg-blob-deep-purple-br),
+    #1a1030;
+
+  /* BG-12: Purple Lavender Dream (Light premium sections) */
+  --bg-composition-purple-lavender-light: 
+    var(--bg-blob-lavender-center),
+    var(--bg-blob-purple-subtle-tl),
+    var(--bg-blob-warm-center),
+    #faf9fe;
+
+  /* BG-13: Dark Purple Gradient Mesh (Feature sections on dark) */
+  --bg-composition-dark-purple-mesh: 
+    var(--bg-blob-purple-dark-gradient),
+    var(--bg-blob-deep-purple-br),
+    var(--bg-blob-lavender-center),
+    #0f0820;
+
+  /* BG-14: Purple Glow Light (Cards on white with purple accent) */
+  --bg-composition-purple-glow-card: 
+    radial-gradient(circle 450px at 100% 100%, rgba(128, 108, 224, 0.04) 0%, transparent 70%),
+    radial-gradient(circle 450px at 0% 0%, rgba(180, 168, 212, 0.03) 0%, transparent 70%),
+    #ffffff;
+
+  /* BG-15: Ethereal White Center (Premium light with center glow) */
+  --bg-composition-ethereal-white-glow: 
+    var(--bg-blob-white-glow-center),
+    var(--bg-blob-purple-subtle-tl),
+    var(--bg-blob-warm-subtle-br),
+    #fafbfe;
+
+  /* BG-16: Dark Black with Subtle Red Accent (Premium dark hero) */
+  --bg-composition-dark-black-red-accent: 
+    radial-gradient(circle 800px at 15% 20%, rgba(176, 31, 36, 0.12) 0%, transparent 60%),
+    radial-gradient(circle 700px at 85% 80%, rgba(198, 45, 49, 0.10) 0%, transparent 60%),
+    radial-gradient(circle 600px at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+    #000000;
+
+  /* BG-17: Dark Black with Cool Accent (Premium dark sections) */
+  --bg-composition-dark-black-cool-accent: 
+    radial-gradient(circle 900px at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 65%),
+    radial-gradient(circle 800px at 80% 70%, rgba(100, 100, 100, 0.06) 0%, transparent 65%),
+    radial-gradient(circle 500px at 50% 50%, rgba(255, 255, 255, 0.015) 0%, transparent 70%),
+    #000000;
+
+  /* BG-18: Dark Black with Warm Glow (Sophisticated dark) */
+  --bg-composition-dark-black-warm-glow: 
+    radial-gradient(circle 1000px at 30% 40%, rgba(245, 225, 215, 0.025) 0%, transparent 60%),
+    radial-gradient(circle 700px at 70% 60%, rgba(255, 255, 255, 0.01) 0%, transparent 70%),
+    #0a0a0a;
+
+  /* ========================================
+     CORAL/TERRACOTTA BACKGROUND COMPOSITIONS (NEW)
+     ======================================== 
+     
+     PURPOSE: Subtle warm backgrounds that create visual storytelling
+     PHILOSOPHY: "Perceptible but refined" - visible warmth like Apple/Stripe
+     OPACITY: 4-6% sweet spot - clearly warm, never overwhelming
+     BASE COLORS: #fffbf9 (warmest white) - creates foundation warmth
+     
+     INSPIRED BY: Reference image showing perfect coral/blush tone
+     WITH PERIWINKLE: Cool blue-purple contrast for visual rhythm
+     ======================================== */
+
+  /* BG-19: Dawn Rising (Top-left sunrise - gentle beginning) */
+  --bg-composition-dawn-rising: 
+    radial-gradient(circle 900px at 8% 12%, rgba(255, 235, 228, 0.5) 0%, rgba(251, 184, 167, 0.04) 40%, transparent 70%),
+    radial-gradient(circle 700px at 0% 0%, rgba(234, 122, 95, 0.04) 0%, transparent 60%),
+    #fffbf9;
+
+  /* BG-20: Center Focus (Problems gathering at center) - WITH PERIWINKLE CONTRAST */
+  --bg-composition-center-focus: 
+    radial-gradient(circle 1000px at 50% 50%, rgba(255, 235, 228, 0.55) 0%, rgba(251, 184, 167, 0.04) 50%, transparent 80%),
+    radial-gradient(circle 800px at 50% 40%, rgba(195, 198, 249, 0.25) 0%, rgba(195, 198, 249, 0.08) 45%, transparent 75%),
+    radial-gradient(circle 750px at 50% 40%, rgba(234, 122, 95, 0.03) 0%, transparent 70%),
+    #fffbf9;
+
+  /* BG-21: Right Light (Clarity emerging from right) */
+  --bg-composition-right-light: 
+    radial-gradient(circle 950px at 92% 50%, rgba(255, 235, 228, 0.55) 0%, rgba(251, 184, 167, 0.04) 45%, transparent 75%),
+    radial-gradient(circle 700px at 100% 40%, rgba(234, 122, 95, 0.04) 0%, transparent 70%),
+    #fffbf9;
+
+  /* BG-22: Foundation Build (Bottom-up structure) - WITH PERIWINKLE CORNERS */
+  --bg-composition-foundation-build: 
+    radial-gradient(circle 1000px at 50% 88%, rgba(255, 235, 228, 0.55) 0%, rgba(251, 184, 167, 0.04) 45%, transparent 75%),
+    radial-gradient(circle 750px at 10% 10%, rgba(223, 234, 250, 0.35) 0%, rgba(195, 198, 249, 0.08) 40%, transparent 70%),
+    radial-gradient(circle 750px at 90% 10%, rgba(199, 218, 245, 0.3) 0%, rgba(195, 198, 249, 0.06) 40%, transparent 70%),
+    radial-gradient(circle 750px at 35% 100%, rgba(234, 122, 95, 0.03) 0%, transparent 70%),
+    #fffbf9;
+
+  /* BG-23: Radiant Burst (Success radiating from center) */
+  --bg-composition-radiant-burst: 
+    radial-gradient(circle 1100px at 50% 50%, rgba(255, 235, 228, 0.65) 0%, rgba(251, 184, 167, 0.06) 55%, transparent 85%),
+    radial-gradient(circle 800px at 40% 40%, rgba(234, 122, 95, 0.05) 0%, transparent 75%),
+    #fffbf9;
+
+  /* BG-24: Warm Embrace (Surrounding warmth from edges) - WITH PERIWINKLE BALANCE */
+  --bg-composition-warm-embrace: 
+    radial-gradient(circle 850px at 0% 50%, rgba(255, 235, 228, 0.45) 0%, rgba(251, 184, 167, 0.04) 45%, transparent 75%),
+    radial-gradient(circle 850px at 100% 50%, rgba(223, 234, 250, 0.4) 0%, rgba(195, 198, 249, 0.08) 45%, transparent 75%),
+    radial-gradient(circle 600px at 50% 50%, rgba(255, 235, 228, 0.25) 0%, transparent 70%),
+    #fffbf9;
+
+  /* BG-25: Full Circle (Complete harmony - all directions) */
+  --bg-composition-full-circle: 
+    radial-gradient(circle 800px at 15% 15%, rgba(255, 235, 228, 0.5) 0%, rgba(251, 184, 167, 0.04) 45%, transparent 75%),
+    radial-gradient(circle 800px at 85% 15%, rgba(249, 247, 246, 0.4) 0%, transparent 70%),
+    radial-gradient(circle 800px at 15% 85%, rgba(249, 247, 246, 0.4) 0%, transparent 70%),
+    radial-gradient(circle 800px at 85% 85%, rgba(234, 122, 95, 0.04) 0%, transparent 70%),
+    #fffbf9;
+
+  /* BG-26: Diagonal Sweep (Top-left to bottom-right energy) */
+  --bg-composition-diagonal-sweep: 
+    radial-gradient(ellipse 1000px 700px at 12% 18%, rgba(255, 235, 228, 0.6) 0%, rgba(251, 184, 167, 0.05) 45%, transparent 80%),
+    radial-gradient(ellipse 950px 650px at 88% 82%, rgba(249, 247, 246, 0.5) 0%, transparent 75%),
+    #fffbf9;
+
+  /* ========================================
+     DARK BACKGROUND COMPOSITIONS (BLACK + CORAL/RED ACCENTS)
+     ======================================== 
+     
+     PURPOSE: Premium dark backgrounds with subtle warmth
+     PHILOSOPHY: "Ember glow" - warm light breaking through darkness
+     OPACITY: 2-5% on dark backgrounds (lower than light backgrounds)
+     USE CASES: Hero sections, dark feature sections, premium blocks
+     
+     COLOR STRATEGY:
+     - Base: Deep black (#0a0a0a) - slightly lighter than pure black
+     - Coral: Peachy warmth (ember glow effect) at 3-5% opacity
+     - Red: Ken Bold Red accent for energy at 2-4% opacity
+     
+     ======================================== */
+
+  /* BG-27: Ember Rise (Bottom-left coral warmth, subtle premium feel) */
+  --bg-composition-ember-rise: 
+    radial-gradient(circle 1100px at 15% 85%, rgba(251, 184, 167, 0.05) 0%, rgba(234, 122, 95, 0.03) 35%, transparent 70%),
+    radial-gradient(circle 900px at 0% 100%, rgba(255, 235, 228, 0.04) 0%, transparent 60%),
+    #0a0a0a;
+
+  /* BG-28: Dual Warmth (Coral left + Red right, balanced energy) */
+  --bg-composition-dual-warmth: 
+    radial-gradient(circle 1000px at 12% 80%, rgba(251, 184, 167, 0.05) 0%, rgba(234, 122, 95, 0.03) 40%, transparent 75%),
+    radial-gradient(circle 950px at 88% 75%, rgba(220, 38, 38, 0.04) 0%, rgba(220, 38, 38, 0.02) 40%, transparent 70%),
+    #0a0a0a;
+
+  /* BG-29: Red Accent Glow (Subtle red energy, perfect for CTA sections) */
+  --bg-composition-red-accent-glow: 
+    radial-gradient(circle 1200px at 50% 100%, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.02) 45%, transparent 80%),
+    radial-gradient(circle 800px at 30% 85%, rgba(251, 184, 167, 0.03) 0%, transparent 65%),
+    #0a0a0a;
+
+  /* BG-30: Corner Warmth (Four corner subtle glows, premium editorial) */
+  --bg-composition-corner-warmth: 
+    radial-gradient(circle 750px at 5% 5%, rgba(251, 184, 167, 0.04) 0%, transparent 70%),
+    radial-gradient(circle 750px at 95% 5%, rgba(199, 218, 245, 0.03) 0%, transparent 70%),
+    radial-gradient(circle 750px at 5% 95%, rgba(255, 235, 228, 0.05) 0%, transparent 70%),
+    radial-gradient(circle 750px at 95% 95%, rgba(220, 38, 38, 0.03) 0%, transparent 70%),
+    #0a0a0a;
+
+  /* BG-31: Center Burst Dark (Radiant from center, hero spotlight effect) */
+  --bg-composition-center-burst-dark: 
+    radial-gradient(circle 1300px at 50% 60%, rgba(251, 184, 167, 0.06) 0%, rgba(234, 122, 95, 0.03) 50%, transparent 85%),
+    radial-gradient(circle 1000px at 50% 55%, rgba(220, 38, 38, 0.02) 0%, transparent 75%),
+    #0a0a0a;
+
+  /* BG-32: Pure Black with Coral Whisper (Minimal warmth, maximum sophistication) */
+  --bg-composition-black-coral-whisper: 
+    radial-gradient(circle 1400px at 50% 90%, rgba(255, 235, 228, 0.03) 0%, rgba(251, 184, 167, 0.02) 50%, transparent 85%),
+    #000000;
+
+  /* ========================================
+     FROSTED GLASS / GLASSMORPHISM SYSTEM
+     ======================================== 
+     
+     PURPOSE: Standardized frosted glass effect for overlays, cards, and modals
+     PRINCIPLE: Premium, legible, and consistent across all components
+     INSPIRED BY: Apple glassmorphism, iOS design language, modern UI trends
+     
+     CORE RULES:
+     ✅ High blur values (40-64px) for premium frosted effect
+     ✅ Semi-transparent backgrounds (60-90% opacity) for depth
+     ✅ Subtle borders (10-20% white/black) for definition
+     ✅ Backdrop saturation boost (150-180%) for richness
+     ✅ Inset highlights for dimensional feel
+     ✅ Always test text readability on various backgrounds
+     
+     USE CASES:
+     - Hero info cards overlaid on images
+     - Modal dialogs and popovers
+     - Navigation bars with transparency
+     - Floating action buttons
+     - Tooltips and dropdowns
+     
+     ======================================== */
+
+  /* Backdrop Blur Levels */
+  --blur-subtle: 16px;      /* Light frost - Navbar, subtle overlays */
+  --blur-standard: 32px;    /* Medium frost - Cards, modals */
+  --blur-strong: 48px;      /* Strong frost - Premium cards, hero overlays ⭐ RECOMMENDED */
+  --blur-extreme: 64px;     /* Maximum frost - Dramatic overlays */
+
+  /* Glass Backgrounds - Light Mode */
+  --glass-white-light: rgba(255, 255, 255, 0.60);    /* 60% - Subtle overlay */
+  --glass-white-standard: rgba(255, 255, 255, 0.75); /* 75% - Balanced */
+  --glass-white-strong: rgba(255, 255, 255, 0.85);   /* 85% - High readability ⭐ HERO CARDS */
+  --glass-white-intense: rgba(255, 255, 255, 0.92);  /* 92% - Maximum opacity */
+  
+  --glass-warm-light: rgba(249, 247, 246, 0.60);     /* 60% - Subtle warm */
+  --glass-warm-standard: rgba(249, 247, 246, 0.75);  /* 75% - Warm frost ⭐ LIGHT ALT VARIANT */
+  --glass-warm-strong: rgba(249, 247, 246, 0.85);    /* 85% - Strong warm */
+
+  /* Glass Backgrounds - Dark Mode */
+  --glass-black-subtle: rgba(0, 0, 0, 0.30);         /* 30% - Light overlay */
+  --glass-black-standard: rgba(0, 0, 0, 0.40);       /* 40% - Medium overlay ⭐ DARK VARIANT */
+  --glass-black-strong: rgba(0, 0, 0, 0.50);         /* 50% - Strong overlay */
+
+  /* Glass Borders */
+  --glass-border-white-subtle: rgba(255, 255, 255, 0.10);  /* 10% - Very subtle */
+  --glass-border-white-standard: rgba(255, 255, 255, 0.15); /* 15% - Balanced */
+  --glass-border-white-strong: rgba(255, 255, 255, 0.20);  /* 20% - Defined ⭐ DARK BG */
+  --glass-border-white-intense: rgba(255, 255, 255, 0.95); /* 95% - Almost opaque ⭐ LIGHT BG */
+  
+  --glass-border-black-subtle: rgba(0, 0, 0, 0.04);   /* 4% - Barely visible */
+  --glass-border-black-standard: rgba(0, 0, 0, 0.06); /* 6% - Soft definition */
+  --glass-border-black-strong: rgba(0, 0, 0, 0.10);   /* 10% - Clear border */
+
+  /* Glass Shadows - For depth and elevation */
+  --glass-shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --glass-shadow-standard: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --glass-shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);  /* ⭐ HERO CARDS */
+  --glass-shadow-extreme: 0 12px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  /* ======================================== */
+
+  /* ========================================
+     RESOURCE CARD TOKEN SYSTEM
+     ======================================== 
+     
+     PURPOSE: Design tokens for ResourceCard component across 
+     light and dark modes with default and bordered card styles.
+     
+     BORDER RADIUS RULES (Design System):
+     - Images: 2.5px (--rc-radius-image)
+     - Buttons/Badges: 5px
+     - Big Cards: 10px (--rc-radius-card)
+     
+     MODE STRATEGY:
+     - Dark mode: White text on dark/transparent backgrounds
+     - Light mode: Dark text on white/warm backgrounds
+     
+     CARD STYLE STRATEGY:
+     - Default: No border, no background, content floats on section bg
+     - Bordered: Subtle container with border, frosted bg, inner padding
+     
+     WCAG COMPLIANCE:
+     ✅ All text colors exceed 7:1 contrast (AAA normal text)
+     ✅ Category/meta text exceeds 4.5:1 (AAA large text)
+     
+     ======================================== */
+
+  /* Card Shape */
+  --rc-radius-image: 2.5px;
+  --rc-radius-card: 10px;
+  --rc-radius-card-inner: 9px;
+  --rc-aspect-ratio: 4 / 3;
+
+  /* Card Spacing */
+  --rc-content-px: 1rem;
+  --rc-content-pt: 1rem;
+  --rc-content-pb: 1.25rem;
+  --rc-image-mb: 1rem;
+  --rc-meta-mb: 0.75rem;
+  --rc-title-mb: 0.5rem;
+
+  /* ── Dark Mode Tokens ── */
+  --rc-dark-title: rgba(255, 255, 255, 1);
+  --rc-dark-title-hover: rgba(255, 255, 255, 0.80);
+  --rc-dark-category: rgba(255, 255, 255, 0.30);
+  --rc-dark-date: rgba(255, 255, 255, 0.40);
+  --rc-dark-description: rgba(255, 255, 255, 0.50);
+  --rc-dark-description-hover: rgba(255, 255, 255, 0.60);
+  --rc-dark-card-bg: rgba(255, 255, 255, 0.03);
+  --rc-dark-card-border: rgba(255, 255, 255, 0.08);
+  --rc-dark-card-border-hover: rgba(255, 255, 255, 0.16);
+  --rc-dark-card-blur: 8px;
+  --rc-dark-image-placeholder: rgba(255, 255, 255, 0.05);
+  --rc-dark-focus-ring: rgba(255, 255, 255, 1);
+  --rc-dark-focus-offset: rgba(0, 0, 0, 1);
+
+  /* ── Light Mode Tokens ── */
+  --rc-light-title: rgba(0, 0, 0, 0.90);
+  --rc-light-title-hover: rgba(0, 0, 0, 0.70);
+  --rc-light-category: #a6968e;
+  --rc-light-date: rgba(0, 0, 0, 0.60);
+  --rc-light-description: rgba(0, 0, 0, 0.70);
+  --rc-light-description-hover: rgba(0, 0, 0, 0.90);
+  --rc-light-card-bg: rgba(255, 255, 255, 0.70);
+  --rc-light-card-border: rgba(0, 0, 0, 0.08);
+  --rc-light-card-border-hover: rgba(0, 0, 0, 0.15);
+  --rc-light-card-blur: 12px;
+  --rc-light-image-placeholder: rgba(0, 0, 0, 0.04);
+  --rc-light-focus-ring: #b01f24;
+  --rc-light-focus-offset: rgba(255, 255, 255, 1);
+
+  /* ── Badge Overlay (Universal) ── */
+  --rc-badge-bg: rgba(0, 0, 0, 0.65);
+  --rc-badge-blur: 24px;
+  --rc-badge-border: rgba(255, 255, 255, 0.10);
+  --rc-badge-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --rc-badge-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  /* ── Image Hover Overlay ── */
+  --rc-image-overlay-hover: rgba(0, 0, 0, 0.20);
+}

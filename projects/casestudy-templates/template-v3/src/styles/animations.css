@@ -1,0 +1,177 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGE SYSTEM ANIMATIONS - PREMIUM EDITION
+   ═══════════════════════════════════════════════════════════════════════════
+   
+   SHIMMER SYSTEM (Premium 700ms Animation):
+   - Works on ANY badge with shimmer prop
+   - Triggers on badge hover OR parent hover
+   - Flexible for all use cases (tags, pills, labels, etc.)
+   - Duration: 700ms (premium, luxurious feel)
+   - Travel: 300% (complete sweep across badge)
+   - Easing: ease-out (natural deceleration)
+   - Theme-aware shimmer colors (no blend modes for predictable appearance)
+   
+   SHIMMER OPACITY BY THEME:
+   - Neutral: 75% white (bright, visible)
+   - Warm: 75% white (balanced on warm beige)
+   - Brand: 50% white (softer on red)
+   - Success/Warning/Error: 60% white (visible on colored backgrounds)
+   
+   INTERACTIVE SYSTEM:
+   - Works on ANY badge with interactive prop
+   - Theme-aware hover states
+   - Clickable feedback animations
+   
+   DESIGN PHILOSOPHY:
+   - Slower animation = more premium, noticeable
+   - Longer travel = complete effect visibility
+   - Theme-aware colors = consistent, predictable appearance
+   - No blend modes = direct gradient control
+   
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────────────────────────────────────────────────────────
+   SHIMMER ANIMATIONS
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Shimmer initial state - off-screen left */
+.badge-shimmer {
+  transform: translateX(-100%);
+  transition: transform 700ms ease-out;
+}
+
+/* Direct badge hover - shimmer on any badge with shimmer prop */
+.badge:hover .badge-shimmer,
+.step-pill:hover .badge-shimmer,
+.objective-pill:hover .badge-shimmer,
+.objective-pill-interactive:hover .badge-shimmer,
+.category-badge:hover .badge-shimmer,
+.status-badge:hover .badge-shimmer {
+  transform: translateX(300%);
+}
+
+/* Parent hover triggers - for cards containing badges */
+.methodology-card:hover .badge-shimmer,
+.objective-card:hover .badge-shimmer,
+.challenge-card:hover .badge-shimmer,
+.resource-card:hover .badge-shimmer,
+.info-card:hover .badge-shimmer,
+.group:hover .badge-shimmer {
+  transform: translateX(300%);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   INTERACTIVE BADGE HOVER EFFECTS
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Base interactive hover - applies to all badges with interactive prop */
+.badge-interactive:hover {
+  transform: scale(1.02);
+  filter: brightness(0.98);
+}
+
+/* Theme-specific hover states - NEUTRAL theme */
+.badge-neutral.badge-interactive:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Theme-specific hover states - WARM theme */
+.badge-warm.badge-interactive:hover {
+  background-color: rgba(212, 163, 115, 0.15) !important; /* More subtle - reduced from 0.25 */
+  border-color: rgba(212, 163, 115, 0.35) !important;     /* More subtle - reduced from 0.5 */
+}
+
+/* Theme-specific hover states - BRAND theme */
+.badge-brand.badge-interactive:hover {
+  background-color: rgba(176, 31, 36, 0.12) !important;   /* More subtle - reduced from 0.2 */
+  border-color: rgba(176, 31, 36, 0.45) !important;       /* More subtle - reduced from 0.6 */
+}
+
+/* Theme-specific hover states - SUCCESS theme */
+.badge-success.badge-interactive:hover {
+  background-color: rgba(34, 197, 94, 0.12) !important;   /* More subtle - reduced from 0.2 */
+  border-color: rgba(34, 197, 94, 0.4) !important;        /* More subtle - reduced from 0.5 */
+}
+
+/* Theme-specific hover states - WARNING theme */
+.badge-warning.badge-interactive:hover {
+  background-color: rgba(251, 191, 36, 0.15) !important;  /* More subtle - reduced from 0.25 */
+  border-color: rgba(251, 191, 36, 0.4) !important;       /* More subtle - reduced from 0.5 */
+}
+
+/* Theme-specific hover states - ERROR theme */
+.badge-error.badge-interactive:hover {
+  background-color: rgba(239, 68, 68, 0.12) !important;   /* More subtle - reduced from 0.2 */
+  border-color: rgba(239, 68, 68, 0.45) !important;       /* More subtle - reduced from 0.6 */
+}
+
+/* Dark mode interactive hover adjustments */
+.badge-dark.badge-interactive:hover {
+  filter: brightness(1.15); /* Brighten instead of darken for dark mode */
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   SPECIFIC BADGE TYPE OVERRIDES
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Objective pill specific hover (keeping existing behavior) */
+.objective-pill-interactive:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;      /* More subtle */
+  border-color: rgba(0, 0, 0, 0.2) !important;           /* More subtle */
+}
+
+/* Step pill hover - more subtle warm theme */
+.step-pill:hover {
+  background-color: rgba(212, 163, 115, 0.15) !important; /* More subtle - reduced from 0.25 */
+  border-color: rgba(212, 163, 115, 0.35) !important;     /* More subtle - reduced from 0.5 */
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   CLICKABLE BADGE STATES
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Clickable badges - cursor and active states */
+.badge[role="button"] {
+  cursor: pointer;
+}
+
+.badge[role="button"]:active {
+  transform: scale(0.98);
+  transition: transform 100ms ease-out;
+}
+
+.badge[role="button"]:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.5);
+  outline-offset: 2px;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   ACCESSIBILITY
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .badge-shimmer {
+    transition: none !important;
+    transform: translateX(-100%) !important;
+  }
+  
+  .badge-interactive:hover,
+  .badge[role="button"]:active {
+    transform: none !important;
+  }
+  
+  .badge,
+  .badge-interactive {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .badge-interactive:hover {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
+}

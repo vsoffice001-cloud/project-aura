@@ -1,0 +1,34 @@
+/* ========================================
+   HERO SECTION RESPONSIVE STYLES
+   ======================================== 
+   
+   PURPOSE: Optimize hero section for single viewport viewing
+   STRATEGY: Use design system tokens with responsive breakpoints
+   
+   ======================================== */
+
+/* Mobile - Default (base) */
+#hero {
+  padding-top: var(--hero-pt-mobile);
+  padding-bottom: var(--hero-pb-mobile);
+}
+
+/* Tablet - sm breakpoint (640px+) */
+@media (min-width: 640px) {
+  #hero {
+    padding-top: var(--hero-pt-tablet);
+    padding-bottom: var(--hero-pb-tablet);
+  }
+}
+
+/* Desktop - md breakpoint (768px+) */
+@media (min-width: 768px) {
+  #hero {
+    padding-top: var(--hero-pt-desktop);
+    padding-bottom: var(--hero-pb-desktop);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

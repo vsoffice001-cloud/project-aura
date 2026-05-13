@@ -1,0 +1,48 @@
+/* ========================================
+   FONT IMPORTS
+   ======================================== 
+   
+   All font imports must be added to this file only.
+   Font imports should always be added to the top of the file.
+   
+   ======================================== */
+
+/* Google Fonts - Variable Fonts with Full Weight Range 
+   CRITICAL: These are VARIABLE fonts that support any weight value in their range
+   - wght@0,9..40,100..1000 means weights from 100 to 1000 are available
+   - The colon separates axis ranges (0 = normal, 1 = italic)
+*/
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* 
+ * IMPORTANT: Variable Fonts Configuration
+ * 
+ * DM Sans - Variable Font (Weight: 100-1000)
+ * - Modern Sans-Serif for Body Text, UI & Labels
+ * - Optical sizing (opsz): 9-40 - Automatically adjusts for different sizes
+ * - Variable weight axis allows any value from 100 to 1000
+ * 
+ * Noto Serif - Variable Font (Weight: 100-900)  
+ * - Editorial Serif Font for Headings & Display Text
+ * - Width variation setting (wdth): 100 - Standard width
+ * - Variable weight axis allows any value from 100 to 900
+ * 
+ * To use variable fonts properly:
+ * 1. Use font-weight with any numeric value in the range
+ * 2. Enable font-optical-sizing: auto
+ * 3. Set font-variation-settings for custom axes
+ * 4. Use @supports to check for variable font support
+ * 
+ * display=swap: Shows fallback font first, then swaps to custom font when loaded
+ */
+
+/* Check if browser supports variable fonts */
+@supports (font-variation-settings: normal) {
+  .font-serif {
+    font-family: 'Noto Serif', serif;
+  }
+  
+  .font-sans {
+    font-family: 'DM Sans', sans-serif;
+  }
+}

@@ -1,0 +1,30 @@
+# STATUS — <project name>
+
+**Status:** `exploring | cleanup | ready-for-tech | handed-over`
+**Owner (current):** design | tech-team
+**Last review:** YYYY-MM-DD
+**Reviewer:** Aura | <name>
+
+## Current state
+<one-paragraph summary>
+
+## Pre-handover gate (mark as you pass each)
+- [ ] `pnpm install` from clean clone boots
+- [ ] Lint clean
+- [ ] Build succeeds
+- [ ] Mock data extracted to `src/lib/mock-data.ts` (or equivalent)
+- [ ] TS strict mode on (or exception documented)
+- [ ] A11y axe scan: 0 critical violations
+- [ ] Lighthouse mobile ≥85 perf / ≥95 a11y / ≥95 best-practices
+- [ ] `prefers-reduced-motion` honored
+- [ ] `README.md` complete
+- [ ] `HANDOVER.md` complete
+- [ ] Visual baseline (gstack screenshots) captured
+- [ ] Conventional commits in git log
+
+## Open issues (won't fix in design phase)
+- <issue>: <reason — defer to tech>
+
+## Versioning notes
+- This is version `<n>`. Previous: `<name>-v<n-1>/` (handed-over YYYY-MM-DD).
+- Next iteration → copy to `<name>-v<n+1>/`, do not edit this folder after handover.

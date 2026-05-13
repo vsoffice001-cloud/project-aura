@@ -1,0 +1,173 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+/* Hide scrollbar for horizontal scrolling */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Custom scrollbar for navigation dropdowns */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(20, 16, 22, 0.15);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(20, 16, 22, 0.25);
+  }
+
+  /* Firefox scrollbar styling */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 16, 22, 0.15) transparent;
+  }
+
+  /* Enhanced scrollbar with visible track for industries list */
+  .industries-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .industries-scrollbar::-webkit-scrollbar-track {
+    background: rgba(20, 16, 22, 0.05);
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+
+  .industries-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(20, 16, 22, 0.25);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.2s ease;
+  }
+
+  .industries-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(20, 16, 22, 0.4);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .industries-scrollbar::-webkit-scrollbar-thumb:active {
+    background: rgba(20, 16, 22, 0.7);
+  }
+
+  /* Firefox scrollbar styling for industries */
+  .industries-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 16, 22, 0.3) rgba(20, 16, 22, 0.05);
+  }
+
+  /* Active navigation item indicator animation */
+  @keyframes borderFillslideIn {
+    0% {
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+    100% {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+
+  .nav-active-indicator {
+    animation: borderFillslideIn 0.3s ease-out forwards;
+  }
+
+  /* Ripple animation for DS Button component */
+  @keyframes ripple {
+    from {
+      transform: scale(0);
+      opacity: 0.4;
+    }
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
+  }
+}
+
+/* Responsive navigation container utility */
+@layer components {
+  .nav-container {
+    @apply mx-auto px-6;
+    width: 100%;
+    max-width: 1440px; /* Container max: 1440px */
+    
+    /* Mobile (<768px): 
+       - Padding: 24px (6 * 4px base)
+       - Content: 100vw - 48px */
+    
+    /* Tablet Portrait (768px+):
+       - Padding: 40px (10 * 4px base)
+       - Content: 100vw - 80px (up to 1360px content) */
+    @media (min-width: 768px) {
+      @apply px-10;
+    }
+    
+    /* Desktop Small (1024px+):
+       - Padding: 60px
+       - Content: 100vw - 120px (up to 1320px content) */
+    @media (min-width: 1024px) {
+      padding-left: 60px;
+      padding-right: 60px;
+    }
+    
+    /* Desktop Standard (1200px+):
+       - Padding: 100px
+       - Content: 100vw - 200px (up to 1240px content) */
+    @media (min-width: 1200px) {
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+    
+    /* Desktop Medium+ (1366px+):
+       - Container: 1440px max-width
+       - Padding: 120px each side (240px total)
+       - Content: 1440px - 240px = 1200px ✅ DESIGN TARGET */
+    @media (min-width: 1366px) {
+      padding-left: 120px;
+      padding-right: 120px;
+      max-width: 1440px; /* 1440px container - 240px padding = 1200px content */
+    }
+  }
+
+  /* Line clamp utilities for text truncation */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+}

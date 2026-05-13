@@ -1,0 +1,127 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+@layer utilities {
+  .bg-gradient-hero {
+    background: linear-gradient(135deg, hsl(213, 63%, 20%) 0%, hsl(213, 63%, 25%) 100%);
+  }
+  
+  .text-gradient-gold {
+    background: linear-gradient(90deg, hsl(42, 70%, 55%), hsl(42, 80%, 65%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .shadow-elegant {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .blur-content {
+    filter: blur(4px);
+  }
+  
+  /* Container utility for content width constraints */
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  
+  .nav-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-container {
+      padding: 0 16px;
+    }
+  }
+  
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .sr-only.focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Mobile-first: smooth scrolling, tap highlight removal */
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area insets for notched devices */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+@layer components {
+  @keyframes beam-orbit {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+      opacity: 0.8;
+    }
+  }
+  
+  .animate-beam-orbit {
+    animation: beam-orbit 3s linear infinite;
+    transform-origin: center;
+    left: 50%;
+    top: 50%;
+  }
+}

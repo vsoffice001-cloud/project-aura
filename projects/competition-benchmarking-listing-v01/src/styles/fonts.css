@@ -1,0 +1,11 @@
+/* ========================================
+   FONT IMPORTS — Ken Bold DS v3.2
+   ======================================== */
+
+/* DM Sans - Modern Sans-Serif for Body Text, UI & Labels */
+/* Weights: 400 (body), 500 (content emphasis), 600 (structural headings) — per DS two-tier system */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+/* Noto Serif - Editorial Serif Font for Headings & Display Text */
+/* Weights: 300 (hero/display), 400 (section headings) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400&display=swap');

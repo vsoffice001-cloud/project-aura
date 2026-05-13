@@ -1,0 +1,842 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  
+  /* ========================================
+     FONT FAMILY SYSTEM - Typeface Pairing
+     ======================================== 
+     
+     PURPOSE: Two-font pairing system for editorial design.
+     PRINCIPLE: Contrast through category (sans + serif), harmony through weight.
+     
+     DM Sans (Sans-Serif): Body text, UI elements, buttons, labels, navigation
+     - Geometric, modern, highly readable at small sizes
+     - Optical sizing (opsz 9-40) adapts automatically
+     - Weights: 300 (light), 400 (body), 500 (medium/labels), 700 (bold/buttons)
+     
+     Noto Serif (Serif): Headings, display text, hero titles, editorial moments
+     - Classic proportions, editorial authority
+     - Used for h1-h3 section titles, testimonial quotes, large numbers
+     - Weights: 300 (light/headings), 400 (normal), 500 (medium emphasis)
+     
+     PAIRING RULES:
+     ✅ Serif headings + Sans body = Maximum contrast, editorial feel
+     ✅ Sans labels + Serif display = Functional clarity + visual impact
+     ✅ All UI chrome (buttons, badges, nav, forms) = ALWAYS Sans
+     ✅ Code/data = System monospace stack
+     ❌ NEVER use Serif for body text, buttons, labels, or navigation
+     ❌ NEVER mix more than 2 custom typefaces
+     
+     HOW IT WORKS (IMPORTANT FOR IMPLEMENTATION):
+     - html root is set to DM Sans — everything inherits sans by default
+     - There is NO CSS rule that makes headings serif automatically
+     - Components must SET serif inline: fontFamily: 'var(--font-serif)'
+     - SectionHeading.tsx does this correctly for editorial headings
+     - Dashboard/UI headings stay DM Sans via inheritance (no override)
+     - If you create a new heading, decide: editorial (serif) or UI (sans)
+     
+     ======================================== */
+  
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  
+  /* ========================================
+     LAYOUT CONTAINER SYSTEM - Max Widths
+     ======================================== 
+     
+     PURPOSE: Consistent content width constraints for readability and visual rhythm.
+     PRINCIPLE: Mobile-first, progressive enhancement. Narrower = more focused.
+     
+     CONTENT WIDTH HIERARCHY:
+     1. --container-page (1200px)    → Outer page shell, full-width heros, navigation
+     2. --container-content (1000px) → Standard section content, cards, grids
+     3. --container-narrow (900px)   → Focused content: CTAs, testimonials, forms
+     4. --container-prose (700px)    → Long-form text, paragraph measure (~65-75 chars)
+     5. --container-compact (600px)  → Descriptions, methodology text, tight reading
+     
+     READABILITY LAW (Baymard Institute / UX research):
+     - Optimal line length: 50-75 characters per line
+     - At 16px body: ~700px = 65-70 chars (ideal)
+     - At 20px body: ~600px = 55-60 chars (acceptable)
+     - Never exceed 80 chars per line — causes reader fatigue
+     
+     RESPONSIVE PADDING SCALE (Mobile-First):
+     - Mobile (0-639px):    16px (px-4)  — Edge-to-edge feel, maximum content area
+     - Tablet (640-1023px): 24px (px-6)  — Breathing room, comfortable margins
+     - Desktop (1024px+):   32px (px-8)  — Generous margins, editorial white space
+     - Wide (1280px+):      Content centers via mx-auto, padding becomes decorative
+     
+     MOBILE-FIRST PRINCIPLES (UX Laws Applied):
+     - Fitts's Law: Touch targets min 44px, generous tap spacing on mobile
+     - Miller's Law: Reduce visible options on small screens (progressive disclosure)
+     - Hick's Law: Simpler choices on mobile = faster decisions
+     - Proximity: Tighter grouping on mobile to show relationships in limited space
+     - Content stacking: 1-column below 640px, 2-col at 768px, multi-col at 1024px+
+     
+     ======================================== */
+  
+  --container-page: 75rem;       /* 1200px - Full page shell, hero backgrounds, navbar */
+  --container-content: 62.5rem;  /* 1000px - Standard sections, card grids, main content */
+  --container-narrow: 56.25rem;  /* 900px  - CTAs, testimonials, focused content */
+  --container-prose: 43.75rem;   /* 700px  - Paragraph text, body copy measure */
+  --container-compact: 37.5rem;  /* 600px  - Tight descriptions, methodology blurbs */
+  
+  /* Responsive Padding Tokens */
+  --padding-mobile: 1rem;        /* 16px - Mobile horizontal padding */
+  --padding-tablet: 1.5rem;      /* 24px - Tablet horizontal padding */
+  --padding-desktop: 2rem;       /* 32px - Desktop horizontal padding */
+  
+  /* Section Vertical Spacing (Mobile-First) */
+  --section-py-mobile: 3rem;     /* 48px - py-12 */
+  --section-py-tablet: 4rem;     /* 64px - sm:py-16 */
+  --section-py-desktop: 5rem;    /* 80px - md:py-20 */
+  
+  /* Section Composition Tokens (used by ResourcesSection, SectionHeader) */
+  --section-py-standard: 3rem;           /* 48px mobile-first - matches py-12 */
+  --section-header-mb: 3rem;             /* 48px - Gap after full section header block */
+  --pair-label-heading: 0.75rem;         /* 12px - Gap between section label and heading */
+  --pair-heading-description: 1rem;      /* 16px - Gap between heading and description */
+  --text-measure: 43.75rem;             /* 700px - Max width for readable text blocks */
+  
+  /* Label Colors (section eyebrow labels on different backgrounds) */
+  --label-on-black: rgba(255, 255, 255, 0.40);
+  --label-on-white: rgba(0, 0, 0, 0.40);
+  
+  /* Semantic Text Colors (for section headers and body text) */
+  --text-primary: #000000;              /* Primary text on light backgrounds */
+  --text-secondary: rgba(0, 0, 0, 0.60); /* Secondary/description text on light backgrounds */
+  
+  /* Background Compositions */
+  --bg-composition-warm-editorial: linear-gradient(180deg, #faf9f8 0%, #f5f2f1 40%, #faf9f8 100%);
+  
+  /* ========================================
+     TYPOGRAPHY SCALE - Major Third (1.25 ratio)
+     ======================================== 
+     
+     PURPOSE: Creates harmonious visual hierarchy through mathematical progression.
+     RATIO: Each size is 1.25× the previous size (Major Third musical interval).
+     BASE: 16px (1rem) - Standard readable body text size.
+     
+     USAGE GUIDELINES:
+     - Use CSS variables for all standard typography
+     - Hardcode only when spatial constraints or client specs require it
+     - See FONT_SIZE_RATIONALE_ANALYSIS.md for detailed explanations
+     
+     UPDATED: January 2025 - Section headings changed from --text-3xl to --text-2xl
+     
+     ======================================== */
+  
+  --text-xs: 0.8rem;      /* 12.8px - Labels, metadata, categories, molecule internals, navbar items, meta rows */
+  --text-sm: 1rem;        /* 16px - Body text, descriptions, standard paragraphs */
+  --text-base: 1.25rem;   /* 20px - Large body text, card titles (when 4+ cards) */
+  --text-lg: 1.563rem;    /* 25px - Card titles (when 2-3 cards) */
+  --text-xl: 1.953rem;    /* 31.25px - Subsection headings (h3), engagement objectives, methodology steps */
+  --text-2xl: 2.441rem;   /* 39px - SECTION HEADINGS (h2) - NEW STANDARD for main sections */
+  --text-3xl: 3.052rem;   /* 48.8px - Hero h1, Final CTA h2 - RESERVED for hero moments only */
+  --text-4xl: 3.815rem;   /* 61px - Extra large headings (challenges card numbers when <4 cards) */
+  --text-5xl: 4.768rem;   /* 76.3px - Massive headings (future use, rarely needed) */
+  
+  /* ========================================
+     CUSTOM FONT SIZES (Outside Scale)
+     ======================================== 
+     
+     These exist for specific use cases where the mathematical scale 
+     doesn't provide the precise size needed for spatial/optical reasons.
+     
+     WHEN TO USE:
+     ✅ Sidebar/narrow column layouts (Client Context)
+     ✅ Preventing text wrapping in cards
+     ✅ Client-specified pixel precision (Navbar)
+     ✅ Creating micro-hierarchies within components
+     
+     WHEN NOT TO USE:
+     ❌ Standard section headings (use --text-xl, --text-2xl, --text-3xl)
+     ❌ Body paragraphs (use --text-sm)
+     ❌ Section labels (use --text-xs)
+     
+     ======================================== */
+  
+  --text-compact: 0.875rem; /* 14px - Compact body text (challenges with 4+ cards) */
+  --text-nav: 0.875rem;    /* 14px - Navigation elements (TOC items, compact CTAs, button text, section eyebrows) */
+
+  /* Sub-Scale: Tight Space Token */
+  --text-card-micro: 0.625rem;  /* 10px - Card micro-labels, category tags, dates, avatar initials, sub-section captions */
+
+  /* ========================================
+     FONT SIZE STANDARDIZATION REFERENCE
+     ======================================== 
+     
+     Every fontSize in the codebase MUST map to one of these tokens.
+     No hardcoded pixel values allowed outside of clamp() ranges.
+     
+     ┌──────────┬───────────────────┬─────────────────────────────────────────────────────────────┐
+     │ Value    │ Token             │ Role / Use Cases                                            │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 10px     │ --text-card-micro │ WHAT: Smallest readable text in the system                  │
+     │          │                   │ WHY:  12px is too large for card metadata in dense grids     │
+     │          │                   │ WHEN: Cards have category tags, dates, "NEW" badges,        │
+     │          │                   │       avatar initials, sub-section micro captions            │
+     │          │                   │ WHERE: ResourceCard, AnalystPickCardB, ClientContextSection  │
+     │          │                   │        sidebar labels, narrow-column micro labels,           │
+     │          │                   │        FilterChip, FilterAccordion heading,                  │
+     │          │                   │        ActiveFilterChipBar label/clear                       │
+     │          │                   │ HOW:  fontSize: 'var(--text-card-micro)'                     │
+     │          │                   │       Always pair with uppercase + tracking for readability  │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 12.8px   │ --text-xs         │ WHAT: Standard small text — labels, metadata, indicators,   │
+     │          │                   │       molecule internals, navbar items, meta rows            │
+     │          │                   │ WHY:  Major Third scale point (16px ÷ 1.25), mathematically  │
+     │          │                   │       harmonious with body text                              │
+     │          │                   │ WHEN: Card index numbers, metric labels, step badges,        │
+     │          │                   │       secondary info text, list number prefixes,             │
+     │          │                   │       compact hierarchy text in sidebars, navbar items,      │
+     │          │                   │       molecule-level labels, card footer dates, chart labels, │
+     │          │                   │       filter option labels (FilterCheckbox),              │
+     │          │                   │       filter search input text (FilterSearchInput)        │
+     │          │                   │ WHERE: ImpactSection, MethodologySection, HeroSection,       │
+     │          │                   │        ClientContextSection, SectionHeading.tsx label,        │
+     │          │                   │        IndustryBadge, CardFooterRow, CardMetaRow,             │
+     │          │                   │        AnalystPickCardB, ReportCard, SurveyCard,              │
+     │          │                   │        ResponseChart, QuestionPreview, CompletionBadge,       │
+     │          │                   │        Button xs size, Tooltip, EmptyState, FilterCheckbox    │
+     │          │                   │ HOW:  fontSize: 'var(--text-xs)'                             │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 14px     │ --text-compact    │ WHAT: Compact body text for dense layouts                   │
+     │          │                   │ WHY:  16px body text causes overflow in 4+ card grids;       │
+     │          │                   │       14px maintains readability in constrained widths        │
+     │          │                   │ WHEN: Card body/question text when ≥4 cards displayed,       │
+     │          │                   │       any body paragraph in a spatially tight container       │
+     │          │                   │ WHERE: ChallengesSection (4+ cards), future dense card grids │
+     │          │                   │ HOW:  fontSize: 'var(--text-compact)'                        │
+     │          │                   │       NEVER use for labels or headings (use --text-nav)       │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 14px     │ --text-nav        │ WHAT: Navigation text, section eyebrow labels, button text  │
+     │          │                   │ WHY:  Same value as --text-compact but DIFFERENT ROLE —      │
+     │          │                   │       labels/navigation need a distinct semantic token        │
+     │          │                   │ WHEN: Section eyebrow labels (uppercase, tracking-[3px]),     │
+     │          │                   │       TOC nav items, compact CTA button text,                │
+     │          │                   │       SectionHeading subtitle text                           │
+     │          │                   │ WHERE: All case study section eyebrows (Challenges, Impact,   │
+     │          │                   │        Methodology, Testimonial, FinalCTA, Objectives),      │
+     │          │                   │        HeroSection "Case Study" label, Navbar TOC             │
+     │          │                   │ HOW:  fontSize: 'var(--text-nav)'                            │
+     │          │                   │       For eyebrows: pair with uppercase + tracking-[3px]     │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 16px     │ --text-sm         │ WHAT: Standard body text — the default reading size         │
+     │          │                   │ WHY:  1rem base, optimal readability at normal viewing        │
+     │          │                   │       distance, underpins the entire Major Third scale        │
+     │          │                   │ WHEN: Body paragraphs, descriptions, form labels,             │
+     │          │                   │       sidebar primary titles (replaces old 17px),             │
+     │          │                   │       card body text in standard (non-dense) layouts          │
+     │          │                   │ WHERE: All section body text, ContactModal, HeroSection       │
+     │          │                   │        info cards, ClientContextSection company name          │
+     │          │                   │ HOW:  fontSize: 'var(--text-sm)'                             │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 20px     │ --text-base       │ WHAT: Large body text, card titles in dense grids           │
+     │          │                   │ WHY:  Major Third step up from 16px (×1.25), provides        │
+     │          │                   │       visual prominence without heading weight                │
+     │          │                   │ WHEN: Card titles when 4+ cards, large body text,             │
+     │          │                   │       sub-heading emphasis without serif treatment             │
+     │          │                   │ WHERE: ChallengesSection card titles, ResourceCard headings   │
+     │          │                   │ HOW:  fontSize: 'var(--text-base)'                           │
+     ├──────────┼───────────────────┼─────────────────────────────────────────────────────────────┤
+     │ 25px+    │ --text-lg to 5xl  │ See Major Third scale above for heading hierarchy           │
+     └──────────┴───────────────────┴─────────────────────────────────────────────────────────────┘
+     
+     CLAMP RANGES (intentionally not tokenized — context-specific):
+     - clamp(19px, 2.8vw, 24px): ClientContextSection lead paragraph (editorial)
+     - clamp(1.75rem, 5vw, 2.5rem): ImpactSection metric values (prevents "₹110 Cr" wrapping)
+     - clamp(1.375rem, 3vw, 1.875rem): SectionHeading h2 (responsive editorial headings)
+     
+     ======================================== */
+  
+  /* ========================================
+     COLOR SYSTEM - Case Study Editorial
+     ======================================== */
+  
+  /* ========================================
+     PRIMARY BRAND COLORS
+     ======================================== */
+  
+  /* Ken Bold Red - Primary Brand Color */
+  --brand-red: #b01f24;
+  --brand-red-hover: #8f181d;
+  --brand-red-active: #771419;
+  
+  /* Ken Bold Red - Full Tints & Shades Scale */
+  --red-50: #fef2f2;    /* Lightest - Subtle backgrounds, alert highlights */
+  --red-100: #fee2e2;   /* Very light - Notice backgrounds, hover states */
+  --red-200: #fecaca;   /* Light - Disabled states, soft accents */
+  --red-300: #fca5a7;   /* Medium light - Borders, dividers */
+  --red-400: #f87176;   /* Medium - Icons, secondary buttons */
+  --red-500: #dc3238;   /* Standard - Links, active states */
+  --red-600: #b01f24;   /* PRIMARY BRAND - CTAs, buttons, key accents */
+  --red-700: #8f181d;   /* Hover - Button hover states */
+  --red-800: #771419;   /* Active - Button active/pressed states */
+  --red-900: #5f1014;   /* Darkest - Text on light backgrounds, deep shadows */
+  
+  /* Black & White - Foundation */
+  --black: #000000;
+  --white: #ffffff;
+  
+  /* Black Tints (White mixed in) */
+  --black-50: #fafafa;   /* Near white - Very subtle backgrounds */
+  --black-100: #f5f5f5;  /* Lightest gray - Card backgrounds */
+  --black-200: #e5e5e5;  /* Very light gray - Borders, dividers */
+  --black-300: #d4d4d4;  /* Light gray - Disabled states */
+  --black-400: #a3a3a3;  /* Medium gray - Placeholder text */
+  --black-500: #737373;  /* Gray - Secondary text */
+  --black-600: #525252;  /* Dark gray - Body text alternative */
+  --black-700: #404040;  /* Darker gray - Headings alternative */
+  --black-800: #262626;  /* Very dark - Strong text */
+  --black-900: #171717;  /* Almost black - Deep backgrounds */
+  
+  /* White Tints (Black mixed in) */
+  --white-900: #fafafa;  /* Slightly off-white */
+  --white-800: #f5f5f5;  /* Off-white */
+  
+  /* ========================================
+     ACCENT COLORS - Strategic Use
+     ======================================== */
+  
+  /* Color 1: Warm - Already in use, expanded scale */
+  --warm-50: #fefdfd;    /* Barely there - Subtle overlays */
+  --warm-100: #fcfbfa;   /* Very subtle - Hover backgrounds */
+  --warm-200: #f9f7f6;   /* Soft - Card backgrounds */
+  --warm-300: #f5f2f1;   /* BASE - Current section backgrounds */
+  --warm-400: #f0ebe9;   /* Medium - Alternative backgrounds */
+  --warm-500: #eae5e3;   /* Borders - Current usage */
+  --warm-600: #d9d1ce;   /* Timeline base - Current usage */
+  --warm-700: #c8bcb8;   /* Timeline nodes - Current usage */
+  --warm-800: #b7a9a3;   /* Dark warm - Text on light warm */
+  --warm-900: #a6968e;   /* Darkest warm - Strong accents */
+  
+  /* Color 2: True V (Purple) - Premium, Innovation, Insights */
+  --purple-50: #f7f6fe;   /* Lightest - Subtle highlights, backgrounds */
+  --purple-100: #efedfd;  /* Very light - Hover states, cards */
+  --purple-200: #dfdcfb;  /* Light - Borders, dividers */
+  --purple-300: #c4bef7;  /* Medium light - Icons, badges */
+  --purple-400: #a89ff2;  /* Medium - Secondary accents */
+  --purple-500: #9488ec;  /* Standard - Interactive elements */
+  --purple-600: #806ce0;  /* BASE - Premium features, insights sections */
+  --purple-700: #6c5bc0;  /* Hover - Button hover states */
+  --purple-800: #5a4ba0;  /* Active - Button active states */
+  --purple-900: #483c80;  /* Darkest - Text, deep accents */
+  
+  /* Color 3: Periwinkle - Soft, Trust, Reliability */
+  --periwinkle-50: #fafbfe;   /* Lightest - Subtle backgrounds */
+  --periwinkle-100: #f5f6fd;  /* Very light - Card backgrounds */
+  --periwinkle-200: #ebedfb;  /* Light - Hover states */
+  --periwinkle-300: #dfe1f9;  /* Medium light - Soft accents */
+  --periwinkle-400: #d3d5f9;  /* Medium - Borders, dividers */
+  --periwinkle-500: #c3c6f9;  /* BASE - Trust indicators, secondary sections */
+  --periwinkle-600: #a7abf0;  /* Standard - Interactive elements */
+  --periwinkle-700: #8b90e0;  /* Hover - Links, buttons */
+  --periwinkle-800: #7075c8;  /* Active - Active states */
+  --periwinkle-900: #5a5fa0;  /* Darkest - Text on light backgrounds */
+  
+  /* Color 3.5: Coral/Terracotta - Warmth, Energy, Approachability */
+  --coral-50: #fffbf9;    /* Warmest white - Base backgrounds */
+  --coral-100: #fff5f1;   /* Very light warm */
+  --coral-200: #ffebe4;   /* Light blush - Perceptible coral wash */
+  --coral-300: #fdd7cb;   /* Soft coral - Gentle peachy tone */
+  --coral-400: #fbb8a7;   /* Medium coral - Clear peachy presence */
+  --coral-500: #f99b85;   /* Bright coral - Warm accent */
+  --coral-600: #ea7a5f;   /* BASE - Terracotta coral */
+  --coral-700: #d96548;   /* Deep coral - Hover state */
+  --coral-800: #c15138;   /* Rich terracotta - Active state */
+  --coral-900: #a23f2d;   /* Burnt terracotta - Darkest accent */
+  
+  /* Color 4: Perano (Light Blue) - Calm, Professional, Data */
+  --perano-50: #fcfdfe;    /* Lightest - Barely visible backgrounds */
+  --perano-100: #f9fbfe;   /* Very light - Subtle highlights */
+  --perano-200: #f4f8fd;   /* Light - Card backgrounds */
+  --perano-300: #eff5fc;   /* Medium light - Hover states */
+  --perano-400: #e9f2fb;   /* Medium - Soft accents */
+  --perano-500: #dfeafa;   /* BASE - Data sections, calm backgrounds */
+  --perano-600: #c8dff5;   /* Standard - Borders, dividers */
+  --perano-700: #a7c9ed;   /* Hover - Interactive elements */
+  --perano-800: #86b3e5;   /* Active - Active states */
+  --perano-900: #6b94c0;   /* Darkest - Text, strong accents */
+  
+  /* ========================================
+     UTILITY COLORS - Semantic States
+     ======================================== */
+  
+  /* Color 7: Green - Success, Growth, Positive Outcomes */
+  --green-50: #ecfdf5;     /* Success backgrounds */
+  --green-100: #d1fae5;    /* Success highlights */
+  --green-200: #a7f3d0;    /* Soft success states */
+  --green-300: #6ee7b7;    /* Success borders, soft accents */
+  --green-400: #34d399;    /* Success icons, secondary */
+  --green-500: #10b981;    /* BASE - Success messages */
+  --green-600: #059669;    /* Impact metrics */
+  --green-700: #047857;    /* Success hover */
+  --green-800: #065f46;    /* Success pressed */
+  --green-900: #064e3b;    /* Success text on light */
+  
+  /* Color 8: Amber - Warning, Attention, Caution */
+  --amber-50: #fffbeb;     /* Warning backgrounds */
+  --amber-100: #fef3c7;    /* Alert highlights */
+  --amber-200: #fde68a;    /* Soft warning states */
+  --amber-300: #fcd34d;    /* Warning borders */
+  --amber-400: #fbbf24;    /* Warning icons, attention */
+  --amber-500: #f59e0b;    /* BASE - Warning messages */
+  --amber-600: #d97706;    /* Warning buttons */
+  --amber-700: #b45309;    /* Warning hover */
+  --amber-800: #92400e;    /* Warning pressed */
+  --amber-900: #78350f;    /* Warning text on light */
+  
+  /* Color 9: Rose - Error, Validation, Destructive (DISTINCT from Brand Red) */
+  --rose-50: #fff1f2;      /* Error backgrounds */
+  --rose-100: #ffe4e6;     /* Error highlights */
+  --rose-200: #fecdd3;     /* Soft error states */
+  --rose-300: #fda4af;     /* Error borders, soft validation */
+  --rose-400: #fb7185;     /* Error icons, field validation */
+  --rose-500: #f43f5e;     /* BASE - Error messages */
+  --rose-600: #e11d48;     /* Destructive actions, delete */
+  --rose-700: #be123c;     /* Error hover */
+  --rose-800: #9f1239;     /* Error active/pressed */
+  --rose-900: #881337;     /* Error text on light */
+
+  /* ========================================
+     LEGACY COLOR VARIABLES (Keep for backwards compatibility)
+     ======================================== */
+  
+  /* Warm Off-White for Highlighted Sections */
+  --bg-warm: #f5f2f1;          /* Base - Challenges, Methodology sections */
+  --bg-warm-500: #eae5e3;      /* Subtle borders, separator lines */
+  --bg-warm-600: #d9d1ce;      /* Timeline base, medium contrast */
+  --bg-warm-700: #c8bcb8;      /* Timeline nodes, stronger borders */
+  
+  /* Pure Black/White for Primary Sections */
+  --bg-pure-black: #000000;    /* Hero, Resources sections */
+  --bg-pure-white: #ffffff;    /* Standard white sections */
+  
+  /* ========================================
+     TYPOGRAPHY DEFAULTS
+     ======================================== */
+  
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  
+  /* ========================================
+     BUTTON SIZE SYSTEM
+     ======================================== */
+  
+  /* Button Heights - Increased for better presence */
+  --button-height-sm: 2.5rem;     /* 40px - Small utility buttons */
+  --button-height-md: 3rem;       /* 48px - Standard buttons */
+  --button-height-lg: 3.5rem;     /* 56px - Primary CTAs */
+  --button-height-xl: 4rem;       /* 64px - Hero/Emphasis CTAs */
+  
+  /* Button Font Sizes */
+  --button-font-sm: 0.875rem;     /* 14px - Small buttons */
+  --button-font-md: 1rem;         /* 16px - Standard buttons */
+  --button-font-lg: 1.125rem;     /* 18px - Large buttons */
+  
+  /* Button Padding Horizontal */
+  --button-px-sm: 1.25rem;        /* 20px - Compact */
+  --button-px-md: 1.75rem;        /* 28px - Standard */
+  --button-px-lg: 2.25rem;        /* 36px - Spacious */
+  --button-px-xl: 2.5rem;         /* 40px - Extra Spacious */
+  
+  /* Button Padding Vertical (for auto-height buttons) */
+  --button-py-sm: 0.625rem;       /* 10px */
+  --button-py-md: 0.875rem;       /* 14px */
+  --button-py-lg: 1rem;           /* 16px */
+  
+  /* Button Min Widths */
+  --button-min-width-sm: 5rem;    /* 80px */
+  --button-min-width-md: 7rem;    /* 112px */
+  --button-min-width-lg: 9rem;    /* 144px */
+  
+  /* NOTE: --brand-red, --brand-red-hover, --brand-red-active 
+     are defined in the PRIMARY BRAND COLORS section above.
+     No duplicate definitions needed here. */
+
+  /* ========================================
+     BORDER RADIUS SCALE - 5px Increments
+     ======================================== 
+     
+     PURPOSE: Consistent corner rounding across all components.
+     SCALE: 5px increments from 0 to 35, plus 2.5px and 9999px.
+     
+     USAGE:
+     - Use scale tokens (--radius-xs, etc.) for general components
+     - Use semantic tokens (--radius-element, etc.) for specific roles
+     - Badge radius tokens (--badge-radius-*) remain separate
+     
+     ======================================== */
+  
+  /* Scale Tokens */
+  --radius-0: 0px;          /* Sharp corners, no rounding */
+  --radius-2xs: 2.5px;      /* Logos, icons, sub-element details */
+  --radius-xs: 5px;          /* PRIMARY — Buttons, inputs, small cards, badges */
+  --radius-sm: 10px;         /* Medium cards, form groups, panels */
+  --radius-md: 15px;         /* Feature cards, modals, large buttons */
+  --radius-lg: 20px;         /* Hero cards, large containers, dashboards */
+  --radius-xl: 25px;         /* Large modals, feature sections */
+  --radius-2xl: 30px;        /* Extra large cards, floating panels */
+  --radius-3xl: 35px;        /* Hero sections, landing page blocks */
+  --radius-full: 9999px;     /* Fully rounded: pills, avatars, dots */
+  
+  /* Semantic Aliases — role-based tokens that map to scale */
+  --radius-element: var(--radius-xs);         /* 5px — Buttons, inputs, tags, icon containers */
+  --radius-inner: var(--radius-2xs);          /* 2.5px — Skeleton shims, checkbox marks, inner details */
+  --rc-radius-card: var(--radius-sm);         /* 10px — Card containers */
+  --rc-radius-card-inner: var(--radius-xs);   /* 5px — Nested elements inside cards */
+  --rc-radius-image: var(--radius-2xs);       /* 2.5px — Thumbnails, small images */
+  
+  /* ========================================
+     UNIFIED INPUT SYSTEM — DS v4.2 (Session 38)
+     ========================================
+     
+     All text inputs, textareas, and selects use a 6-state monochromatic
+     black/opacity color system. NO colored rings, NO brand-red on inputs.
+     Focus is indicated by border-color change (not outline ring).
+     
+     CANONICAL 6-STATE TABLE:
+     ┌────────────┬──────────────┬────────────┬─────────────────┬──────────────┬─────────────────────────┐
+     │ State      │ Border       │ Text       │ Placeholder     │ Background   │ Notes                   │
+     ├────────────┼──────────────┼────────────┼─────────────────┼──────────────┼─────────────────────────┤
+     │ Default    │ black/10     │ black/90   │ black/30        │ white        │ —                       │
+     │ Hover      │ black/25     │ black/90   │ black/30        │ white        │ Weber: 150% increase    │
+     │ Focus      │ black/90     │ black      │ black/30        │ white        │ Border only, no ring    │
+     │ Filled     │ black/15     │ black/90   │ —               │ white        │ "has content" signal    │
+     │ Error      │ --brand-red  │ black/90   │ black/30        │ white        │ 2px border              │
+     │ Disabled   │ black/6      │ black/35   │ black/20        │ black/[0.03] │ cursor-not-allowed      │
+     └────────────┴──────────────┴────────────┴─────────────────┴──────────────┴─────────────────────────┘
+     
+     RADIUS: rounded-[5px] = var(--radius-element) = var(--radius-xs)
+     PADDING: Standard px-4 py-3 (44px touch target) | Compact px-3 py-2 (sidebar)
+     FONT: Standard var(--text-sm) 16px | Compact var(--text-xs) 12.8px
+     TRANSITION: transition-colors duration-150
+     
+     CHECKBOX/RADIO: border-2 border-black/25, checked:bg-black, accent-black
+     Checkbox radius: rounded-[2.5px] = var(--radius-inner)
+     
+     WHERE APPLIED:
+     - ui/input.tsx, ui/textarea.tsx (shadcn base components)
+     - FilterSearchInput.tsx (container-pattern: focus-within on outer div)
+     - ContactModal.tsx (production form)
+     - DesignSystemDashboard.tsx (sidebar search)
+     - ComponentsContent.tsx (all demos: labels, inputs, states, textarea, checkbox, radio)
+     - SpacingHelpers.tsx, AllSpacingTokensContent.tsx, AllElevationTokensContent.tsx
+     - AllBorderRadiusTokensContent.tsx, ButtonDocumentation.tsx, ButtonControlsGuide.tsx
+     - MotionContent.tsx, ResourcesContent.tsx
+     
+     CSS SAFETY NET: report-store-additions.css suppresses :focus-visible
+     outline on input/textarea/select globally.
+     ======================================== */
+  
+  /* ========================================
+     ELEVATION / SHADOW SYSTEM
+     ======================================== 
+     
+     PURPOSE: Consistent depth cues across the UI.
+     SCALE: 5 neutral levels + 3 accent (purple) levels.
+     
+     ======================================== */
+  
+  /* Neutral Shadows */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.18);
+  --shadow-2xl: 0 20px 48px rgba(0, 0, 0, 0.24);
+  
+  /* Accent Shadows (Purple) — for premium/featured elements */
+  --shadow-accent-sm: 0 2px 8px rgba(128, 108, 224, 0.15), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-accent-md: 0 8px 24px rgba(128, 108, 224, 0.24), 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-accent-lg: 0 16px 40px rgba(128, 108, 224, 0.32), 0 4px 12px rgba(0, 0, 0, 0.15);
+  
+  /* ========================================
+     SPACING SCALE - 4px Base Unit
+     ======================================== 
+     
+     PURPOSE: Consistent spacing for padding, margin, gap.
+     BASE: 4px unit, scales through common sizes.
+     
+     ======================================== */
+  
+  --spacing-base-unit: 4px;
+  --space-2xs: 0.25rem;    /* 4px */
+  --space-xs: 0.5rem;      /* 8px */
+  --space-sm: 0.75rem;     /* 12px */
+  --space-md: 1rem;        /* 16px */
+  --space-lg: 1.5rem;      /* 24px */
+  --space-xl: 2rem;        /* 32px */
+  --space-2xl: 3rem;       /* 48px */
+  --space-3xl: 4rem;       /* 64px */
+  --space-4xl: 6rem;       /* 96px */
+  --space-5xl: 8rem;       /* 128px */
+  
+  /* Numeric aliases (used in some components as --space-4, --space-6, --space-12) */
+  --space-4: var(--space-md);    /* 16px */
+  --space-6: var(--space-lg);    /* 24px */
+  --space-12: var(--space-2xl);  /* 48px */
+  
+  /* Card Padding Tokens */
+  --card-padding-sm: 0.75rem;    /* 12px */
+  --card-padding-md: 1rem;       /* 16px */
+  --card-padding-lg: 1.5rem;     /* 24px */
+
+  /* ========================================
+     BADGE SIZE SYSTEM - Major Third Scale
+     ======================================== 
+     
+     Proportional sizes based on the Major Third (1.25) typography ratio.
+     Each size defines font, padding (vertical/horizontal), and letter-spacing.
+     
+     SIZE HIERARCHY:
+     xs: 9-10px  → Info card labels, micro metadata
+     sm: 11px    → Section labels, pills, standard badges
+     md: 13px    → Emphasized badges, highlighted tags
+     lg: 15px    → Large interactive badges, hero badges
+     
+     PADDING RATIO: ~0.77 (py ÷ font) for optical balance
+     TRACKING: Scales from 1.2px (xs) to 2.2px (lg) for readability at size
+     ======================================== */
+  
+  /* Badge Size: XS (9-10px) */
+  --badge-xs-font: 0.5625rem;      /* 9px */
+  --badge-xs-py: 0.1875rem;        /* 3px */
+  --badge-xs-px: 0.5rem;           /* 8px */
+  --badge-xs-tracking: 0.075em;    /* ~1.2px at 16px base */
+  
+  /* Badge Size: SM (11px) */
+  --badge-sm-font: 0.6875rem;      /* 11px */
+  --badge-sm-py: 0.3125rem;        /* 5px */
+  --badge-sm-px: 0.625rem;         /* 10px */
+  --badge-sm-tracking: 0.09em;     /* ~1.5px at 16px base */
+  
+  /* Badge Size: MD (13px) */
+  --badge-md-font: 0.8125rem;      /* 13px */
+  --badge-md-py: 0.375rem;         /* 6px */
+  --badge-md-px: 0.75rem;          /* 12px */
+  --badge-md-tracking: 0.1em;      /* ~1.6px at 16px base */
+  
+  /* Badge Size: LG (15px) */
+  --badge-lg-font: 0.9375rem;      /* 15px */
+  --badge-lg-py: 0.4375rem;        /* 7px */
+  --badge-lg-px: 0.875rem;         /* 14px */
+  --badge-lg-tracking: 0.12em;     /* ~2px at 16px base */
+
+  /* Badge Radius Tokens */
+  --badge-radius-minimal: 0px;     /* No radius for minimal/text-only badges */
+  --badge-radius-rounded: 5px;     /* Subtle rounding for category tags */
+  --badge-radius-pill: 9999px;     /* Fully rounded pill shape */
+
+  /* Badge Transition */
+  --badge-transition-duration: 300ms;
+}
+
+@layer base {
+  html {
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+  }
+
+  /* 
+   * Headings inherit color from parent:
+   * - Light bg: inherits pure black (#000000) from html root
+   * - Dark bg: inherits white from SectionWrapper text-white
+   * 
+   * Editorial components set fontFamily: var(--font-serif) inline.
+   * Dashboard/UI headings stay sans-serif via inheritance.
+   * No explicit heading color rule — inheritance handles both modes.
+   */
+  
+/* ═══════════════════════════════════════════════════════════════════════
+   BADGE SYSTEM - Animations & Interactive States
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ========================================
+   BADGE BASE RULE
+   ======================================== 
+   
+   Consumes the CSS custom properties set as inline styles by Badge.tsx.
+   JS selects the correct theme colors → sets --badge-* inline → CSS applies them.
+   This avoids 22-selector CSS explosion (11 themes × 2 modes).
+   ======================================== */
+  
+.badge {
+  font-family: var(--font-sans);
+  color: var(--badge-text, rgba(0, 0, 0, 0.6));
+  background-color: var(--badge-bg, transparent);
+  border-width: var(--badge-border-width, 0px);
+  border-style: solid;
+  border-color: var(--badge-border, transparent);
+  white-space: nowrap;
+}
+
+/* Shimmer Animation - Premium 700ms (40% slower than standard) */
+.badge-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: translateX(-100%);  /* Start position: completely off-screen left */
+  /* NO TRANSITION HERE - prevents reverse animation on unhover */
+  z-index: 5;
+  /* Shimmer gradient — uses var(--badge-shimmer) set by Badge.tsx inline styles */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--badge-shimmer, rgba(255, 255, 255, 0.75)) 45%,
+    var(--badge-shimmer, rgba(255, 255, 255, 0.75)) 55%,
+    transparent 100%
+  );
+  border-radius: inherit;
+}
+
+/* ========================================
+   BADGE HOVER STATES
+   ======================================== 
+   
+   Consumes --badge-hover-bg and --badge-hover-border 
+   set as inline CSS custom properties by Badge.tsx.
+   ======================================== */
+
+.badge:hover {
+  background-color: var(--badge-hover-bg, var(--badge-bg, transparent));
+  border-color: var(--badge-hover-border, var(--badge-border, transparent));
+}
+
+/* Interactive badges get lift + scale on hover */
+.badge-interactive:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.badge-interactive:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* ========================================
+   SHIMMER HOVER TRIGGER
+   ======================================== 
+   
+   On hover, shimmer sweeps right across the badge.
+   Uses transition (not animation) for single-sweep behavior.
+   NO reverse animation on unhover — shimmer resets instantly 
+   via the lack of transition on .badge-shimmer base rule.
+   ======================================== */
+
+.badge:hover .badge-shimmer {
+  transform: translateX(100%);
+  transition: transform 700ms ease-in-out;
+}
+
+/* ========================================
+   BADGE VARIANT OVERRIDES
+   ======================================== */
+
+/* Minimal: no background, no border — text-only treatment */
+.badge-minimal {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.badge-minimal:hover {
+  background-color: transparent !important;
+}
+
+/* Pill: fully rounded */
+.badge-pill {
+  border-radius: var(--badge-radius-pill);
+}
+
+/* Rounded: subtle rounding */
+.badge-rounded {
+  border-radius: var(--badge-radius-rounded);
+}
+
+/* ========================================
+   STEP-PILL & OBJECTIVE-PILL PRESETS
+   ======================================== 
+   
+   Semantic CSS classes used by StepPill, ObjectivePill, and
+   ObjectivePillInteractive convenience wrappers in Badge.tsx.
+   These layer on top of the base .badge rules.
+   ======================================== */
+
+/* Step pill — warm editorial pill for methodology steps */
+.step-pill {
+  transition: background-color var(--badge-transition-duration) ease,
+              border-color var(--badge-transition-duration) ease,
+              box-shadow var(--badge-transition-duration) ease;
+}
+
+.step-pill.step-active {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Objective pill — neutral pill for engagement objectives */
+.objective-pill {
+  transition: background-color var(--badge-transition-duration) ease,
+              border-color var(--badge-transition-duration) ease,
+              transform var(--badge-transition-duration) ease;
+}
+
+/* Interactive objective pill — adds cursor + lift */
+.objective-pill-interactive {
+  cursor: pointer;
+}
+
+.objective-pill-interactive:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.objective-pill-interactive:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+/* ========================================
+   BADGE ICON SIZING
+   ======================================== 
+   
+   Icons inside badges scale proportionally to badge size.
+   Uses em units so they inherit the badge's font-size.
+   ======================================== */
+
+.badge svg,
+.badge [data-badge-icon] {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+}
+
+/* Badge Icon Wrapper — enforces size-matched icon dimensions.
+   Icons inside .badge-icon inherit the wrapper's explicit w/h. */
+.badge-icon svg {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== 
+   
+   Respects user preferences for reduced motion.
+   Disables shimmer sweep and hover transitions.
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none !important;
+  }
+  
+  .badge:hover .badge-shimmer {
+    transition: none !important;
+    transform: translateX(-100%);
+  }
+  
+  .badge-interactive:hover {
+    transform: none !important;
+  }
+}
+}

@@ -1,0 +1,68 @@
+/**
+ * BenchmarkTestimonials — Tail section organism
+ * competition-benchmarking-listing-v01
+ * bg: white per bg alternation spec.
+ */
+
+import { Quote } from 'lucide-react';
+
+// TODO: replace w/ real API — GET /api/testimonials?type=competition-benchmarking
+const TESTIMONIALS = [
+  {
+    quote: 'The competitor set benchmarking from Ken Research gave our strategy team a granular view of pricing and go-to-market moves we simply couldn\'t have built in-house in this timeframe.',
+    author: 'VP Strategy',
+    company: 'Fortune 500 FMCG Conglomerate',
+  },
+  {
+    quote: 'We used the SEA digital banking benchmark to build our product roadmap for the next 18 months. The mystery shopping data was especially credible and board-ready.',
+    author: 'Chief Product Officer',
+    company: 'Challenger Bank, Southeast Asia',
+  },
+  {
+    quote: 'Detailed, unbiased, and fast. The benchmarking covered all 10 competitors with methodology transparency that made it easy to defend to our investors.',
+    author: 'Head of Competitive Intelligence',
+    company: 'Series C Insurtech, North America',
+  },
+];
+
+export function BenchmarkTestimonials() {
+  return (
+    <div>
+      <h2
+        className="mb-8 text-center"
+        style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-xl)', fontWeight: 400, color: 'var(--text-primary)' }}
+      >
+        What buyers say
+      </h2>
+      <div className="grid gap-6 sm:grid-cols-3">
+        {TESTIMONIALS.map((t) => (
+          <blockquote
+            key={t.author}
+            className="flex flex-col p-5"
+            style={{
+              border: '1px solid rgba(0,0,0,0.07)',
+              borderRadius: 'var(--rc-radius-card)',
+              background: 'var(--warm-100)',
+            }}
+          >
+            <Quote className="h-4 w-4 mb-3 shrink-0" style={{ color: 'var(--brand-red)', opacity: 0.7 }} />
+            <p
+              className="flex-1 mb-4 italic"
+              style={{ fontSize: 'var(--text-sm)', color: 'rgba(0,0,0,0.65)', lineHeight: 1.6 }}
+            >
+              {t.quote}
+            </p>
+            <footer>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {t.author}
+              </p>
+              <p style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.4)' }}>
+                {t.company}
+              </p>
+            </footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  );
+}

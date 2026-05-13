@@ -1,0 +1,90 @@
+# HANDOVER — <project name>
+
+**For:** Tech team
+**From:** Design team (Aura-assisted)
+**Date:** YYYY-MM-DD
+**Version:** <semver or v1>
+
+## TL;DR
+<2 sentences — what this is, what tech needs to do to take it>
+
+## Run locally
+```bash
+pnpm install
+pnpm dev   # → http://localhost:<port>
+```
+
+## Build
+```bash
+pnpm build
+pnpm start  # production preview
+```
+
+## Stack
+- Framework: <Next.js 15 / Vite / etc.>
+- React: <version>
+- Tailwind: <v4 etc.>
+- Animation: <GSAP + Framer Motion + Lenis / Framer only / none>
+- UI primitives: <shadcn/ui + Radix / @kenresearch/ds / custom>
+- Other: <gsap, lenis, etc.>
+
+## Route map
+| Route | Page | Purpose | Mobile? |
+|---|---|---|---|
+| `/` | Home | <one-line> | ✓ |
+| `/<route>` | <name> | <one-line> | ✓ |
+
+## Components
+Located: `src/components/`
+| Component | File | Status | Notes |
+|---|---|---|---|
+| <Name> | `<path>` | done / wip | <props/states/a11y notes> |
+
+## Mock data
+- Location: `src/lib/mock-data.ts`
+- Markers: every mocked field has `// TODO: replace w/ <real source>` comment
+- Replace strategy: <e.g. `getReports()` → `fetch(/api/reports)`>
+
+## Env vars
+| Var | Purpose | Required? | Example |
+|---|---|---|---|
+| `NEXT_PUBLIC_API_URL` | backend base | yes | `http://localhost:8000` |
+
+`.env.example` committed; copy to `.env.local`.
+
+## Known issues / won't-fix
+- <item>: <reason — defer to tech>
+
+## A11y baseline
+- WCAG: AA
+- Tested via: `pnpm test` (Playwright + axe-core)
+- Last scan: YYYY-MM-DD — <0 critical | N moderate>
+- Reduced-motion: honored
+
+## Perf baseline
+- Lighthouse mobile: Perf <n> · A11y <n> · BP <n> · SEO <n>
+- LCP/INP/CLS: <values>
+- Bundle size (gzip): <value>
+
+## Visual baseline
+- Screenshots: `gstack-out/` (gitignored, regenerate via `gstack`)
+
+## Brand tokens
+- Source: `<src/styles/theme.css | globals.css | @kenresearch/ds tokens>`
+- Quick ref: `<workspace>/Quick_start_guide.md`
+
+## Animation rules (if applicable)
+- GSAP for scroll/timeline; Framer for state/component motion; never both on same property
+- Always honor `prefers-reduced-motion`
+
+## Tech-team integration checklist
+- [ ] Match Node version (`.nvmrc`)
+- [ ] Match pnpm version (`packageManager` field)
+- [ ] Wire backend env (`NEXT_PUBLIC_API_URL` etc.)
+- [ ] Replace mock data calls (search `// TODO: replace w/`)
+- [ ] Wire NextAuth if auth needed (design didn't ship auth)
+- [ ] Wire analytics (GTM, GA, Clarity, Leadfeeder, Crazy Egg, Contentsquare per prod)
+- [ ] Re-run a11y + perf gates against your CI
+
+## Contact
+Design lead: design@kenresearch.com (Aura-assisted)

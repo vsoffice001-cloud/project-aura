@@ -1,0 +1,32 @@
+# Source — consumers get dist/ only
+src/atoms/
+src/molecules/
+src/organisms/
+src/patterns/
+src/hooks/
+src/charts/
+src/lib/
+
+# Playground
+playground/
+
+# Storybook
+.storybook/
+storybook-static/
+
+# Docs (excluded from npm, kept in package.files for devs)
+# docs/ is included per package.json "files" — do NOT exclude here
+
+# Config files
+tsconfig*.json
+vite.config.ts
+.eslintrc.cjs
+.gitignore
+scripts/
+
+# Misc
+*.local
+.env
+coverage/
+.turbo/
+node_modules/

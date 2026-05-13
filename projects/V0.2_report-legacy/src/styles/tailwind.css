@@ -1,0 +1,106 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Ken Research Color System */
+  --color-alabaster-50: oklch(99% 0 0);
+  --color-alabaster-75: oklch(97% 0 0);
+  --color-alabaster-100: oklch(94% 0 0);
+  --color-alabaster-200: oklch(86% 0 0);
+  --color-alabaster-300: oklch(74% 0 0);
+  --color-alabaster-400: oklch(60% 0 0);
+  --color-alabaster-500: oklch(49% 0 0);
+  --color-alabaster-600: oklch(40% 0 0);
+  --color-alabaster-700: oklch(32% 0 0);
+  --color-alabaster-800: oklch(27% 0 0);
+  --color-alabaster-900: oklch(24% 0 0);
+  --color-alabaster-950: oklch(16% 0 0);
+
+  --color-bold-ken-50: oklch(95% 0.05 12);
+  --color-bold-ken-100: oklch(92% 0.08 12);
+  --color-bold-ken-200: oklch(87% 0.12 12);
+  --color-bold-ken-300: oklch(80% 0.15 12);
+  --color-bold-ken-400: oklch(68% 0.18 12);
+  --color-bold-ken-500: oklch(58% 0.20 12);
+  --color-bold-ken-600: oklch(48% 0.22 12);
+  --color-bold-ken-700: oklch(40% 0.20 12);
+  --color-bold-ken-800: oklch(34% 0.18 12);
+  --color-bold-ken-900: oklch(30% 0.15 12);
+  --color-bold-ken-950: oklch(15% 0.10 12);
+
+  --color-flux-50: oklch(95% 0.08 270);
+  --color-flux-100: oklch(91% 0.12 270);
+  --color-flux-200: oklch(83% 0.18 270);
+  --color-flux-300: oklch(73% 0.24 270);
+  --color-flux-400: oklch(62% 0.28 265);
+  --color-flux-500: oklch(54% 0.32 264);
+  --color-flux-600: oklch(50% 0.35 266);
+  --color-flux-700: oklch(50% 0.35 266);
+  --color-flux-800: oklch(45% 0.32 266);
+  --color-flux-900: oklch(35% 0.28 269);
+  --color-flux-950: oklch(20% 0.15 270);
+
+  --color-periwinkle-50: oklch(97% 0.04 270);
+  --color-periwinkle-100: oklch(94% 0.08 270);
+  --color-periwinkle-200: oklch(88% 0.12 270);
+  --color-periwinkle-300: oklch(78% 0.16 270);
+  --color-periwinkle-400: oklch(68% 0.20 270);
+  --color-periwinkle-500: oklch(58% 0.24 270);
+  --color-periwinkle-600: oklch(50% 0.26 270);
+  --color-periwinkle-700: oklch(45% 0.165 270); /* #5e43bf - Updated to match Figma */
+  --color-periwinkle-800: oklch(38% 0.13 270); /* #4d399a - Updated to match Figma */
+  --color-periwinkle-900: oklch(32% 0.105 270); /* #41347b - Updated to match Figma */
+  --color-periwinkle-950: oklch(20% 0.075 270); /* #271f47 - Updated to match Figma */
+
+  --color-growth-50: oklch(95% 0.03 155);
+  --color-growth-100: oklch(88% 0.05 155);
+  --color-growth-200: oklch(76% 0.08 155);
+  --color-growth-300: oklch(60% 0.10 155);
+  --color-growth-400: oklch(48% 0.12 155);
+  --color-growth-500: oklch(40% 0.13 155);
+  --color-growth-600: oklch(32% 0.12 155);
+  --color-growth-700: oklch(25% 0.10 155);
+  --color-growth-800: oklch(18% 0.08 155);
+  --color-growth-900: oklch(12% 0.06 155);
+  --color-growth-950: oklch(6% 0.04 155);
+
+  /* Semantic Tokens */
+  --color-background: var(--color-alabaster-50);
+  --color-foreground: var(--color-alabaster-900);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: var(--color-alabaster-900);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: var(--color-alabaster-900);
+  --color-primary: var(--color-bold-ken-600);
+  --color-primary-foreground: oklch(100% 0 0);
+  --color-secondary: var(--color-alabaster-100);
+  --color-secondary-foreground: var(--color-alabaster-800);
+  --color-muted: var(--color-alabaster-200);
+  --color-muted-foreground: var(--color-alabaster-600);
+  --color-accent: var(--color-bold-ken-100);
+  --color-accent-foreground: var(--color-bold-ken-700);
+  --color-destructive: oklch(60% 0.24 29);
+  --color-destructive-foreground: oklch(100% 0 0);
+  --color-border: var(--color-alabaster-300);
+  --color-input: var(--color-alabaster-300);
+  --color-ring: var(--color-flux-500);
+
+  /* Table Specific Colors */
+  --color-neutral-primary-soft: oklch(100% 0 0);
+  --color-neutral-secondary-medium: oklch(96% 0 0);
+  --color-text-body: oklch(60% 0 0);
+  --color-text-heading: oklch(24% 0 0);
+  --color-border-default: oklch(86% 0 0);
+  --color-border-default-medium: oklch(80% 0 0);
+
+  /* Spacing */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';

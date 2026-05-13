@@ -1,0 +1,35 @@
+{
+  "name": "@kenresearch/tokens",
+  "version": "0.1.0",
+  "description": "Ken Research design tokens — W3C DTCG canonical source. Style Dictionary v4 builds platform outputs.",
+  "private": false,
+  "type": "module",
+  "main": "build/tokens.js",
+  "types": "build/tokens.d.ts",
+  "files": [
+    "build/",
+    "tokens.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "style-dictionary build --config config.js",
+    "clean": "rm -rf build/",
+    "rebuild": "pnpm clean && pnpm build",
+    "validate": "node ./scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "style-dictionary": "^4.3.0"
+  },
+  "keywords": [
+    "design-tokens",
+    "dtcg",
+    "design-system",
+    "ken-research"
+  ],
+  "license": "UNLICENSED"
+}

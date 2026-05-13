@@ -1,0 +1,40 @@
+{
+  "skill_name": "ken-research",
+  "evals": [
+    {
+      "id": 1,
+      "name": "claim-guard-fifa-carousel",
+      "prompt": "I want to add a 'Trusted by FIFA, Samsung, BMW, World Bank' logo carousel to our homepage hero, between the headline and the recent reports strip. We're using design system v26. Can you draft the section copy and the layout, mobile-first?",
+      "expected_output": "Refuses to put the logos in a carousel because they are flagged unverified single-source claims in the fact sheet. Offers a counter-proposal grounded in verified case studies (DHL or Al-Dawaa) or a different verifiable trust signal. Cites the wedge and the fact sheet. Maps to projects/topnav-v32 or similar.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "factual-headcount-honest",
+      "prompt": "How many people actually work at Ken Research? I'm being asked by a prospect.",
+      "expected_output": "Cites the three numbers from the fact sheet (MCA 62 / LinkedIn 201-500 / website 500+ analysts). Names the most authoritative source (MCA filing, Oct 2024). Flags the 500+ analysts claim as unverified marketing. Suggests an honest answer the user can give the prospect.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "competitor-mordor-receipt",
+      "prompt": "What specifically does Mordor Intelligence do well on their report pages that we should copy? I'm working on the report store today.",
+      "expected_output": "Pulls page-level evidence from the Mordor deep-dive and the synthesis. Names the driver/restraint impact table with CAGR contributions as the highest-leverage move. Cites a specific Mordor URL (e.g., mordorintelligence.com/industry-reports/artificial-intelligence-market). Maps the work to projects/report-store-v07/. Mentions sibling regional links and free segment percentages.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "wedge-alignment-routing",
+      "prompt": "I'm thinking we should pivot to building a private-company database like Crunchbase but for emerging markets. Could be a big growth bet. Thoughts?",
+      "expected_output": "Tests against the wedge. Pushes back honestly: this would be Tier C territory where Crunchbase already wins, and our verified depth is in market sizing, not company entities. References the strategic frame and the white-space analysis. Suggests instead doubling down on the existing wedge — Tier A research depth with Tier C product UX. Does not just agree.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "router-handoff-pure-css",
+      "prompt": "How do I center a div in CSS using flexbox? I keep forgetting the syntax.",
+      "expected_output": "Recognizes this is not a Ken Research strategic question. Hands off cleanly: notes that this is generic frontend work and suggests frontend-design or just answers it directly without invoking the strategy workspace. Does not unnecessarily read strategy files for a pure CSS question.",
+      "files": []
+    }
+  ]
+}

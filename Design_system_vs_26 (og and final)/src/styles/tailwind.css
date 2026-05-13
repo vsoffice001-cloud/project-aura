@@ -1,0 +1,45 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+/* ========================================
+   TAILWIND THEME OVERRIDES
+   ========================================
+   
+   Map Tailwind's text-size utility classes to the design system's
+   Major Third typography scale defined in theme.css.
+   
+   Without this, Tailwind's defaults are used:
+     text-xs  → 0.75rem (12px)   vs DS --text-xs  → 0.8rem (12.8px)
+     text-sm  → 0.875rem (14px)  vs DS --text-sm  → 1rem (16px)
+     text-base→ 1rem (16px)      vs DS --text-base→ 1.25rem (20px)
+     text-lg  → 1.125rem (18px)  vs DS --text-lg  → 1.563rem (25px)
+     text-xl  → 1.25rem (20px)   vs DS --text-xl  → 1.953rem (31.25px)
+     text-2xl → 1.5rem (24px)    vs DS --text-2xl → 2.441rem (39px)
+     text-3xl → 1.875rem (30px)  vs DS --text-3xl → 3.052rem (48.8px)
+   
+   This caused fonts to appear "too small" wherever Tailwind classes
+   were used instead of inline style={{ fontSize: 'var(--text-xxx)' }}.
+   ======================================== */
+
+@theme {
+  --font-size-xs: var(--text-xs);            /* 0.8rem = 12.8px */
+  --font-size-xs--line-height: 1.4;
+  --font-size-sm: var(--text-sm);            /* 1rem = 16px */
+  --font-size-sm--line-height: 1.5;
+  --font-size-base: var(--text-base);        /* 1.25rem = 20px */
+  --font-size-base--line-height: 1.5;
+  --font-size-lg: var(--text-lg);            /* 1.563rem = 25px */
+  --font-size-lg--line-height: 1.4;
+  --font-size-xl: var(--text-xl);            /* 1.953rem = 31.25px */
+  --font-size-xl--line-height: 1.3;
+  --font-size-2xl: var(--text-2xl);          /* 2.441rem = 39px */
+  --font-size-2xl--line-height: 1.2;
+  --font-size-3xl: var(--text-3xl);          /* 3.052rem = 48.8px */
+  --font-size-3xl--line-height: 1.15;
+  --font-size-4xl: var(--text-4xl);          /* 3.815rem = 61px */
+  --font-size-4xl--line-height: 1.1;
+  --font-size-5xl: var(--text-5xl);          /* 4.768rem = 76.3px */
+  --font-size-5xl--line-height: 1.05;
+}

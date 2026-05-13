@@ -1,0 +1,29 @@
+@import '@kenresearch/design-system/styles/base.css';
+@import '@kenresearch/design-system/styles/utilities.css';
+@import '@kenresearch/design-system/styles/editorial-light.css';
+@import '@kenresearch/design-system/styles/cinematic-dark.css';
+
+/* ── v2-only Tailwind v4 @theme registration ─────────────────────────────
+   Reason: v2 builder pattern uses `className="font-display"` + `className="font-body"`
+   Tailwind utilities (272 occurrences across sections). Canonical consumers
+   (V0_lite_report · V0.2_report · report-store) DON'T use these utility classes —
+   they rely on DS atom internal font-family + body cascade. v2 needs explicit
+   @theme registration for those utility classes to compile.
+
+   Future fix: refactor v2 to canonical pattern (drop className font-* · use DS
+   atoms + body cascade) · then this block can be deleted. Logged as tech-debt.
+   ──────────────────────────────────────────────────────────────────────── */
+@theme {
+  --font-display: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+}
+
+/* ── @source safelist for DS atom utilities ──────────────────────────────
+   DS source is in workspace node_modules (pnpm symlinked). Tailwind v4 skips
+   node_modules scanning by default. Force generation of DS-emitted utilities.
+   (LEARNINGS 2026-05-11)
+   ──────────────────────────────────────────────────────────────────────── */
+@source inline("text-white text-black");
+@source inline("font-display font-body font-mono");
+@source inline("focus-visible:ring-2 focus-visible:ring-offset-1 rounded-sm");

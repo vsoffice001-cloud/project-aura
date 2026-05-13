@@ -1,0 +1,15 @@
+packages:
+  - 'design-system/tokens'
+  - 'design-system/core-v2'
+  # core-v2 enabled 2026-05-08 (Phase B3 step 1.6)
+  # Active project ports (uncomment as scaffolded)
+  - 'projects/V0_lite_report'  # enabled 2026-05-08 (Phase C step 1)
+  - 'projects/report-store'    # enabled 2026-05-08 (Phase D step 1)
+  - 'projects/V0.2_report'     # enabled 2026-05-08 (Phase E step 1)
+  - 'projects/reports-pdp-v2'  # enabled 2026-05-11 (DS consumption alignment)
+  # Verification consumer
+  # - 'projects/_ds-verify'
+  # Excluded (legacy, read-only):
+  # - 'design-system/core'           # legacy v1, will be renamed core-legacy-v1/
+  # - 'design-system/dashboard'      # functional duplicate, will merge into core-v2 then delete
+  # - 'projects/*-legacy'            # all legacy folders

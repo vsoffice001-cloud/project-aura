@@ -1,0 +1,48 @@
+# <project-name>
+
+> <one-line purpose>
+
+## Stack
+- <framework + version>
+- <key libs>
+
+## Prerequisites
+- Node ≥20 (see `.nvmrc`)
+- pnpm ≥10 (see `packageManager` in `package.json`)
+
+## Quick start
+```bash
+pnpm install
+pnpm dev
+```
+
+Open http://localhost:<port>.
+
+## Scripts
+| Script | What |
+|---|---|
+| `pnpm dev` | dev server |
+| `pnpm build` | production build |
+| `pnpm start` | production preview |
+| `pnpm lint` | ESLint |
+| `pnpm format` | Prettier write |
+| `pnpm test` | Playwright + axe |
+
+## Project layout
+```
+src/
+  app/          # routes (App Router) | pages
+  components/   # UI components
+  lib/          # utilities, mock data
+  styles/       # global CSS, tokens
+```
+
+## Brand tokens
+See workspace `Quick_start_guide.md` and `<this-project>/src/<theme-file>`.
+
+## Handover
+See `HANDOVER.md` for tech-team integration notes.
+See `STATUS.md` for current handover state.
+
+## License
+Private — internal Ken Research design project.

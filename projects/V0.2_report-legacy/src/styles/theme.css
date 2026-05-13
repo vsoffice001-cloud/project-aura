@@ -1,0 +1,510 @@
+@layer base {
+  /* ============================================
+     Project KP 2.0 Product Design System
+     Version: 2.0.1
+     Last Updated: January 23, 2026
+     ============================================ */
+  
+  :root {
+    /* ============================================
+       FOUNDATION COLORS
+       ============================================ */
+    --black: #000000;
+    --white: #ffffff;
+    
+    /* ============================================
+       GRAYSCALE (Black Tints 50-900)
+       ============================================ */
+    --black-50: #fafafa;
+    --black-100: #f5f5f5;
+    --black-200: #e5e5e5;
+    --black-300: #d4d4d4;
+    --black-400: #a3a3a3;
+    --black-500: #737373;
+    --black-600: #525252;
+    --black-700: #404040;
+    --black-800: #262626;
+    --black-900: #171717;
+    
+    /* ============================================
+       WARM OFF-WHITE SCALE (50-900)
+       ============================================ */
+    --warm-50: #fefdfd;
+    --warm-100: #fcfbfa;
+    --warm-200: #f9f7f6;
+    --warm-300: #f5f2f1;   /* BASE - Section backgrounds */
+    --warm-400: #f0ebe9;
+    --warm-500: #eae5e3;   /* Borders */
+    --warm-600: #d9d1ce;
+    --warm-700: #c8bcb8;
+    --warm-800: #b7a9a3;
+    --warm-900: #a6968e;
+    
+    /* ============================================
+       KEN BOLD RED - PRIMARY BRAND COLOR
+       ============================================ */
+    --brand-red: #b01f24;         /* PRIMARY BRAND - CTAs */
+    --brand-red-hover: #8f181d;   /* Hover state */
+    --brand-red-active: #771419;  /* Active state */
+    
+    /* Complete Red Scale (50-900) */
+    --red-50: #fef2f2;
+    --red-100: #fee2e2;
+    --red-200: #fecaca;
+    --red-300: #fca5a7;
+    --red-400: #f87176;
+    --red-500: #dc3238;
+    --red-600: #b01f24;   /* PRIMARY BRAND */
+    --red-700: #8f181d;
+    --red-800: #771419;
+    --red-900: #5f1014;
+    
+    /* ============================================
+       PERIWINKLE - TRUST, RELIABILITY, SOFT ACCENTS
+       ============================================ */
+    --periwinkle-50: #fafbfe;
+    --periwinkle-100: #f5f6fd;
+    --periwinkle-200: #ebedfb;
+    --periwinkle-300: #dfe1f9;
+    --periwinkle-400: #d3d5f9;
+    --periwinkle-500: #c3c6f9;
+    --periwinkle-600: #a7abf0;   /* BASE */
+    --periwinkle-700: #8b90e0;
+    --periwinkle-800: #7075c8;
+    --periwinkle-900: #5a5fa0;
+    
+    /* ============================================
+       PURPLE - PREMIUM FEATURES, CHARTS, DATA VISUALIZATION
+       ============================================ */
+    --purple-50: #f4f2fc;
+    --purple-100: #eff1fe;
+    --purple-200: #e2e4fd;
+    --purple-300: #b8aeef;
+    --purple-400: #9b80eb;
+    --purple-500: #7f5fe3;   /* BASE - Standard interactive elements */
+    --purple-600: #6d52d9;   /* Premium features */
+    --purple-700: #5b43b8;
+    --purple-800: #4a3697;
+    --purple-900: #3a2b76;
+    
+    /* ============================================
+       GLASSMORPHIC / HERO OVERLAY COLORS
+       ============================================ */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-text: rgb(255, 255, 255);
+    --glass-text-muted: rgba(255, 255, 255, 0.4);
+    --glass-accent: rgba(255, 255, 255, 0.3);
+    --glass-glow: rgba(255, 255, 255, 0.05);
+    --glass-hover: rgba(255, 255, 255, 0.15);
+    
+    /* ============================================
+       UTILITY COLORS
+       ============================================ */
+    
+    /* Green - Success / Positive Metrics */
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-400: #4ade80;
+    --green-500: #22c55e;
+    --green-600: #16a34a;   /* BASE */
+    --green-700: #15803d;
+    --green-800: #166534;
+    --green-900: #14532d;
+    
+    /* Rose - Error / Warning / Validation */
+    --rose-50: #fff1f2;
+    --rose-100: #ffe4e6;
+    --rose-200: #fecdd3;
+    --rose-300: #fda4af;
+    --rose-400: #fb7185;
+    --rose-500: #f43f5e;
+    --rose-600: #e11d48;   /* BASE */
+    --rose-700: #be123c;
+    --rose-800: #9f1239;
+    --rose-900: #881337;
+    
+    /* Amber - Warning / Highlights */
+    --amber-50: #fffbeb;
+    --amber-100: #fef3c7;
+    --amber-200: #fde68a;
+    --amber-300: #fcd34d;
+    --amber-400: #fbbf24;
+    --amber-500: #f59e0b;
+    --amber-600: #d97706;   /* BASE */
+    --amber-700: #b45309;
+    --amber-800: #92400e;
+    --amber-900: #78350f;
+    
+    /* ============================================
+       SEMANTIC COLOR TOKENS
+       ============================================ */
+    
+    /* Text Colors */
+    --color-text-primary: var(--black);
+    --color-text-secondary: var(--black-600);
+    --color-text-tertiary: var(--black-500);
+    --color-text-muted: var(--black-400);
+    --color-text-disabled: var(--black-300);
+    --color-text-inverse: var(--white);
+    
+    /* Background Colors */
+    --color-bg-primary: var(--white);
+    --color-bg-secondary: var(--black-50);
+    --color-bg-tertiary: var(--black-100);
+    --color-bg-warm: var(--warm-300);
+    --color-bg-warm-light: var(--warm-200);
+    --color-bg-dark: var(--black);
+    
+    /* Border Colors */
+    --color-border-default: var(--black-200);
+    --color-border-light: var(--black-100);
+    --color-border-medium: var(--black-300);
+    --color-border-dark: var(--black-400);
+    --color-border-warm: var(--warm-500);
+    
+    /* Brand Colors */
+    --color-brand-primary: var(--brand-red);
+    --color-brand-primary-hover: var(--brand-red-hover);
+    --color-brand-primary-active: var(--brand-red-active);
+    --color-brand-accent: var(--periwinkle-600);
+    
+    /* Chart & Data Visualization Colors */
+    --color-chart-primary: var(--purple-500);   /* Primary chart color - Standard interactive elements */
+    --color-chart-bg: var(--purple-100);        /* Chart backgrounds */
+    
+    /* Feedback Colors */
+    --color-success: var(--green-600);
+    --color-success-bg: var(--green-50);
+    --color-error: var(--rose-600);
+    --color-error-bg: var(--rose-50);
+    --color-warning: var(--amber-600);
+    --color-warning-bg: var(--amber-50);
+    --color-info: var(--periwinkle-600);
+    --color-info-bg: var(--periwinkle-50);
+    
+    /* ============================================
+       TYPOGRAPHY TOKENS
+       ============================================ */
+    
+    /* Font Families */
+    --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    
+    /* Font Sizes - Major Third Scale (1.25 ratio) */
+    --text-xs: 12px;       /* 0.75rem - Metadata, timestamps */
+    --text-sm: 14px;       /* 0.875rem - Captions, labels */
+    --text-base: 16px;     /* 1rem - Standard body (foundation) */
+    --text-lg: 20px;       /* 1.25rem - Large body, emphasis */
+    --text-xl: 25px;       /* 1.5625rem - Card headings */
+    --text-2xl: 31px;      /* 1.953rem - Subsections H3 */
+    --text-3xl: 39px;      /* 2.441rem - Main sections H2 */
+    --text-4xl: 48px;      /* 3rem - Hero H1 only ⭐ */
+    --text-5xl: 61px;      /* 3.815rem - Large hero */
+    --text-6xl: 76px;      /* 4.768rem - Massive impact */
+    
+    /* Font Weights - Two Weights Only */
+    --font-regular: 400;
+    --font-bold: 700;
+    
+    /* Line Heights - Generous Whitespace */
+    --leading-tight: 1.2;        /* H1, H2 */
+    --leading-snug: 1.3;         /* H3 */
+    --leading-normal: 1.4;       /* H4, H5, H6 */
+    --leading-relaxed: 1.5;      /* Small text */
+    --leading-comfortable: 1.6;  /* Body text ⭐ */
+    
+    /* Text Opacity Hierarchy */
+    --text-opacity-primary: 1;      /* 100% - Primary headings */
+    --text-opacity-body: 0.7;       /* 70% - Standard body */
+    --text-opacity-caption: 0.6;    /* 60% - Captions, labels */
+    --text-opacity-metadata: 0.4;   /* 40% - Metadata, timestamps */
+    
+    /* ============================================
+       SPACING TOKENS
+       ============================================ */
+    
+    /* Base Spacing Scale */
+    --space-0: 0px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+    --space-24: 96px;
+    --space-32: 128px;
+    
+    /* Semantic Spacing */
+    --space-component-xs: var(--space-2);
+    --space-component-sm: var(--space-3);
+    --space-component-md: var(--space-4);   /* Base unit */
+    --space-component-lg: var(--space-6);
+    --space-component-xl: var(--space-8);
+    
+    --space-layout-sm: var(--space-6);
+    --space-layout-md: var(--space-8);
+    --space-layout-lg: var(--space-12);     /* Standard section */
+    --space-layout-xl: var(--space-16);
+    --space-layout-xxl: var(--space-24);
+    
+    /* Container Padding */
+    --container-mobile: 16px;
+    --container-tablet: 32px;
+    --container-desktop: 48px;
+    --container-wide: 64px;
+    
+    /* Content Spacing */
+    --paragraph-gap: 24px;
+    --heading-gap: 16px;
+    --card-padding: 24px;
+    --section-margin: 64px;
+    
+    /* ============================================
+       LAYOUT & CONTAINER – Proportional padding
+       ============================================ */
+    
+    /* Core content area constraints */
+    --content-max-width: 1440px;          /* Prevents ultra-wide text lines on 4K+ */
+    --content-min-width: 320px;           /* Mobile safety */
+    
+    /* Side padding – proportional to viewport width */
+    --padding-page-side: 20%;             /* Left & right = 20% each → 40% total padding */
+    
+    /* Responsive fallbacks (use media queries or clamp for safety) */
+    --padding-page-side-min: 16px;        /* Never smaller than mobile comfort */
+    --padding-page-side-max: 160px;       /* Cap extreme padding on ultra-wide */
+    
+    /* Final computed padding (recommended usage) */
+    --padding-page-inline: clamp(
+      var(--padding-page-side-min),
+      var(--padding-page-side),
+      var(--padding-page-side-max)
+    );
+    
+    /* ============================================
+       MANDATORY SECTION PADDING RULE
+       ============================================
+       
+       ⚠️ ALL SECTIONS MUST USE STANDARD PADDING ⚠️
+       
+       Standard section padding for ALL components:
+       px-[67.5px] lg:px-[90px]
+       
+       CORRECT USAGE:
+       <section>
+         <div className="max-w-7xl mx-auto px-[67.5px] lg:px-[90px]">
+           ... content ...
+         </div>
+       </section>
+       
+       ❌ DO NOT USE:
+       - px-6, px-12 (too small)
+       - Custom padding values that deviate from the standard
+       - CSS variables like --padding-page-inline (incorrect implementation)
+       
+       This ensures consistent horizontal spacing across all sections
+       and maintains the design integrity of the landing page.
+       ============================================ */
+    
+    /* ============================================
+       MANDATORY CHAPTER NUMBERING RULE
+       ============================================
+       
+       ⚠️ ALL SECTION OVERHEAD TEXT MUST INCLUDE CHAPTER NUMBER ⚠️
+       
+       Format: "CHAPTER [NUMBER] - [Section Name]"
+       
+       Examples:
+       - "CHAPTER 1 - Market Overview"
+       - "CHAPTER 2 - Market Analysis"
+       - "CHAPTER 3 - Detailed Data"
+       - "CHAPTER 4 - Regional Comparison"
+       - "CHAPTER 5 - Competitive Landscape"
+       
+       CORRECT USAGE:
+       <OverheadText>CHAPTER 3 - Detailed Data</OverheadText>
+       
+       ❌ INCORRECT:
+       <OverheadText>Detailed Data</OverheadText>
+       
+       This provides clear visual hierarchy and helps users navigate
+       the report structure systematically.
+       ============================================ */
+    
+    /* ============================================
+       BORDER RADIUS – Intent-driven scale
+       ============================================ */
+    --radius-xs: 2.5px;    /* Exceptional: tiny tags, badges, micro-buttons */
+    --radius-sm: 5px;      /* Tight: form inputs, chips, toggles */
+    --radius-md: 10px;     /* Standard: cards, panels, tables */
+    --radius-lg: 15px;     /* Dialogs, modals, drawers, large surfaces */
+    --radius-xl: 20px;     /* Marketing hero containers, large banners (optional extension) */
+    --radius-full: 9999px; /* Pills, avatars, circular buttons */
+    
+    /* ============================================
+       BORDER THICKNESS – Standard & Ring Utilities
+       ============================================ */
+    
+    /* Standard Border Thickness */
+    --border-0: 0px;       /* No border */
+    --border-1: 1px;       /* Default border (standard) */
+    --border-2: 2px;       /* Medium emphasis borders */
+    --border-4: 4px;       /* Strong borders */
+    --border-8: 8px;       /* Extra strong borders (rare) */
+    
+    /* Ring Utilities (for focus/active states) */
+    --ring-0: 0px;         /* No ring */
+    --ring-1: 1px;         /* Subtle focus ring */
+    --ring-2: 2px;         /* Standard focus/active ring ⭐ */
+    --ring-3: 3px;         /* Default ring (Tailwind standard) */
+    --ring-4: 4px;         /* Strong focus ring */
+    --ring-8: 8px;         /* Extra strong ring (rare) */
+    
+    /* Ring Offset (gap between element and ring) */
+    --ring-offset-0: 0px;  /* No offset */
+    --ring-offset-1: 1px;  /* Minimal gap */
+    --ring-offset-2: 2px;  /* Standard gap ⭐ */
+    --ring-offset-4: 4px;  /* Large gap */
+    --ring-offset-8: 8px;  /* Extra large gap */
+    
+    /* ============================================
+       ELEVATION / SHADOW LEVELS – Semantic depth
+       ============================================ */
+    --elevation-flat: none;
+    --elevation-xs: 0 1px 2px rgba(0,0,0,0.08);
+    --elevation-sm: 0 1px 2px rgba(0,0,0,0.08);   /* subtle lift, e.g. cards on hover */
+    --elevation-md: 0 4px 12px rgba(0,0,0,0.12);  /* standard card, popover */
+    --elevation-lg: 0 12px 28px rgba(0,0,0,0.18); /* modal, dialog, dropdown menu */
+    --elevation-xl: 0 20px 40px rgba(0,0,0,0.22); /* deep overlays, floating panels (optional) */
+    
+    /* Keep brand shadows for colored accents */
+    --shadow-brand-red: 0 10px 15px -3px rgba(176, 31, 36, 0.1), 0 4px 6px -4px rgba(176, 31, 36, 0.1);
+    --shadow-brand-red-hover: 0 20px 25px -5px rgba(176, 31, 36, 0.15), 0 8px 10px -6px rgba(176, 31, 36, 0.1);
+    --shadow-brand-periwinkle: 0 10px 15px -3px rgba(167, 171, 240, 0.1), 0 4px 6px -4px rgba(167, 171, 240, 0.1);
+    --shadow-brand-purple: 0 10px 15px -3px rgba(127, 95, 227, 0.1), 0 4px 6px -4px rgba(127, 95, 227, 0.08);
+    
+    /* ============================================
+       TRANSITIONS & TIMING – Feel tuning
+       ============================================ */
+    --duration-xxs: 150ms;   /* very quick micro-interactions */
+    --duration-xs: 200ms;
+    --duration-sm: 300ms;    /* default hover/click feedback */
+    --duration-md: 400ms;
+    --duration-lg: 500ms;
+    --duration-xl: 600ms;    /* page transitions, drawer open */
+    --duration-xxl: 700ms;
+    --duration-xxxl: 800ms;
+    --duration-max: 900ms;   /* slow reveals, loading emphasis */
+    
+    --timing-ease-out: cubic-bezier(0.16, 1, 0.3, 1);  /* recommend for most exits */
+    --timing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ============================================
+     GLOBAL STYLES
+     ============================================ */
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    border-color: var(--color-border-default);
+  }
+
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================
+     MANDATORY TYPOGRAPHY RULE
+     ALL H1-H6 NOW USE DM SANS
+     ============================================
+     
+     This rule is MANDATORY and applies globally to all heading elements.
+     
+     ⚠️ UPDATED: ALL ELEMENTS NOW USE DM SANS ⚠️
+     
+     - ALL semantic heading tags (h1, h2, h3, h4, h5, h6) MUST use DM Sans
+     - This includes hero headings, section titles, card headings, etc.
+     - Consistent sans-serif typography for all text elements
+     - Available weights: 400 (Regular) and 700 (Bold) only
+     
+     Why? DM Sans provides excellent readability and modern aesthetics
+     across all text elements including headings and body copy.
+     ============================================ */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display); /* DM Sans – MANDATORY, never override */
+    font-weight: 400; /* Regular weight - default for all headings */
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+  
+  /* Individual heading sizes - Major Third Scale */
+  h1 {
+    font-size: var(--text-3xl);       /* 39px */
+    line-height: var(--leading-tight); /* 1.2 */
+  }
+  
+  h2 {
+    font-size: var(--text-2xl);       /* 31px */
+    line-height: var(--leading-snug);  /* 1.3 */
+  }
+  
+  h3 {
+    font-size: var(--text-xl);        /* 25px */
+    line-height: var(--leading-normal); /* 1.4 */
+  }
+  
+  h4 {
+    font-size: var(--text-lg);        /* 20px */
+    line-height: var(--leading-normal); /* 1.4 */
+  }
+  
+  h5 {
+    font-size: var(--text-base);      /* 16px */
+    line-height: var(--leading-normal); /* 1.4 */
+  }
+  
+  h6 {
+    font-size: var(--text-sm);        /* 14px */
+    line-height: var(--leading-normal); /* 1.4 */
+  }
+  
+  /* Body text with opacity hierarchy */
+  p {
+    color: rgba(0, 0, 0, var(--text-opacity-body)); /* 70% opacity */
+  }
+
+  /* ============================================
+     UTILITY CLASSES
+     ============================================ */
+
+  /* Dot Pattern Background - Reusable */
+  .dot-pattern-bg {
+    opacity: var(--pattern-opacity);
+    background-image: radial-gradient(circle at var(--pattern-dot-position) var(--pattern-dot-position), hsl(var(--foreground)) var(--pattern-dot-size), transparent 0);
+    background-size: var(--pattern-grid-size) var(--pattern-grid-size);
+  }
+
+  /* Gradient Card Purple - Table of Contents style */
+  .gradient-card-purple {
+    background: linear-gradient(135deg, rgba(243, 244, 255, 0.5), rgba(250, 250, 250, 0.3));
+    border: 1px solid rgba(226, 228, 253, 0.5);
+  }
+}

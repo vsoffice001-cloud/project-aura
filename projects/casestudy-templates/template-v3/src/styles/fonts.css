@@ -1,0 +1,34 @@
+/* ========================================
+   FONT IMPORTS
+   ======================================== 
+   
+   All font imports must be added to this file only.
+   Font imports should always be added to the top of the file.
+   
+   ======================================== */
+
+/* DM Sans - Modern Sans-Serif for Body Text, UI & Labels */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap');
+
+/* Noto Serif - Editorial Serif Font for Headings & Display Text */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;500&display=swap');
+
+/* 
+ * DM Sans Weights in Use:
+ * - 300 (Light): Subtle body text (if needed)
+ * - 400 (Normal): Body text, descriptions, standard UI elements
+ * - 500 (Medium): Labels, navbar items, emphasized text
+ * - 700 (Bold): Buttons, section labels, strong emphasis
+ * 
+ * Optical sizing (opsz) 9-40: Automatically adjusts for different sizes
+ * - Small text (9-12px): More open spacing, increased x-height
+ * - Large text (20px+): Tighter spacing, refined details
+ * 
+ * Noto Serif Weights in Use:
+ * - 300 (Light): Headings, hero title, section titles, large numbers
+ * - 400 (Normal): Lead paragraphs, body headings, testimonials
+ * - 500 (Medium): Emphasized headings (if needed in future)
+ * 
+ * display=swap: Shows fallback font first, then swaps to custom font when loaded
+ * for better perceived performance and no invisible text during loading
+ */

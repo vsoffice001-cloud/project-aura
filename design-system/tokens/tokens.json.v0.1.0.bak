@@ -1,0 +1,251 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "color": {
+    "foundation": {
+      "black": { "$value": "#000000", "$type": "color", "$description": "Foundation black — 92% usage surface" },
+      "white": { "$value": "#ffffff", "$type": "color", "$description": "Foundation white — 92% usage surface" }
+    },
+    "brand": {
+      "red": { "$value": "#b01f24", "$type": "color", "$description": "Ken Red — CTAs ONLY (5% usage). Never use for decoration." }
+    },
+    "accent": {
+      "purple": { "$value": "#806ce0", "$type": "color", "$description": "Purple accent — shadows and highlights only (3% usage)" },
+      "periwinkle": { "$value": "#c3c6f9", "$type": "color", "$description": "Periwinkle accent — light tint for subtle highlights" },
+      "perano": { "$value": "#dfeafa", "$type": "color", "$description": "Perano light blue — very subtle accent tint" },
+      "warm": { "$value": "#d9d1ce", "$type": "color", "$description": "Warm neutral accent — borders and muted backgrounds" },
+      "teal": { "$value": "#00e5ff", "$type": "color", "$description": "Cinematic dark variant only — glow/neon accent" }
+    },
+    "ramp": {
+      "red": {
+        "50":  { "$value": "#fef2f2", "$type": "color" },
+        "100": { "$value": "#fee2e2", "$type": "color" },
+        "200": { "$value": "#fecaca", "$type": "color" },
+        "300": { "$value": "#fca5a7", "$type": "color" },
+        "400": { "$value": "#f87176", "$type": "color" },
+        "500": { "$value": "#dc3238", "$type": "color" },
+        "600": { "$value": "#b01f24", "$type": "color" },
+        "700": { "$value": "#8f181d", "$type": "color" },
+        "800": { "$value": "#771419", "$type": "color" },
+        "900": { "$value": "#5f1014", "$type": "color" }
+      },
+      "black": {
+        "50":  { "$value": "#fafafa", "$type": "color" },
+        "100": { "$value": "#f5f5f5", "$type": "color" },
+        "200": { "$value": "#e5e5e5", "$type": "color" },
+        "300": { "$value": "#d4d4d4", "$type": "color" },
+        "400": { "$value": "#a3a3a3", "$type": "color" },
+        "500": { "$value": "#737373", "$type": "color" },
+        "600": { "$value": "#525252", "$type": "color" },
+        "700": { "$value": "#404040", "$type": "color" },
+        "800": { "$value": "#262626", "$type": "color" },
+        "900": { "$value": "#171717", "$type": "color" }
+      },
+      "white": {
+        "800": { "$value": "#f5f5f5", "$type": "color" },
+        "900": { "$value": "#fafafa", "$type": "color" }
+      },
+      "warm": {
+        "50":  { "$value": "#fefdfd", "$type": "color" },
+        "100": { "$value": "#fcfbfa", "$type": "color" },
+        "200": { "$value": "#f9f7f6", "$type": "color" },
+        "300": { "$value": "#f5f2f1", "$type": "color" },
+        "400": { "$value": "#f0ebe9", "$type": "color" },
+        "500": { "$value": "#eae5e3", "$type": "color" },
+        "600": { "$value": "#d9d1ce", "$type": "color" },
+        "700": { "$value": "#c8bcb8", "$type": "color" },
+        "800": { "$value": "#b7a9a3", "$type": "color" },
+        "900": { "$value": "#a6968e", "$type": "color" }
+      },
+      "purple": {
+        "50":  { "$value": "#f7f6fe", "$type": "color" },
+        "100": { "$value": "#efedfd", "$type": "color" },
+        "200": { "$value": "#dfdcfb", "$type": "color" },
+        "300": { "$value": "#c4bef7", "$type": "color" },
+        "400": { "$value": "#a89ff2", "$type": "color" },
+        "500": { "$value": "#9488ec", "$type": "color" },
+        "600": { "$value": "#806ce0", "$type": "color" },
+        "700": { "$value": "#6c5bc0", "$type": "color" },
+        "800": { "$value": "#5a4ba0", "$type": "color" },
+        "900": { "$value": "#483c80", "$type": "color" }
+      },
+      "periwinkle": {
+        "50":  { "$value": "#fafbfe", "$type": "color" },
+        "100": { "$value": "#f5f6fd", "$type": "color" },
+        "200": { "$value": "#ebedfb", "$type": "color" },
+        "300": { "$value": "#dfe1f9", "$type": "color" },
+        "400": { "$value": "#d3d5f9", "$type": "color" },
+        "500": { "$value": "#c3c6f9", "$type": "color" },
+        "600": { "$value": "#a7abf0", "$type": "color" },
+        "700": { "$value": "#8b90e0", "$type": "color" },
+        "800": { "$value": "#7075c8", "$type": "color" },
+        "900": { "$value": "#5a5fa0", "$type": "color" }
+      },
+      "perano": {
+        "50":  { "$value": "#fcfdfe", "$type": "color" },
+        "100": { "$value": "#f9fbfe", "$type": "color" },
+        "200": { "$value": "#f4f8fd", "$type": "color" },
+        "300": { "$value": "#eff5fc", "$type": "color" },
+        "400": { "$value": "#e9f2fb", "$type": "color" },
+        "500": { "$value": "#dfeafa", "$type": "color" },
+        "600": { "$value": "#c8dff5", "$type": "color" },
+        "700": { "$value": "#a7c9ed", "$type": "color" },
+        "800": { "$value": "#86b3e5", "$type": "color" },
+        "900": { "$value": "#6b94c0", "$type": "color" }
+      },
+      "coral": {
+        "50":  { "$value": "#fffbf9", "$type": "color" },
+        "100": { "$value": "#fff5f1", "$type": "color" },
+        "200": { "$value": "#ffebe4", "$type": "color" },
+        "300": { "$value": "#fdd7cb", "$type": "color" },
+        "400": { "$value": "#fbb8a7", "$type": "color" },
+        "500": { "$value": "#f99b85", "$type": "color" },
+        "600": { "$value": "#ea7a5f", "$type": "color" },
+        "700": { "$value": "#d96548", "$type": "color" },
+        "800": { "$value": "#c15138", "$type": "color" },
+        "900": { "$value": "#a23f2d", "$type": "color" }
+      }
+    }
+  },
+  "semantic": {
+    "$description": "Intent-named tokens for consumer pages. Reduces literal-alpha drift across surfaces. Added 2026-05-07 from competition-benchmarking-listing-v01 learnings.",
+    "ink": {
+      "$description": "Text + icon hierarchy on light surfaces (white / warm-*). Use over rgba(0,0,0,*) literals.",
+      "strong":  { "$value": "rgba(0, 0, 0, 0.90)", "$type": "color", "$description": "Primary headings, hover state" },
+      "body":    { "$value": "rgba(0, 0, 0, 0.80)", "$type": "color", "$description": "Body text, list-card titles" },
+      "muted":   { "$value": "rgba(0, 0, 0, 0.60)", "$type": "color", "$description": "Secondary text, dek" },
+      "subtle":  { "$value": "rgba(0, 0, 0, 0.45)", "$type": "color", "$description": "Meta lines, eyebrow color, link tier" },
+      "faint":   { "$value": "rgba(0, 0, 0, 0.35)", "$type": "color", "$description": "Counts, ranks, very-muted" },
+      "whisper": { "$value": "rgba(0, 0, 0, 0.18)", "$type": "color", "$description": "Dot separators, dividers as text-color" }
+    },
+    "ink-on-dark": {
+      "$description": "Text + icon hierarchy on black / cinematic surfaces.",
+      "strong":  { "$value": "rgba(255, 255, 255, 0.92)", "$type": "color" },
+      "body":    { "$value": "rgba(255, 255, 255, 0.75)", "$type": "color" },
+      "muted":   { "$value": "rgba(255, 255, 255, 0.62)", "$type": "color", "$description": "Dek, secondary text" },
+      "subtle":  { "$value": "rgba(255, 255, 255, 0.45)", "$type": "color", "$description": "Eyebrow, counts" },
+      "faint":   { "$value": "rgba(255, 255, 255, 0.30)", "$type": "color" },
+      "whisper": { "$value": "rgba(255, 255, 255, 0.18)", "$type": "color" }
+    },
+    "hairline": {
+      "$description": "Border / divider tokens on light surfaces.",
+      "strong": { "$value": "rgba(0, 0, 0, 0.18)", "$type": "color", "$description": "Hover-state borders" },
+      "default": { "$value": "rgba(0, 0, 0, 0.12)", "$type": "color" },
+      "soft":   { "$value": "rgba(0, 0, 0, 0.08)", "$type": "color", "$description": "Default card border" },
+      "faint":  { "$value": "rgba(0, 0, 0, 0.07)", "$type": "color", "$description": "Subtle dividers" }
+    },
+    "hairline-on-dark": {
+      "default": { "$value": "rgba(255, 255, 255, 0.12)", "$type": "color" },
+      "soft":    { "$value": "rgba(255, 255, 255, 0.10)", "$type": "color" },
+      "faint":   { "$value": "rgba(255, 255, 255, 0.06)", "$type": "color" }
+    },
+    "surface-tint": {
+      "$description": "Hover / selected row tints on light surfaces.",
+      "soft":   { "$value": "rgba(0, 0, 0, 0.025)", "$type": "color", "$description": "Hover row" },
+      "default": { "$value": "rgba(0, 0, 0, 0.04)", "$type": "color", "$description": "Selected row" },
+      "strong": { "$value": "rgba(0, 0, 0, 0.06)", "$type": "color", "$description": "Active row" }
+    },
+    "surface": {
+      "black":            { "$value": "#000000", "$type": "color", "$description": "Pure black — closes --black token gap (theme.css max was --black-900: #171717)" },
+      "white":            { "$value": "#ffffff", "$type": "color" },
+      "white-glass":      { "$value": "rgba(255, 255, 255, 0.95)", "$type": "color", "$description": "Sticky bars w/ backdrop-filter blur" },
+      "white-glass-soft": { "$value": "rgba(255, 255, 255, 0.85)", "$type": "color" },
+      "cinematic-1":      { "$value": "#1a1a1c", "$type": "color", "$description": "Toaster, dark surface tint between --black-800 + --black-900" },
+      "cinematic-2":      { "$value": "#111113", "$type": "color" }
+    },
+    "scrim": {
+      "$value": "rgba(0, 0, 0, 0.50)", "$type": "color", "$description": "Modal / sheet backdrop overlay"
+    },
+    "brand-red-alpha": {
+      "$description": "Brand red w/ alpha — for chip borders, faint accents, image-overlay badge wrapper bg.",
+      "30": { "$value": "rgba(176, 31, 36, 0.30)", "$type": "color" },
+      "12": { "$value": "rgba(176, 31, 36, 0.12)", "$type": "color" },
+      "65": { "$value": "rgba(176, 31, 36, 0.65)", "$type": "color", "$description": "Image-overlay 'Featured' badge bg (WCAG AAA over images)" },
+      "80": { "$value": "rgba(176, 31, 36, 0.80)", "$type": "color", "$description": "Image-overlay 'Featured' badge border" }
+    }
+  },
+  "typography": {
+    "family": {
+      "display": { "$value": "Noto Serif, Georgia, Times New Roman, serif", "$type": "fontFamily", "$description": "Headings, hero, editorial — never use for body/buttons/nav" },
+      "body":    { "$value": "DM Sans, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif", "$type": "fontFamily", "$description": "Body text, UI elements, buttons, labels, navigation" },
+      "mono":    { "$value": "SF Mono, Fira Code, Fira Mono, Roboto Mono, monospace", "$type": "fontFamily", "$description": "Code and data display" }
+    },
+    "size": {
+      "2xs":     { "$value": "0.75rem",  "$type": "dimension", "$description": "12px — navbar text, micro labels when 12.8px too large" },
+      "xs":      { "$value": "0.8rem",   "$type": "dimension", "$description": "12.8px — labels, metadata, categories, section eyebrows" },
+      "compact": { "$value": "0.875rem", "$type": "dimension", "$description": "14px — compact body text, challenges with 4+ cards" },
+      "nav":     { "$value": "0.875rem", "$type": "dimension", "$description": "14px — navigation elements, TOC items, compact CTAs, button text" },
+      "sm":      { "$value": "1rem",     "$type": "dimension", "$description": "16px — standard body text, descriptions, paragraphs (90% of text)" },
+      "base":    { "$value": "1.25rem",  "$type": "dimension", "$description": "20px — large body text, card titles (4+ cards)" },
+      "lg":      { "$value": "1.563rem", "$type": "dimension", "$description": "25px — card titles (2-3 cards)" },
+      "xl":      { "$value": "1.953rem", "$type": "dimension", "$description": "31.25px — subsection headings (h3), engagement objectives, methodology steps" },
+      "2xl":     { "$value": "2.441rem", "$type": "dimension", "$description": "39px — section headings (h2), main sections standard" },
+      "3xl":     { "$value": "3.052rem", "$type": "dimension", "$description": "48.8px — hero h1, final CTA h2 — reserved for hero moments only" },
+      "4xl":     { "$value": "3.815rem", "$type": "dimension", "$description": "61px — extra large headings, challenge card numbers when <4 cards" },
+      "5xl":     { "$value": "4.768rem", "$type": "dimension", "$description": "76.3px — massive headings, future use" }
+    },
+    "weight": {
+      "light":  { "$value": "300", "$type": "fontWeight" },
+      "normal": { "$value": "400", "$type": "fontWeight" },
+      "medium": { "$value": "500", "$type": "fontWeight" },
+      "bold":   { "$value": "700", "$type": "fontWeight" },
+      "black":  { "$value": "900", "$type": "fontWeight" }
+    },
+    "lineHeight": {
+      "tight":   { "$value": "1.1", "$type": "number", "$description": "Display / 4xl-5xl headings" },
+      "snug":    { "$value": "1.3", "$type": "number", "$description": "Section headings (2xl)" },
+      "normal":  { "$value": "1.5", "$type": "number", "$description": "Card titles, compact text" },
+      "relaxed": { "$value": "1.6", "$type": "number", "$description": "Body text, descriptions" }
+    }
+  },
+  "container": {
+    "page":    { "$value": "75rem",     "$type": "dimension", "$description": "1200px — full page shell, hero backgrounds, navbar" },
+    "content": { "$value": "62.5rem",   "$type": "dimension", "$description": "1000px — standard sections, card grids, main content" },
+    "narrow":  { "$value": "56.25rem",  "$type": "dimension", "$description": "900px — CTAs, testimonials, focused content" },
+    "prose":   { "$value": "43.75rem",  "$type": "dimension", "$description": "700px — paragraph text, body copy (65-75 chars per line)" },
+    "compact": { "$value": "37.5rem",   "$type": "dimension", "$description": "600px — tight descriptions, methodology blurbs" }
+  },
+  "padding": {
+    "mobile":  { "$value": "1rem",   "$type": "dimension", "$description": "16px — mobile horizontal padding (px-4)" },
+    "tablet":  { "$value": "1.5rem", "$type": "dimension", "$description": "24px — tablet horizontal padding (sm:px-6)" },
+    "desktop": { "$value": "2rem",   "$type": "dimension", "$description": "32px — desktop horizontal padding (md:px-8)" }
+  },
+  "radius": {
+    "image":  { "$value": "2.5px",   "$type": "dimension", "$description": "Images, photos, visual media" },
+    "button": { "$value": "5px",     "$type": "dimension", "$description": "Buttons, small cards, badges" },
+    "card":   { "$value": "10px",    "$type": "dimension", "$description": "Big cards, containers, sections" },
+    "pill":   { "$value": "9999px",  "$type": "dimension", "$description": "Full pill / capsule shape" }
+  },
+  "variant": {
+    "cinematic": {
+      "$description": "Ken-v1 cinematic dark variant — overrides foundation/accent for dark surface (#0a0a0c bg)",
+      "bg": {
+        "deep":    { "$value": "#0a0a0c", "$type": "color", "$description": "Primary dark background" },
+        "darker":  { "$value": "#050506", "$type": "color", "$description": "Deeper background, hero underlays" },
+        "surface": { "$value": "#111114", "$type": "color", "$description": "Card/section surface on dark bg" }
+      },
+      "text": {
+        "primary":   { "$value": "#FAFAFA",                   "$type": "color", "$description": "Primary text on dark surface" },
+        "secondary": { "$value": "rgba(250,250,250,0.65)",    "$type": "color", "$description": "Secondary / subdued text on dark surface" },
+        "muted":     { "$value": "rgba(250,250,250,0.40)",    "$type": "color", "$description": "Muted / disabled text on dark surface" }
+      },
+      "accent": {
+        "primary":   { "$value": "#b01f24", "$type": "color", "$description": "Ken red CTA — same as brand.red, dark-surface use" },
+        "secondary": { "$value": "#806ce0", "$type": "color", "$description": "Purple accent on dark surface" },
+        "tertiary":  { "$value": "#c62d31", "$type": "color", "$description": "Red gradient end, dark surface" },
+        "teal":      { "$value": "#00e5ff", "$type": "color", "$description": "Cinematic-only neon glow accent — never use on editorial light" }
+      }
+    },
+    "editorial": {
+      "$description": "DS-core / DS-dashboard editorial light variant — warm off-white surface (#f5f2f1 bg)",
+      "bg": {
+        "warm":      { "$value": "#f5f2f1", "$type": "color", "$description": "Primary editorial background (warm-300)" },
+        "white":     { "$value": "#ffffff", "$type": "color", "$description": "White card/section surface" },
+        "blackPure": { "$value": "#000000", "$type": "color", "$description": "Pure black sections on editorial surface" }
+      },
+      "text": {
+        "primary":   { "$value": "#000000",              "$type": "color", "$description": "Primary text on light surface" },
+        "secondary": { "$value": "rgba(0,0,0,0.60)",    "$type": "color", "$description": "Secondary/description text on light surface" }
+      }
+    }
+  }
+}
