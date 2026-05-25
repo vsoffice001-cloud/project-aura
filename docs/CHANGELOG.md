@@ -4,6 +4,91 @@ Append-only log of changes to Aura's own configuration: `CLAUDE.md`, `workflows/
 
 **Not** for project code changes — those live in git history. **Not** for design decisions — those happen in chat. **Only** Aura-meta changes that affect how Aura behaves next session.
 
+## 2026-05-25 · Chart Library Promote Sprint · A.1 + A.2 + A.3
+**What:**
+- NEW `design-system/core-v2/src/charts/` library · 14 files (theme + primitives + 7 charts + 2 tables + barrel)
+  - `theme/tokens.ts` (9 token exports · KEN_CHART_SERIES · KEN_INK · KEN_TOOLTIP · KEN_TABLE · KEN_CHART_MOTION etc)
+  - `theme/highcharts-base.ts` (`buildKenChartBase()` · ref-aligned tooltip white + periwinkle border)
+  - `primitives/ChartReveal.tsx` (motion wrapper · fadeInUp 0.6s ease-out · viewport-triggered)
+  - `primitives/TableShell.tsx` (density · sticky · header wash · alternateRows · `TableDensityContext`)
+  - `primitives/ChartFigure.tsx` (ported · wrapper)
+  - 7 charts promoted: KenBarChart · KenBubbleChart · KenColumnChart · KenDonutChart · KenDualColumnChart · KenMultiLineChart · KenScenarioFanChart (all wrap `<ChartReveal>`)
+  - 2 tables promoted: PropertyTable · RankingTable (use `<TableShell>`)
+  - `index.ts` barrel · all exports
+- Legacy `highchartsTheme.ts` marked `@deprecated`
+- v0.4 PDP: 11 section files import-swapped to `@kenresearch/design-system/charts` · 11 project-local files DELETED
+- NEW `projects/charts-showcase/` standalone Next 15 project · port 3070 · DS chart sandbox · 7 charts + 2 tables + 3 primitives demoed
+- `pnpm-workspace.yaml` · added `projects/charts-showcase`
+- DELETED `projects/v1-project/v1-product-page-ver0.{1,2,3}` (~1 GB freed · superseded by v0.4)
+- `HANDOVER_TRACKER.md` · marked v0.1-v0.3 deleted · added v0.4 polish-active + charts-showcase
+- Docs created (CONFIDENTIAL · gitignored): `REF-DEEP-MINE-2026-05-25.md` · `REF-PORT-PLAN-2026-05-25.md` · `CURRENT-STATE-CHARTS-TABLES-2026-05-25.md` · `CHART-LIBRARY-PLAN-2026-05-25.md`
+
+**Why:** Charts/tables were project-local in v0.4 · not reusable. Refs deep-mine surfaced 10 actionable deltas (tooltip · grid · header wash · row density · entrance motion · button hover). Library promotion + 6 critical bug fixes shipped in one coordinated sprint. v0.1-v0.3 dead weight (superseded by v0.4). Charts-showcase enables DS chart preview without polluting v0.4.
+
+**Reversal:**
+- DS chart library · `rm -rf design-system/core-v2/src/charts/{theme,primitives,charts,tables}/` · revert barrel `index.ts` · revert v0.4 section import swaps via git
+- charts-showcase · `rm -rf projects/charts-showcase/` · revert pnpm-workspace.yaml
+- v0.1-v0.3 · recoverable from git history (state at commit `5cec9db`)
+
+**6 critical bug fixes (locked):**
+1. §14 KenBubbleChart "Linfox​Linfox" duplicate label → drop textOutline · position above bubble (verticalAlign:top · y:-8 · allowOverlap:true)
+2. §16 KenScenarioFanChart white spline invisible → base scenario `KEN_CHART_SERIES.primary` · fan `KEN_CHART_SERIES.light` 0.18 opacity
+3. Grid stroke verified · was Highcharts xAxis baseline (`#e5e5e5` by design) · yAxis grid periwinkle hairline already correct
+4. §10 SubmarketsSection single-series → KenDualColumnChart · 2 series (Cold Storage + Cold Transport · PRD anchors + CAGR)
+5. §17 OpportunitiesSection split-table → single `<RankingTable>` w/ gatedContent slot · single-table · 40px standard density · header opacity 0.45→0.60 (WCAG)
+6. §14 CompetitorLandscapeSection PropertyTable 72px → density="comfortable" (45px per `KEN_TABLE_DENSITY`)
+
+**DS gaps still open (next sprint):**
+- `--table-header-wash` · `--table-alt-row-wash` · `--table-row-divider` · add to `base.css` as CSS custom properties (TableShell currently uses Tailwind arbitrary values w/ comments citing ref)
+- Phase 2 work pending: SegmentedSwitcher · sticky table opt-in defaults · stat-strip ChartReveal apply · skeleton states · new viz (KenTreemap · KenHeatmap · KenKeywordScatter · KenGanttTimeline)
+
+**Locked rules (new):**
+- Chart wrappers MUST use `<ChartReveal>` (fadeInUp 0.6s ease-out · viewport-triggered · useReducedMotion respected)
+- Tables MUST use `<TableShell>` base · density-prop discipline
+- All chart consumers import from `@kenresearch/design-system/charts` · NEVER project-local
+- Token rename map: `KEN_CHART_COLORS` (legacy) → `KEN_CHART_SERIES_ARRAY` (array) + `KEN_CHART_SERIES` (object) · `KEN_INK_*` flat → `KEN_INK.{strong/body/muted/subtle/faint}` · `KEN_FONT_*` → `KEN_CHART_FONT.{sans/serif}`
+- Tooltip white + periwinkle border `rgb(228,226,240)` (NOT dark overlay any longer · ref-aligned)
+
+**Live URLs:**
+- v0.4 PDP: http://localhost:3040/test/phase-2
+- charts-showcase: http://localhost:3070/
+
+## 2026-05-22 · V0.4 PDP Sprint · §22 slideshow + UX audit Phase A
+**What:**
+- `memory/project_v04_pdp_sprint_2026-05-22.md` created · full sprint state
+- `MEMORY.md` · new ★★ pointer entry at top
+- `projects/v1-project/v1-product-page-ver0.4/docs/UX_AUDIT_2026-05-22.md` · 367 LOC audit doc
+- `projects/v1-project/v1-product-page-ver0.4/qa-screenshots/audit-2026-05-22/` · 29 screenshots
+
+**Why:** Sprint closeout · §22 slideshow port + §24 FinalCTABanner DS refactor + UX/UI audit + 5 P0 fixes complete · user holds Phase B/C polish to pivot to charts/tables next sprint.
+
+**Reversal:** Delete memory file + revert MEMORY.md line · audit doc + screenshots are sprint artifacts, leave for charts-sprint reference.
+
+**Locked rules (new):**
+- Eyebrow rule · §01-§21 (inside SideTOC) keep "Section NN · TITLE" · §22-§24 (outside SideTOC) drop number
+- Nav+Button pattern · `<Link><Button>...</Button></Link>` (DS Button has no href/asChild)
+- SectionWrapper bug · gradient overlay children fill inner content div ONLY · not section padding · use raw `<section>` for full-bleed gradient sections
+
+**DS gaps surfaced (backlog):**
+- `--semantic-ink-on-dark-strong/body/muted/faint` text-opacity tokens missing
+- `--color-surface-cinematic-start/mid/end` gradient anchor tokens missing
+- Button `href`/`asChild` prop absent (Link-wrap workaround documented)
+
+## 2026-05-20 · WORKFLOW-RESET execution (6 phases)
+- **Phase 1** · DS plan-vs-delivery audit · 11 match · 2 minor drift · 0 gap · `core-v2/docs/DS-AUDIT-2026-05-20.md`
+- **Phase 2** · Doc inventory + prune
+  - B1 · 11 .DS_Store + graphify-out/ + qa-screenshots/ deleted (96.7 MB freed)
+  - B2 · 3 sprint docs + aura-sprint-2026-05-07-port/ + CLAUDE.original.md → `docs/_archive/` and `_archive/`
+  - B3 · 95 V0.2 agent-artifact .md → `projects/V0.2 -for design system/_archive_md/`
+  - B3 · 33 V0_lite agent-artifact .md → `projects/V0_lite_report-legacy/_archive_md/`
+  - Essentials kept (README · ATTRIBUTIONS · LEGACY-READONLY) · ALL code untouched
+  - Design_system_vs_26 KEPT per user direction
+- **Phase 3** · `core-v2/docs/AI-CONSUMPTION-PROTOCOL.md` written · single source of truth for AI session boot + 5-step picker + token rules + composition + GAPS + anti-patterns + scenarios
+- **Phase 4** · `workflows/CANONICAL-WORKFLOW.md` written · 6 scenarios (A-F) · agent routing · trace markers · token-efficiency rules · `workflows/ROUTING.md` → `workflows/_archive/ROUTING.md.deprecated-2026-05-20`
+- **Phase 5** · `core-v2/docs/SKILL-AUDIT-2026-05-20.md` written · 11 KEEP · 1 ARCHIVE (skill-creator) · SKILL_ROUTING.md updated · SKILL_ROUTING.original.md archived
+- **Phase 6** · `CLAUDE.md` (root) updated · 3 references swapped (ROUTING.md → CANONICAL-WORKFLOW.md + AI-CONSUMPTION-PROTOCOL.md) · MEMORY.md prepended w/ new canonical workflow entry · `feedback_canonical_workflow_reset.md` memory created
+- Verification · TSC green both sides · HTTP 200 · zero functional regression
+
 Entry format:
 
 ```
@@ -14,6 +99,440 @@ Entry format:
 ```
 
 Newest entries on top.
+
+---
+
+## 2026-05-20 — P5 handover finalization · v1-product-page-ver0.3 · DS contrast fix
+
+**What:** 4-task finalization pass (aura-builder · Sonnet).
+- T1 Docs scaffolded: `README.md` + `HANDOVER.md` + `STATUS.md` created at `projects/v1-project/v1-product-page-ver0.3/` from workspace templates. Status: `ready-for-tech (caveats)`.
+- T2 DS contrast fix: `design-system/core-v2/src/organisms/TableOfContentsSidebar.tsx` — 4 occurrences of `--black-500` (4.34:1 · WCAG AA fail at 12px) swapped to `--black-600` (7:1 · WCAG AA pass). Affected: totalTime badge text + section numbers (expanded + collapsed states) + inactive section title text.
+- T3 HANDOVER_TRACKER.md: v0.3 entry updated from `cleanup` → `ready-for-tech (caveats)`. 3 DS escalations noted.
+- T4 TSC verified: DS core-v2 `pnpm tsc --noEmit` green · v0.3 consumer `pnpm tsc --noEmit` green. HTTP 200 at localhost:3002.
+
+**Why:** Pre-handover gate blocked on missing docs + contrast violation. All consumer-side blockers now resolved. DS escalations (definition-list · nested-interactive · target-size) are open DS-team items — not consumer regressions.
+**Reversal:** Delete the 3 docs; revert `TableOfContentsSidebar.tsx` L247/L320/L339/L405 from `--black-600` back to `--black-500`; revert HANDOVER_TRACKER row.
+
+---
+
+## 2026-05-19 — P3 polish sweep · v1-product-page-ver0.3
+
+**What:** 5-task polish pass on v1-product-page-ver0.3 (aura-builder · Sonnet).
+- T1 BG alternation: 4 sections patched (TaxonomySection warm, SubmarketIntelligence warm, IndustrySection warm, TableOfContentsSection warm) — breaks 5 consecutive white pairs from P2 audit
+- T2 Intersect-gate: `useDeferredRender` hook created at `src/hooks/useDeferredRender.ts`; applied to MarketSizeSection + SubmarketIntelligence chart areas (defers Highcharts mount until 200px pre-viewport)
+- T3 15px sweep: 9 occurrences of `text-[0.9375rem]` → `text-[1rem]` in 6 files (CountryInfraSection, TableOfContentsSection, DefinitionsSection, IndustrySection, DSGapSection, OpportunitiesSection)
+- T4 Hex sweep: ~35 bare hex instances tokenized across 8 files (`#171717`→`var(--black-900)` etc). Flagged semantic colors (#15803d, #e11d48, SWOT viz colors) for Aura design call. Brand-red on non-CTA contexts flagged with TODO markers.
+- T5 GenesisTimeline: 15 inline style blocks → Tailwind classes; year labels `color: var(--color-brand-red)` → `text-[var(--black-700)]` (neutral editorial). Removed `<style>` tag, using `hidden md:block` responsive classes.
+
+**Why:** Pre-handover P3 gate. Resolves P2 audit findings before pre-handover checklist.
+**Reversal:** Git revert the 12 files touched.
+**Gate:** TSC green · HTTP 200 · lint config missing pre-P3 (not introduced).
+
+---
+
+## 2026-05-20 — P2 visual diff fixes · 6 color swaps (ordinals + excluded-scope labels)
+
+**What:** 6 mechanical color fixes in v1-product-page-ver0.3 section components. TableOfContentsSection:70, ExecutiveSummary:79, IndustrySection:55, OpportunitiesSection:70 — ordinal numbers `text-[#b01f24]` → `text-[#171717]` (neutral black). DefinitionsSection:53,59 — "Excluded from scope" label + icon `text-[#b01f24]` → `text-[#e11d48]` (rose-600, semantic risk state per DS anti-patterns).
+
+**Why:** Brand-red (#b01f24) reserved for CTAs only. Ordinals are semantic neutral counters (not CTAs); excluded scope is semantic negative/risk (use rose-600, not brand). Resolves visual diff drift vs DS ANTI_PATTERNS.md rule §2.4 (brand-red scope).
+
+**Reversal:** Revert 6 edits · restore `#b01f24` in both contexts. TSC will remain green.
+
+---
+
+## 2026-05-19 — P1 Highcharts LCP perf fix · useDeferredRender hook + 3 hero lazy gates
+
+**What:** DS core-v2 new hook `useDeferredRender.ts` + sidecar `.md` + `hooks/index.ts` export. Consumer `v1-product-page-ver0.3` patches to `HeroChartCard.tsx`, `HeroCockpit.tsx`, `HeroRightRail.tsx` — all 3 chart renders now lazy-gated via `requestIdleCallback` (strategy: 'idle'). Skeleton placeholders with exact final dimensions (150px / 140px / 160px) prevent CLS. `useReducedMotion` gates skeleton pulse. TSC green both sides. HTTP 200 confirmed.
+
+**Why:** LCP 5.0s blocked at Lighthouse Perf 71. Highcharts 117KB eval (3.7s) ran before h1+CTA paint. rIC gate defers eval until after LCP — target improvement 5.0s → 2.5-3.0s.
+
+**Reversal:** Remove `useDeferredRender` import + hook call from 3 hero files. Restore original dynamic import `loading` props. Delete `hooks/useDeferredRender.ts` + `.md` + remove export from `hooks/index.ts`.
+
+---
+
+## 2026-05-20 — P0 a11y fixes · 5 serious axe violations resolved in DS organisms/molecules
+
+**What:** DS source fixes (aura-builder Sonnet). Fixes 5 serious axe violations identified in Stage 5 QA of v1-product-page-ver0.3. All fixes at DS source level — every consumer benefits.
+
+**Fixes applied:**
+1. `ScopeOfReport.tsx` — removed `role="button"` from `motion.div` wrapping interactive MindMap. Replaced with semantic `<button>` around the card inner div. MindMap canvas marked `aria-hidden="true"` in preview mode — D3 node role=button elements no longer exposed to AT (nested-interactive axe rule resolved).
+2. `MegaBreadcrumb.tsx` — changed inactive crumb color from `--semantic-ink-subtle` (#737373, 4.48:1 fails AA) to `--black-600` (#525252, 7:1). Same fix on DropdownColumn header + item colors. Also fixed undefined `--semantic-ink-muted` token → `--black-600` (color-contrast axe rule resolved).
+3. `MetadataStrip.tsx` — collapsed double-nested `<div>` inside `<dl>` to single `<div>` per `<dt>/<dd>` pair (definition-list / dlitem axe rules resolved).
+4. `ChartCard.tsx` — already had `role="img"` + `aria-label={title}` on chart wrapper div (svg-img-alt already resolved — no change needed).
+5. Heading order fixes — `StakeholderCard.tsx` h4→h3, `ReportCard.tsx` all 3 h4→h3 (compact/list/grid card titles), `Footer.tsx` FooterLinkColumn h4→h3.
+
+**Why:** Unblock Lighthouse Accessibility score from 86 to ≥95. TSC green both DS + consumer. HTTP 200 localhost:3002 confirmed.
+
+**Reversal:** git revert affected files. Specific: StakeholderCard/ReportCard h3→h4 if any nested section adds h3 level above cards. MegaBreadcrumb token rollback: `--black-600` → `--semantic-ink-subtle` (degrades contrast).
+
+---
+
+## 2026-05-19 — Batch 3.3e · TIER 4 TEMPLATES · 9 greenfield composition shells + 1 page recipe
+
+**What:** DS Port Batch 3.3e (aura-builder Sonnet). Creates entire Tier 4 templates directory. 9 new template files + 9 sidecar `.md` files + `templates/index.ts` + root `index.ts` re-export + `design-system/recipes/v1-product-page.md`. GAPS.md §5 all 9 entries marked ✅. `pnpm tsc --noEmit` passes clean.
+
+**Templates created (9 · greenfield · `core-v2/src/templates/`):**
+- `ChapterSectionTemplate.tsx` + `.md` — default chapter section recipe (SectionWrapper + LabelHeadingPair + content slot + optional CTA)
+- `HeroCinematicTemplate.tsx` + `.md` — cinematic-dark hero (5-col 3/2 grid · Breadcrumb · orbs · MetadataStrip · PreviewCard right)
+- `HeroEditorialTemplate.tsx` + `.md` — editorial-light hero (1-col OR 2-col with rightSlot)
+- `PDPLayoutTemplate.tsx` + `.md` — full PDP page shell (Navbar + SkipLink + TOC sidebar + main + FinalCTA + Footer)
+- `ListingPageTemplate.tsx` + `.md` — report store listing shell (Navbar + Hero + FiltersPanel + ListingToolbar + CardListing + MobileFilterBar + Footer)
+- `DataChartTemplate.tsx` + `.md` — 2-col chart + table grid (ChartCard pair)
+- `MultiCardGridTemplate.tsx` + `.md` — 2/3/2 staggered segmentation grid + optional takeaways
+- `AccordionListTemplate.tsx` + `.md` — FAQ/definitions list (AccordionItem + FAQContactCTA + optional JSON-LD)
+- `StepperPlusGridTemplate.tsx` + `.md` — methodology stepper + 3-col MethodologyCard grid (activeStep synced)
+
+**Page recipe created (1):**
+- `design-system/recipes/v1-product-page.md` — 30-section report PDP recipe · bg alternation · spacing · Z-ladder · A11y · template usage map
+
+**Index updated:** `templates/index.ts` (new) · `src/index.ts` (re-export added)
+**GAPS.md:** §5 all 9 template entries marked ✅ PORTED 2026-05-19
+
+**Reversal:** delete `core-v2/src/templates/` directory · remove `export * from './templates/index'` from `src/index.ts`
+
+---
+
+## 2026-05-19 — Batch 3.3d · LISTING surface · 2 molecules + 3 organisms (report-store-legacy canonical)
+
+**What:** DS Port Batch 3.3d (aura-builder Sonnet). Final listing surface batch. 2 new molecules + 3 new organisms. Completes the report-store surface. `GAPS.md` all listing entries marked ✅.
+
+**Molecules ported (2 NEW):**
+- `MobileFilterBar.tsx` + `MobileFilterBar.md` — frosted-glass fixed-bottom pill · z-1500 · env(safe-area-inset-bottom) · aria-haspopup=dialog · active-count badge (brand-red) · lg:hidden
+- `CheckboxFilterSection.tsx` + `CheckboxFilterSection.md` — accordion filter section for FiltersPanel · title + active-count badge + optional search input + checkbox list + show-more threshold · native `<input type="checkbox" sr-only>` a11y
+
+**Organisms ported (3 NEW):**
+- `ReportCardOrganism.tsx` + sidecar — 4-variant organism (grid/list/compact/featured) from report-store-legacy canonical `ReportCard.tsx:1-583`. Image badge CSS-var override pattern. Card atom chrome preserved. `animatedArrow` aligned to DS Button API (legacy used `showArrow`).
+- `ReportCardListing.tsx` + sidecar — generic render-prop listing grid/list. CardReveal stagger idx×50ms capped at 8. EmptyState w/ action Button. SkeletonCard loading. LoadMoreSentinel children slot. Bottom spacer for MobileFilterBar.
+- `RelatedReports.tsx` + sidecar — horizontal-scroll related-reports row. LabelHeadingPair + CTALink header. HorizontalScroll + snap-scroll. ReportCardOrganism compact variant default.
+
+**Organism status (existing — confirmed canonical, no port needed):**
+- `FiltersPanel.tsx` DS v4.4 — MORE advanced than legacy (search auto-expand · show-all · scroll-to-active-sub). CheckboxFilterSection molecule extracted from legacy pattern.
+- `ListingToolbar.tsx` DS v4.2 — canonical API parity confirmed.
+- `ReportStoreHero.tsx` — wraps ProductHero; full-globe version deferred (3D lib not in DS scope).
+
+**Index updated:** `molecules/index.ts` + `organisms/index.ts`
+**GAPS.md:** all listing molecule + organism entries marked ✅
+
+**Why:** Complete the report-store listing surface organisms. After this batch, all GAPS.md listing entries are ✅. Templates (Tier 4) remain greenfield.
+
+**Reversal:** Remove Batch 3.3d exports from `molecules/index.ts` + `organisms/index.ts`. Delete files: `MobileFilterBar.tsx`, `CheckboxFilterSection.tsx`, `ReportCardOrganism.tsx`, `ReportCardListing.tsx`, `RelatedReports.tsx` + sidecars.
+
+---
+
+## 2026-05-19 — Batch 3.3c · DATA organisms · 7 V0.2 canonical ports (SegmentationSection · GrowthDriversChallenges · MarketDataTable · CompetitiveLandscape · TargetAudience · MarketAnalysis · MarketOverview)
+
+**What:** DS Port Batch 3.3c (aura-builder Sonnet). 7 new DATA organisms — the analytical core of the V0.2 report PDP. 7 `.tsx` files + 7 `.md` sidecar docs + `organisms/index.ts` updated + `GAPS.md` 7 entries marked ✅ PORTED.
+
+**Organisms ported (7 NEW):**
+- `SegmentationSection.tsx` — 7-card 2/3/2 staggered grid + gradient takeaways footer card (`--bg-card-takeaways`). `SegmentationCard` molecule ×7. Dot-pattern bg.
+- `GrowthDriversChallenges.tsx` — 3-col `IconCard` grid. Challenge color `--rose-600` (NOT `--red-600` — ANTI-PATTERNS rule 19). Nested topic h4+p+ul per card. Stats strip (desktop flex / mobile 2-col).
+- `MarketDataTable.tsx` — Generic `MarketDataTable<T>`. Keyboard-accessible sort (`<button>` inside `<th>`, `aria-sort`, Enter/Space). Paywall blur overlay. ProgressBar column slot. `useReducedMotion()` guard. WAI-ARIA 28 fix.
+- `CompetitiveLandscape.tsx` — 3-card summary row (chart slot + top players + dynamics bars). Sortable companies table with keyboard-accessible headers + paywall. `ComparisonParameterCard` grid. `AnalysisCard` gradient footer.
+- `TargetAudience.tsx` — `StakeholderCard` ×N + `aside` callout (`p-8` padding). Benefit checklist `<ul aria-label>`. 3-col lg layout (`col-span-2` + `col-span-1`). Full-width fallback.
+- `MarketAnalysis.tsx` — Chart-slot organism (`ChartSlotItem` = title + chart ReactNode). Main full-width + optional 2-col sub-charts. Callers MUST set `accessibility.enabled: true` (documented in JSDoc — organism cannot enforce on ReactNode).
+- `MarketOverview.tsx` — `OverheadText` + `SectionHeader title={}` + `BodyText` paragraphs + 4-col stat grid (StatTile sub-component) + `TextCard` future outlook + `TimelineCard` timeline periods. `--content-max-width` aliased to `--container-page` per TOKEN-GAP-REPORT §2.18.
+
+**Fixes applied across all 7:**
+- `Container` API: `maxWidth="page"` (NOT `variant="page"` — atom has no variant prop)
+- `SectionHeader` API: `title={heading}` (NOT children — discovered by reading atom source)
+- Section padding: `py-12 md:py-20` (NOT V0.2 `py-24 lg:py-32` — SPACING-CANON §1.1)
+- Zero hardcoded hex/px — all via `var(--token-name)` or Tailwind token classes
+
+**Why:** Complete the DATA organism tier for V0.2 report PDP. These 7 organisms cover the analytical chapters (market overview · segmentation · growth drivers · market size data · competitive landscape · target audience · market analysis charts). Unblocks V0.2 report PDP page assembly.
+
+**Reversal:** Delete 7 `.tsx` + 7 `.md` files from `core-v2/src/organisms/`, revert `organisms/index.ts` Batch 3.3c section, revert 7 GAPS.md entries to `🔴 MISSING`.
+
+---
+
+## 2026-05-19 — Batch 3.3b · CHROME organisms · Navbar + Footer + ReportHeroSection + 6 supporting molecules
+
+**What:** DS Port Batch 3.3b (aura-builder Sonnet). 9 new components — most user-visible chrome layer.
+
+**Molecules ported (6 NEW):**
+- `DropdownPanel.tsx` — Industries mega-menu panel. 2-col grid. Glass bg (`--glass-header-bg`). Framer AnimatePresence enter/exit. ESC + outside-click + blur-trap close. Focus returned to trigger on ESC.
+- `CmdKSearchTrigger.tsx` — Search trigger only (not the menu). `aria-keyshortcuts="Meta+k"`. Shows Search icon + placeholder + `<kbd>⌘K</kbd>` hint. Consumer wires command palette.
+- `MobileMenu.tsx` — Full-screen slide-down mobile nav. Backdrop + panel. Body scroll lock while open. Focus-first on open. ESC + backdrop click close. Contains stacked nav links + Sign In + brand Demo CTA Button.
+- `TrustBar.tsx` — ISO 27001 + Award badge + client logo pills strip. Horizontal scroll on mobile. `onDark` surface prop.
+- `PreviewCard.tsx` — Report preview glass card (10px radius). WindowControls molecule top. Chapter/title pair. Mini bar chart (decorative). PaywallOverlay on lower section. `whileHover` scale + shadow. `surface` dark/light prop.
+- `PaywallOverlay.tsx` — Blur wrapper + absolute overlay w/ PREMIUM Badge + CTA Button. `blurPx` + `surface` + `showCTA` props. `role="status"` on overlay.
+
+**Organisms ported (3 NEW):**
+- `Navbar.tsx` — Full Ken Research navigation. Utility bar (h-8 black lg+) + glass header (h-56px sticky). Composes: DropdownPanel, CmdKSearchTrigger, MobileMenu, Button, HamburgerIcon. Active nav underline = neutral black (NOT brand-red — ANTI-PATTERNS rule 19). Demo CTA only red element.
+- `Footer.tsx` — Dark bg-black footer. TrustBar top. 5-col grid (Brand 2-col + Industries + Services + Company). Bottom bar: dynamic copyright + Privacy/Terms links + LinkedIn/Twitter inline SVGs. Composes: TrustBar, Container.
+- `ReportHeroSection.tsx` — Cinematic-dark report PDP hero. 5-col 3/2 grid. Optional video bg + gradient overlays + grid texture + 2 Framer floating orbs (reduced-motion guarded). Left: Breadcrumb + badges + SectionLabel + h1 + description + CTARowResponsive + MetadataStrip. Right (lg+): PreviewCard. Scroll-down indicator. `data-variant-section="cinematic"`.
+
+**Index exports updated:**
+- `core-v2/src/molecules/index.ts` — 6 new exports added
+- `core-v2/src/organisms/index.ts` — 3 new exports added
+
+**GAPS.md updated:** 6 molecule entries + 3 organism entries marked ✅ PORTED 2026-05-19
+
+**TSC:** green (0 errors)
+
+**Reversal:** delete the 9 .tsx files + remove their exports from index.ts files
+
+---
+
+## 2026-05-19 — Batch 3.3a · Map UI story · TabStrip molecule + MapChart organism + RegionalComparison organism
+
+**What:** DS Port Batch 3.3a (aura-builder Sonnet). 3 new components: TabStrip molecule (tablist pattern), MapChart organism (choropleth via react-simple-maps), RegionalComparison organism (V0.2 port + enhanced). Deps installed: `react-simple-maps@^3.0.0` + `topojson-client@^3.1.0` + types.
+
+**Dependencies added to core-v2:**
+- `react-simple-maps@^3.0.0` — MIT · choropleth SVG map. Peer warning: declares `react@^16-18` · works fine with React 19. Monitor for v4.
+- `topojson-client@^3.1.0` — MIT · TopoJSON feature parsing.
+- `@types/react-simple-maps@^3.0.6` + `@types/topojson-client@^3.1.5` (devDeps)
+
+**Molecule ported (NEW):**
+- `TabStrip.tsx` — Accessible tablist tab-strip. `role="tablist"`. `role="tab"` per option. `aria-selected` + `aria-controls` wiring (scoped by `useId()` per instance). Framer Motion `layoutId` animated underline (unique per instance). Arrow/Home/End keyboard nav. `TabStripPanel` companion: `role="tabpanel"` + AnimatePresence crossfade 150ms. `useReducedMotion()` skips animation. Size `sm`/`md`. RENAMED from ViewToggle to avoid collision with existing ViewToggle ATOM (icon grid/list switch).
+
+**Organisms ported (NEW + V0.2 port):**
+- `MapChart.tsx` — Choropleth SVG map via `react-simple-maps`. Color ramp: linear interpolation across brand purple-100→purple-600 (6-step hex fallbacks for SVG). Tooltip (fixed position, Card-styled). Legend (5-step gradient strip). Hover highlight (fill darken + 2px stroke). Keyboard: interactive regions `role="button" tabindex="0"` · Enter/Space fires `onRegionClick`. Screen reader: SVG `<title>`+`<desc>` + per-region `aria-label`. `useReducedMotion()` disables fill transition. 3 color ramp options: purple/periwinkle/coral. 3 projections: geoMercator/geoEqualEarth/geoNaturalEarth1.
+- `RegionalComparison.tsx` — V0.2 port + enhanced. Desktop 2-col: MapChart (left ChartCard) + DatasetPreviewTable (right ChartCard). Mobile single-col: TabStrip switch. LabelHeadingPair header. SectionWrapper container. Paywall via `accessTier` prop delegated to DatasetPreviewTable. Replaces V0.2 Highcharts bar + inline Table blur pattern.
+
+**V0.2 changes on port:**
+- Highcharts bar chart → MapChart choropleth
+- Inline Table+blur → DatasetPreviewTable molecule (access-tier aware)
+- Always-2-col layout → responsive with TabStrip mobile toggle
+- Hardcoded `px-[84.375px]` + `text-[48px]` → SectionWrapper + LabelHeadingPair tokens
+- paywall=true → accessTier prop
+
+**GAPS.md updated:** RegionalComparison ✅ PORTED · MapChart ✅ PORTED (NEW — not in original GAPS list) · TabStrip ✅ PORTED (NEW — not in original GAPS list).
+
+**TSC:** green.
+
+**Files touched:**
+- `design-system/core-v2/package.json` (UPDATED — 4 new deps)
+- `design-system/core-v2/src/molecules/TabStrip.tsx` (NEW)
+- `design-system/core-v2/src/molecules/TabStrip.md` (NEW)
+- `design-system/core-v2/src/molecules/index.ts` (UPDATED — TabStrip export)
+- `design-system/core-v2/src/organisms/MapChart.tsx` (NEW)
+- `design-system/core-v2/src/organisms/MapChart.md` (NEW)
+- `design-system/core-v2/src/organisms/RegionalComparison.tsx` (NEW)
+- `design-system/core-v2/src/organisms/RegionalComparison.md` (NEW)
+- `design-system/core-v2/src/organisms/index.ts` (UPDATED — MapChart + RegionalComparison exports)
+- `design-system/core-v2/docs/GAPS.md` (UPDATED — 3 entries marked ✅ PORTED)
+
+**Reversal:** `pnpm remove react-simple-maps topojson-client @types/react-simple-maps @types/topojson-client` · delete 8 new files · revert index.ts exports.
+
+---
+
+## 2026-05-19 — Batch 3.2c organisms · 4 D3 organisms ported · MindMap engine + Scope + Taxonomy
+
+**What:** DS Port Batch 3.2c (aura-builder Sonnet). 4 organisms from brief. D3 mind map engine used by Scope + Taxonomy chapters. Fixes highest-visibility v0.3 regressions (invented flat lists for both sections).
+
+**D3 dependencies added:**
+- `d3-hierarchy@^3` · `d3-zoom@^3` · `d3-selection@^3` · `d3-transition@^3` · `d3-ease@^3` + matching `@types/*` — installed via `pnpm add` in `core-v2/`
+
+**Organisms ported (NEW):**
+- `MindMap.tsx` — D3 hierarchy tree. Collapsible nodes. 800ms easeCubicInOut transitions. `interactionMode='full'|'preview'`. Node pill + badge + bezier links. `useReducedMotion()` → DURATION=0. `role="img"` + per-node `role="button" tabindex="0"`. V0.2 MindMap.tsx:1-386 canonical.
+- `MindMapModal.tsx` — Fixed 95vw×90vh modal. Search bar + close button. Focus-trap (Tab cycles). ESC + backdrop close. Body scroll locked. `openerRef` focus-return. AnimatePresence fade+slide. `useReducedMotion()` instant. V0.2 MindMapModal.tsx canonical.
+- `ScopeOfReport.tsx` — Chapter 2 section. OverheadText + LabelHeadingPair header. 600px MindMap preview card. Hover overlay (gradient + Maximize2 icon, Framer whileHover). Opens MindMapModal on click/Enter. Dot pattern bg optional. V0.2 ScopeOfReport.tsx:240-313 canonical.
+- `TaxonomyTree.tsx` — Chapter taxonomy section sharing MindMap engine. Two variants: `preview` (card+modal) | `inline` (full 700px canvas + search bar + hint text). `bgVariant` white/warm/subtle. V0.2 MindMapDemo.tsx canonical.
+
+**Anti-regression locked:** Both ScopeOfReport + TaxonomyTree explicitly block the v0.3 flat-list regression in JSDoc (WHEN NOT rules) and GAPS.md entries updated to ✅ PORTED.
+
+**Files touched:**
+- `design-system/core-v2/src/organisms/MindMap.tsx` (NEW)
+- `design-system/core-v2/src/organisms/MindMap.md` (NEW)
+- `design-system/core-v2/src/organisms/MindMapModal.tsx` (NEW)
+- `design-system/core-v2/src/organisms/MindMapModal.md` (NEW)
+- `design-system/core-v2/src/organisms/ScopeOfReport.tsx` (NEW)
+- `design-system/core-v2/src/organisms/ScopeOfReport.md` (NEW)
+- `design-system/core-v2/src/organisms/TaxonomyTree.tsx` (NEW)
+- `design-system/core-v2/src/organisms/TaxonomyTree.md` (NEW)
+- `design-system/core-v2/src/organisms/index.ts` (UPDATED — 4 new exports)
+- `design-system/core-v2/docs/GAPS.md` (UPDATED — 4 entries ✅ PORTED)
+- `design-system/core-v2/package.json` (UPDATED — d3 deps added)
+
+**Why:** V0.3 regressions ScopeOfReport→flat-list + TaxonomyTree→indented-list confirmed in GAPS.md. These are the highest-visibility missing organisms in the report PDP. Ported from V0.2 canonical (D3 engine is library-agnostic — no React 19 compat issues).
+
+**Reversal:** `git rm` the 8 new files + revert organisms/index.ts last-block + revert package.json d3 deps + revert GAPS.md 4 entries.
+
+---
+
+## 2026-05-19 — Batch 3.2b organisms · 5 new organisms ported + 1 enhanced + 1 rewrote + 1 hook ported
+
+**What:** DS Port Batch 3.2b (aura-builder Sonnet). 7 organisms from brief (TableOfContentsSidebar · KeyStatsStrip · ResearchMethodology · FAQSection · SampleReportPreview · AssociationStrip · FinalCTASection). Plus useScrollSpy hook.
+
+**Organisms ported (NEW/UPDATED):**
+- `TableOfContentsSidebar.tsx` — Sticky sidebar TOC. expanded 255px / collapsed 80px / mobile floating button. useScrollSpy hook drives active state. Neutral black circles (not brand-red per Anti-pattern §9). -right-4 collapse button. V0.2 canonical.
+- `KeyStatsStrip.tsx` — 3-col stat strip. --bg-section-stats-tinted gradient bg. useAnimatedCounter per stat cell. StatItem wraps icon-box + tabular-nums value + label. V0_lite KeyStats.tsx canonical.
+- `ResearchMethodology.tsx` — REWROTE simplified placeholder. Composes StepperHorizontal + MethodologyCard. Full section header. Active step drives card elevation. V0_lite ChapterMethodology.tsx canonical.
+- `SampleReportPreview.tsx` — NEW. 3-state sidebar (open 280px / compressed 200px / minimal 60px). IntersectionObserver chapter tracking. Locked items show LockKeyhole. Chapter dividers border-t black/5. Mobile floating Contents button. V0_lite SampleReportPreview.tsx canonical.
+- `AssociationStrip.tsx` — NEW. Trust strip: certifications left + logo pills right. report-store-legacy Footer trust bar canonical.
+- `FinalCTASection.tsx` — ENHANCED. Added `showOrbs` prop (report PDP orbs bg, useReducedMotion guarded) + `singleCTA` prop (hides secondary button for single-CTA report PDP mode). Backward compat preserved.
+- `FAQSection.tsx` — reviewed vs V0_lite canonical. Existing core-v2 version solid — no regression.
+
+**Hooks ported (NEW):**
+- `useScrollSpy.ts` — IntersectionObserver-based scroll-spy. Returns active section ID from array. rootMarginTop controls trigger zone. V0.2 canonical.
+
+**Files touched:**
+- `design-system/core-v2/src/organisms/TableOfContentsSidebar.tsx` (NEW)
+- `design-system/core-v2/src/organisms/TableOfContentsSidebar.md` (NEW)
+- `design-system/core-v2/src/organisms/KeyStatsStrip.tsx` (NEW)
+- `design-system/core-v2/src/organisms/KeyStatsStrip.md` (NEW)
+- `design-system/core-v2/src/organisms/ResearchMethodology.tsx` (REWRITE)
+- `design-system/core-v2/src/organisms/ResearchMethodology.md` (NEW)
+- `design-system/core-v2/src/organisms/SampleReportPreview.tsx` (NEW)
+- `design-system/core-v2/src/organisms/SampleReportPreview.md` (NEW)
+- `design-system/core-v2/src/organisms/AssociationStrip.tsx` (NEW)
+- `design-system/core-v2/src/organisms/AssociationStrip.md` (NEW)
+- `design-system/core-v2/src/organisms/FinalCTASection.tsx` (ENHANCED — showOrbs + singleCTA props)
+- `design-system/core-v2/src/organisms/index.ts` (UPDATED — 4 new exports)
+- `design-system/core-v2/src/hooks/useScrollSpy.ts` (NEW)
+- `design-system/core-v2/src/hooks/useScrollSpy.md` (NEW)
+- `design-system/core-v2/src/hooks/index.ts` (UPDATED — useScrollSpy export)
+- `design-system/core-v2/docs/GAPS.md` (UPDATED — 6 organisms + 1 hook marked ✅ PORTED)
+
+**Why:** Batch 3.2b — 7 layout + dense-data organisms needed for V1 product page PDP build.
+**Reversal:** delete organism files + revert index.ts + revert GAPS.md entries.
+
+---
+
+## 2026-05-19 — Batch 3.2a molecules · 5 supporting molecules ported (stepper + FAQ-CTA + methodology-card + dataset-table + map-fallback)
+
+**What:** DS Port Batch 3.2a (aura-builder Sonnet). 5 supporting molecules required by Batch 3.2 organisms.
+All ported from canonical V0_lite_report-legacy + v1-product-page-ver0.3 sources.
+
+**Molecules ported (NEW):**
+- `StepperHorizontal.tsx` — Horizontal step-picker bar. Controlled via activeId+onStepChange. Active=bg-black-900+white, inactive=white+warm-500-border+coral-hover. ChevronRight separators. Mobile: hidden-scrollbar horizontal scroll with step-number badge only. sm+: justify-center with labels. Canonical: V0_lite ChapterMethodology.tsx:86-123.
+- `FAQContactCTA.tsx` — "Still have questions?" card after FAQ list. Flex-col mobile, flex-row sm+. Gradient bg via --bg-card-takeaways token. Composes CTALink atom. Canonical: V0_lite FAQSection.tsx:127-139.
+- `MethodologyCard.tsx` — Single card in 3-col ResearchMethodology grid. Icon-box + title + subtitle + ChevronRight-bullet list. Active=--shadow-card-active dual elevation. Gradient bg via --bg-card-methodology token. role=button + keyboard handler. Canonical: V0_lite ChapterMethodology.tsx:127-191.
+- `DatasetPreviewTable.tsx` — Access-aware <table> molecule. publicRows/leadUnlockedRows/paid tiers. Ghost blurred row + "Unlock Full Dataset" CTA when rows hidden. Desktop table + mobile card-per-row fallback. Token-mapped from v0.3: --semantic-ink-* → black/--black-500, --border-soft (same name in editorial-light.css). Canonical: v1-product-page-ver0.3 charts/DatasetPreviewTable.tsx.
+- `MapFallback.tsx` — Region share table with inline horizontal bar visualization. Replaces geo MapChart until @ken-research/charts ships it. Sorted desc by share. Highlight region = brand-red row + ★ Top badge. Bar: --purple-400 fill, --brand-red highlight. Migration TODO comment. Canonical: v1-product-page-ver0.3 charts/MapFallback.tsx.
+
+**Files touched:**
+- `design-system/core-v2/src/molecules/StepperHorizontal.tsx` (NEW)
+- `design-system/core-v2/src/molecules/StepperHorizontal.md` (NEW)
+- `design-system/core-v2/src/molecules/FAQContactCTA.tsx` (NEW)
+- `design-system/core-v2/src/molecules/FAQContactCTA.md` (NEW)
+- `design-system/core-v2/src/molecules/MethodologyCard.tsx` (NEW)
+- `design-system/core-v2/src/molecules/MethodologyCard.md` (NEW)
+- `design-system/core-v2/src/molecules/DatasetPreviewTable.tsx` (NEW)
+- `design-system/core-v2/src/molecules/DatasetPreviewTable.md` (NEW)
+- `design-system/core-v2/src/molecules/MapFallback.tsx` (NEW)
+- `design-system/core-v2/src/molecules/MapFallback.md` (NEW)
+- `design-system/core-v2/src/molecules/index.ts` (UPDATED — 5 new exports)
+- `design-system/core-v2/docs/GAPS.md` (UPDATED — 2 entries ✅ PORTED + 3 new ported entries)
+
+**Why:** Batch 3.2 organisms (ResearchMethodology, FAQSection, etc.) require these molecules pre-ported. Anti-pattern Cat 13.8 — never re-implement atoms inline in organism.
+**Reversal:** Delete the 5 new .tsx + .md files · revert index.ts to pre-Batch-3.2a · revert GAPS.md entries.
+
+---
+
+## 2026-05-19 — Batch 3.1c molecules · 9 molecules ported (heading + stat + CTA + breadcrumb + accordion + controls + metadata + chart)
+
+**What:** DS Port Batch 3.1c (aura-builder Sonnet). Last sub-batch of Stage 3.1 primitives.
+All 9 molecules ported from V0_lite_report-legacy + V0.2-for-ds canonical sources.
+
+**Molecules ported (NEW):**
+- `LabelHeadingPair.tsx` — SectionLabel + SectionHeading + optional BodyText. Canonical section-header block used 10+ times in V0_lite. Enforces `--pair-label-heading` + `--pair-heading-description` spacing.
+- `StatPairRow.tsx` — 3-col stat strip (`grid-cols-3 gap-3 sm:gap-6 pt-6 sm:pt-8`). Composes 3× InlineStats atoms. Canonical from V0_lite HeroSection:349-379.
+- `CTARowResponsive.tsx` — 3-tier responsive CTA pair. Mobile stacked + tablet row + desktop lg row. Composes 2× Button atoms. Canonical from V0_lite HeroSection:285-345.
+- `Breadcrumb.tsx` — Accessible nav breadcrumb with dropdown panel. Framer AnimatePresence panel + `useReducedMotion`. ARIA complete (aria-current=page · aria-expanded · aria-haspopup). NOTE: type renamed `BreadcrumbNavItem` (was `BreadcrumbItem`) to avoid collision with `MegaBreadcrumb` organism export.
+- `AccordionItem.tsx` — Single bordered FAQ card. Per-item chrome `border border-black/10 rounded-[--radius-sm]`. Framer height animation. Controlled + uncontrolled modes. Canonical from V0_lite FAQSection:81-127.
+- `WindowControls.tsx` — macOS 3-dot chrome row + label. `aria-hidden` decorative. light/dark color scheme. Canonical from V0_lite HeroSection:462-477.
+- `MetadataStrip.tsx` — 5-col label-value `<dl>/<dt>/<dd>` strip with `divide-x` separators. 2-col mobile grid. `--text-xs` labels (uppercase) + `--text-nav` values. Canonical from V0_lite HeroSection below-CTA.
+- `ChartTitleHeader.tsx` — Chart block header: title + optional subtitle + optional legend dots + optional info icon. Token-decoupled port of V0.2 `chart-title-header.tsx`.
+
+**Sidecars written (NEW · `.md` per molecule):**
+- `LabelHeadingPair.md` · `StatPairRow.md` · `CTARowResponsive.md` · `Breadcrumb.md`
+- `AccordionItem.md` · `WindowControls.md` · `MetadataStrip.md` · `ChartTitleHeader.md`
+
+**index.ts:** 8 new exports added.
+**GAPS.md §3:** 8 molecule rows marked ✅ PORTED 2026-05-19.
+
+**TSC:** `pnpm tsc --noEmit` — green (0 errors).
+
+**Why:** Batch 3.1c per PORT-PLAN.md. Closes Stage 3.1 primitives. Unlocks organism ports (HeroSection, FAQSection, KeyStatsStrip, ResearchMethodology) in Stage 3.2.
+
+**Reversal:** Delete `core-v2/src/molecules/LabelHeadingPair.tsx|StatPairRow.tsx|CTARowResponsive.tsx|Breadcrumb.tsx|AccordionItem.tsx|WindowControls.tsx|MetadataStrip.tsx|ChartTitleHeader.tsx` and their `.md` sidecars. Remove Batch 3.1c block from `molecules/index.ts`. Re-mark GAPS.md entries 🔴 MISSING.
+
+---
+
+## 2026-05-19 — Batch 3.1b atoms · 7 NEW atoms ported (Type + Stat) + NextSectionCTA verified
+
+**What:** DS Port Batch 3.1b (aura-builder Sonnet). Type atoms from V0.2-for-ds · Stat atoms from V0_lite canonical.
+
+**Atoms ported (NEW):**
+- `SectionHeader.tsx` — 4-prop combo (chapter + title + heading + subtitle). Locks eyebrow→h2→lede spacing sequence. Token refactor: V0.2 `text-3xl` → `--text-30` · `text-sm` (13px) → `--text-xs` · `leading-tight` → `leading-[1.25]` per rule 22a · `--radius-md(10px)` → `--radius-sm` · `mb-16` → `--section-header-mb`.
+- `OverheadText.tsx` — brand-red uppercase eyebrow span. Inline-flex, gap-2 for optional icon sibling. Token: `--text-xs` + `--font-weight-bold` + `--tracking-label-wide`.
+- `BodyText.tsx` — paragraph wrapper. `spacing="first"` (mt-6 via --space-6) / `"follow"` (mt-4 via --space-4). Token refactor: V0.2 `text-base (14px)` → `--text-sm (16px)` · `text-black-500` → `var(--black-500)`.
+- `StatPair.tsx` — label-value pair. 3 orientations: vertical / vertical-label-first / horizontal. Semantic `<dl><dt><dd>`. tabular-nums value.
+- `StatBadge.tsx` — mini trend/change/neutral/emphasis pill badge. 4 variants with tinted bg. Token: `--text-xs` + `--radius-xs` + `--space-1`. Note: V0.2 canonical stat-badge uses `--radius-md(10px)` → refactored to `--radius-xs(5px)` per token gap report.
+- `IconBox.tsx` — tinted icon container. 6 colour palettes. sm=44px / md=48px. Radius: `--radius-sm(10px)`. Token refactor: V0.2 `--radius-md` → `--radius-sm`.
+- `InlineStats.tsx` — composes IconBox + StatPair. vertical (default) / horizontal. Canonical KeyStats StatItem pattern (L69-118).
+
+**Atoms verified:**
+- `NextSectionCTA.tsx` — ✅ exists. Solid impl. No changes.
+
+**Sidecars written:** SectionHeader.md · OverheadText.md · BodyText.md · StatPair.md · StatBadge.md · IconBox.md · InlineStats.md
+
+**index.ts:** 7 new exports added.
+
+**GAPS.md:** 7 MISSING → ✅ PORTED · 1 ⚠️ verify → ✅ VERIFIED.
+
+**Quality gate:** `pnpm tsc --noEmit` — run after log entry.
+
+**Why:** Batch 3.1b per PORT-PLAN.md. Type + Stat atoms unlock StatPairRow molecule (Batch 3.1c) and SectionHeader composite used in 20+ chapter sections.
+
+**Reversal:** Remove 7 new atom files + sidecar .md files. Revert index.ts exports. Revert GAPS.md entries.
+
+---
+
+## 2026-05-19 — Batch 3.1a atoms · 10 atoms verified/ported from report-store-legacy
+
+**What:** DS Port Batch 3.1a (aura-builder Sonnet). Canonical source: report-store-legacy. Atoms audited against source, fixed, and sidecars written.
+
+**Atoms touched:**
+- `Button.tsx` — fixed `fontStyle()` bug: `lg` was getting `--button-font-md`; `xs` used non-standard token. Now all 5 sizes correctly mapped.
+- `AnimatedArrow.tsx` — added `duration` prop for CTALink's 250ms use case. Previously hardcoded 300ms.
+- `CTALink.tsx` — VERIFIED. `--typography-size-*` tokens confirmed in `tokens.css`. No change.
+- `InlineLink.tsx` — VERIFIED. Always-visible underline is deliberate improvement over canonical.
+- `FilterChip.tsx` — REWRITTEN. Previous core-v2 = dismiss chip (display-only, X button). Canonical = toggle chip (active/inactive, Check icon, 44px). Consumers updated.
+- `FilterCheckbox.tsx` — REWRITTEN. Previous core-v2 = plain button. Canonical = custom 16×16 checkbox box with inset shadow + Check icon. FilterAccordion consumer updated.
+- `LogoButton.tsx` — focus ring updated from hardcoded black to `--color-brand-red` token.
+- `HamburgerIcon.tsx` — VERIFIED. No changes.
+- `MenuItem.tsx` — VERIFIED. More advanced than canonical (adds danger/iconBg/subtitle).
+- `IconButton.tsx` — N/A. Not in canonical source map. `Button iconOnly=true` covers this.
+
+**Sidecars written:** Button.md · AnimatedArrow.md · CTALink.md · InlineLink.md · FilterChip.md · FilterCheckbox.md · LogoButton.md · HamburgerIcon.md · MenuItem.md
+
+**Consumers fixed:** `molecules/ActiveFilterChip.tsx` (removed FilterChip dep, inlined DismissChip), `molecules/FilterAccordion.tsx` (selected→checked, onClick→onToggle)
+
+**Quality gate:** `pnpm tsc --noEmit` green · no TS errors.
+
+**Why:** Batch 3.1a per PORT-PLAN.md. Canonical-first: read source before writing. Closed FilterChip + FilterCheckbox API drift that would have caused silent visual regression in listing pages.
+
+**Reversal:** `git revert` commits for this batch. Consumer molecules would need to revert to old FilterChip/FilterCheckbox APIs.
+
+---
+
+## 2026-05-19 — Batch 3.0 token foundation · 18 blocks → base.css
+
+**What:** Appended ~47 new CSS custom properties to `design-system/core-v2/src/styles/base.css` `:root` block (unlayered · cascade-safe). Backup at `base.css.bak`. `FOUNDATIONS.md` updated with block inventory + conflict notes.
+
+**Blocks added:**
+- Legacy compat aliases (`--warmBg` · `--warmBorder` · `--content-max-width`)
+- Type tokens (`--text-nav-helper/md/13/24/30/32`)
+- Weight tokens (`--font-weight-light/semibold/bold`)
+- Tracking tokens (`--tracking-display-tight` · `--tracking-button` · `--tracking-label-tight/wide/x-wide` · `--tracking-nav` · `--tracking-nav-loose`)
+- Leading tokens (`--leading-stat-label`)
+- Color (`--black-25`)
+- Glass suite (9 tokens: `--glass-bg/border/glow/accent/text/text-muted/hover` + header variants)
+- Shadows (5 tokens: `--shadow-card-rest/active` · `--shadow-brand-button/-hover` · `--shadow-search-hero`)
+- Spacing (`--space-14` · `--space-20`)
+- Motion easing (`--ease-smooth/arrow/card-lift`) + duration (`--duration-medium/shimmer`)
+- BG compositions (`--bg-section-stats-tinted` · `--bg-card-methodology` · `--bg-card-takeaways`)
+- Pattern tokens (`--pattern-opacity/grid-size/dot-size/dot-position`)
+
+**Conflicts resolved:** `--leading-snug` (pre-existing 1.3 kept · TOKEN-GAP-REPORT wanted 1.25 → flag for Aura review) · `--shadow-card-hover` (pre-existing kept) · `--duration-instant/fast/normal/slow/slowest` (pre-existing kept · only gap tokens added).
+
+**Why:** Stage 3.1 of PORT-PLAN.md — token foundation precedes any component port. All 3 legacy projects (V0_lite · V0.2 · report-store) reference these tokens during port.
+
+**Reversal:** `cp base.css.bak base.css` — removes all 18 blocks cleanly.
+
+**Verification:** `pnpm tsc --noEmit` clean · v0.3 dev server HTTP 200 · no visual regression (pure additions).
 
 ---
 

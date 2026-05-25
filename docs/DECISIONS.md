@@ -23,6 +23,38 @@ Entry format:
 
 ## Active
 
+## 2026-05-19 — DS heritage reclaim · Stage 3 port · doc-first methodology w/ 5 batched gates
+**Context:** user flagged v0.3 product page UI regressing · root-cause audit found new core-v2 DS shipped from OG vs_26 + topnav only · V0.2 organism layer never ported · 13 of 22 V0.2 organisms missing · AI invents flat substitutes on miss · rationalizes in JSDoc.
+**Decision:** Synthesize FIRST · port SECOND · NO code in Stage 2 · 7 synthesis docs gate Stage 2 · 5-batch decomposed port (3.0 tokens · 3.1 primitives · 3.2 layout+data · 3.3 specialty + 3.3e templates) gated between batches · 4WH applied to every doc + component · TodoWrite decomposes >3-step tasks.
+**Alternatives rejected:**
+- (A) "Just port everything from V0.2 blanket" — user flagged buttons/CTAs/bottom-banner outdated in V0.2 · would re-introduce drift
+- (B) "Just port everything from V0_lite blanket" — V0_lite missing dense-data organisms (MindMap · Scope · etc) which v0.3 needs
+- (C) "Code first, document later" — token name collisions (V0.2 `--text-sm`=13px vs core-v2 `--text-sm`=16px) would silently shift body type · doc-first prevents
+- (D) "Single mega-batch" — Sonnet credit exhaustion mid-batch likely (proved correct · one agent ran out · partial deliverable salvaged)
+- (E) "Keep using v0.3 as source" — user flagged v0.3 NOT approved · DELETED v0.3-sourced files mid-port (MapFallback · DatasetPreviewTable) · re-ported from V0.2 canonical
+**Reversal trigger:** if Stage 4 v0.3 swap reveals critical port quality issues · revert to v0.3 inline UI for affected sections · investigate root cause · fix in next batch. If user redirects: any synthesis doc updated → re-version → re-approve before further execution.
+**Status:** APPROVED · executed · TSC green · 228 components in core-v2 · 8 gates passed · Stage 4 paused at user gate.
+
+## 2026-05-19 — Charts: @ken-research/charts npm pkg + react-simple-maps for Map (NOT Highmaps)
+**Context:** Stage 3 audit · `@ken-research/charts` v0.1.5 ships 9 charts (Pie · Bar · Column · Area · Line · StackedBar · MultiSeriesLine · MultiAxisLine · HistoricalProjectedArea) but lacks Map. User asked: "we also have charts npm package installed we can use them too. instead of old page graphs and charts?". User also said: "if there is no map create it learn it and then create it ... also create a variant switcher to showcase both the map and table ui of v0.2".
+**Decision:** Use `@ken-research/charts` for ALL chart rendering (Pie/Bar/Stacked/etc) · DO NOT port V0.2 `ui/chart.tsx`. For Map (gap): build NEW `MapChart` organism via `react-simple-maps` v3 (MIT · ~35kB · pure-React composition · Framer-friendly · TopoJSON via `topojson-client`). For Map ⇄ Table variant switcher: build `TabStrip` molecule (role=tablist · underline-active · Framer crossfade 150ms · `useReducedMotion()` guard · URL `?view=` persistence via Next 15 `useSearchParams`). Compose Map + Table + TabStrip in `RegionalComparison` organism.
+**Alternatives rejected:**
+- (A) **Highcharts Highmaps** · industry gold standard · already loaded as runtime dep of `@ken-research/charts` (Highcharts v11.4.6) · marginal +25kB · API cohesion · BUT commercial license · procurement gate · ~$535/dev minimum
+- (B) **D3-geo direct** · max control · ~30kB · BUT high build cost (2-3 dev-days) · no tooltip/legend/zoom built-in
+- (C) **Visx (@visx/geo)** · MIT · React-native · BUT less map-specific tooling than react-simple-maps · no map collection
+- (D) **Pill toggle / segmented control / icon button group** for view switcher · all valid · but tab strip matches editorial style (Stripe / FT / Bloomberg precedent)
+**Reversal trigger:** if Ken Research procurement confirms Highmaps covered under existing Highcharts license · swap `react-simple-maps` → Highmaps for publishing-grade SVG + native drill-down + PDF export. If Map is rarely used (<3 instances on V1 PDP) · keep react-simple-maps indefinitely.
+**Status:** APPROVED · MapChart built + TabStrip built + RegionalComparison composed · TSC green · TopoJSON files NOT bundled (consumer responsibility · note in MapChart.md w/ sourcing guide).
+
+## 2026-05-19 — Token foundation extension · 53 tokens added · existing values win on collision
+**Context:** Token-rename trap discovered: V0.2 + core-v2 share token NAMES (`--text-sm`, `--radius-md`, `--purple-500`) but ship DIFFERENT VALUES. Silent drift on naive port.
+**Decision:** Strategy A · core-v2 values win · legacy ports refactor to new names/values via TOKEN-GAP-REPORT §4 port refactor rules (23 rules). 50 tokens appended to `base.css :root` L626-731 in 18 blocks: 3 legacy aliases (`--warmBg` · `--warmBorder` · `--content-max-width`) · 6 type tokens · 3 weight tokens · 7 tracking · 1 leading + 1 stat-label · 1 color (`--black-25`) · 9 glass tokens (cinematic-dark surfaces) · 6 shadows · 2 spacing (`--space-14` · `--space-20`) · 10 motion (3 ease + 7 duration) · 3 bg compositions · 4 pattern tokens. 2 reconciliation collisions found post-add: `--leading-snug` existing `1.3` wins (rejected spec `1.25`) · `--duration-slow` existing `500ms` wins (rejected spec `600ms`). Plus 4 semantic ink aliases (`--semantic-ink-strong/body/subtle` + `--border-soft`) added post-Batch-3.2a for cross-tier consumer parity. Total: 53 new CSS vars.
+**Alternatives rejected:**
+- (B) Override core-v2 to legacy values · reverts brand alignment · breaks AA contrast guarantees · invalidates foundation-lock memory
+- (C) Namespace legacy values (`--text-legacy-sm`) · permanent tech debt · AI confusion · doubles maintenance
+**Reversal trigger:** if v0.3 visual regression after Stage 4 swap reveals hex/size drift was user-visible · revisit per-token decision · case-by-case.
+**Status:** APPROVED · executed · TSC green · documented in TOKEN-GAP-REPORT §10 reconciliation log + FOUNDATIONS.md "Added 2026-05-19" section + base.css.bak backup.
+
 ## 2026-05-12 — Page-build workflow: 8-step process w/ 2 user-blocking gates (PROPOSE + SHOW FIRST CUT)
 **Context:** User correction after reports-pdp-v2 partial rebuild went wrong — built 34 bespoke organisms before user saw first cut. Spawned aura-builder w/o approach approval. Spawned aura-qa w/o user picking gates. Result: ~10000 LOC rework + multi-turn refinement cycles.
 **Decision:** Lock 8-step canonical process for ALL page builds + major UI builds. Two HARD user-blocking gates:
