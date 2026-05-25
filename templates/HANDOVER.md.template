@@ -24,9 +24,11 @@ pnpm start  # production preview
 - Framework: <Next.js 15 / Vite / etc.>
 - React: <version>
 - Tailwind: <v4 etc.>
-- Animation: <GSAP + Framer Motion + Lenis / Framer only / none>
+- Animation: <Framer Motion only · GSAP + Lenis REMOVED 2026-05-08 per workspace canon>
 - UI primitives: <shadcn/ui + Radix / @kenresearch/ds / custom>
-- Other: <gsap, lenis, etc.>
+- Other: <list runtime deps>
+- Charts: <@ken-research/charts npm pkg if used>
+- Map: <react-simple-maps if used>
 
 ## Route map
 | Route | Page | Purpose | Mobile? |
@@ -74,8 +76,11 @@ Located: `src/components/`
 - Quick ref: `<workspace>/Quick_start_guide.md`
 
 ## Animation rules (if applicable)
-- GSAP for scroll/timeline; Framer for state/component motion; never both on same property
-- Always honor `prefers-reduced-motion`
+- Framer Motion ONLY · GSAP + Lenis REMOVED 2026-05-08 (dev-team parity · they don't use either)
+- State/component motion: Framer `motion.*` · `AnimatePresence` · gestures · layout transitions
+- Scroll-driven motion: Framer `useScroll({ target, offset })` + `useTransform` for parallax/scrub · `useInView` for scroll-into-view triggers
+- Smooth page scroll: native CSS `html { scroll-behavior: smooth }` (DS base.css)
+- ALWAYS honor `prefers-reduced-motion` via Framer `useReducedMotion()` + CSS `@media (prefers-reduced-motion: reduce)`
 
 ## Tech-team integration checklist
 - [ ] Match Node version (`.nvmrc`)

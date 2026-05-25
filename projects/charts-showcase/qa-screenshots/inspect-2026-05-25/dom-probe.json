@@ -1,0 +1,749 @@
+{
+  "page": {
+    "title": "Ken Research · Chart Library Showcase",
+    "totalHeight": 6878,
+    "viewport": {
+      "w": 1440,
+      "h": 900
+    },
+    "bodyBG": "rgb(255, 255, 255)"
+  },
+  "sections": [
+    {
+      "idx": 0,
+      "id": "",
+      "ariaLabel": null,
+      "bbox": {
+        "x": 194,
+        "y": 230,
+        "w": 1052,
+        "h": 1001
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "hasH2": true,
+      "h2Text": "1 · Primitives"
+    },
+    {
+      "idx": 1,
+      "id": "",
+      "ariaLabel": null,
+      "bbox": {
+        "x": 194,
+        "y": 1295,
+        "w": 1052,
+        "h": 4066
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "hasH2": true,
+      "h2Text": "2 · Charts"
+    },
+    {
+      "idx": 2,
+      "id": "",
+      "ariaLabel": null,
+      "bbox": {
+        "x": 194,
+        "y": 3359,
+        "w": 1052,
+        "h": 502
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "24px",
+      "hasH2": false
+    },
+    {
+      "idx": 3,
+      "id": "",
+      "ariaLabel": null,
+      "bbox": {
+        "x": 194,
+        "y": 5425,
+        "w": 1052,
+        "h": 1265
+      },
+      "bg": "rgba(0, 0, 0, 0)",
+      "padding": "0px",
+      "hasH2": true,
+      "h2Text": "3 · Tables"
+    }
+  ],
+  "charts": [
+    {
+      "idx": 0,
+      "bbox": {
+        "x": 219,
+        "y": 1578,
+        "w": 1002,
+        "h": 280
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-column-series highcharts-tracker",
+      "pointCount": 12,
+      "hasOverflow": false,
+      "dataLabels": [],
+      "colors": [
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec"
+      ]
+    },
+    {
+      "idx": 1,
+      "bbox": {
+        "x": 219,
+        "y": 2006,
+        "w": 1002,
+        "h": 260
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-column-series highcharts-tracker",
+      "pointCount": 11,
+      "hasOverflow": false,
+      "dataLabels": [],
+      "colors": [
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec"
+      ]
+    },
+    {
+      "idx": 2,
+      "bbox": {
+        "x": 219,
+        "y": 2479,
+        "w": 1002,
+        "h": 280
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-bar-series highcharts-tracker",
+      "pointCount": 6,
+      "hasOverflow": false,
+      "dataLabels": [
+        {
+          "text": "35%",
+          "bbox": {
+            "x": 1103,
+            "y": 2500,
+            "w": 22,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "27.5%",
+          "bbox": {
+            "x": 935,
+            "y": 2542,
+            "w": 30,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "15.5%",
+          "bbox": {
+            "x": 667,
+            "y": 2583,
+            "w": 29,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "11%",
+          "bbox": {
+            "x": 566,
+            "y": 2624,
+            "w": 16,
+            "h": 14
+          },
+          "opacity": "1"
+        }
+      ],
+      "colors": [
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec"
+      ]
+    },
+    {
+      "idx": 3,
+      "bbox": {
+        "x": 219,
+        "y": 2972,
+        "w": 1002,
+        "h": 300
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-column-series highcharts-tracker",
+      "pointCount": 16,
+      "hasOverflow": false,
+      "dataLabels": [],
+      "colors": [
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec",
+        "#9488ec"
+      ]
+    },
+    {
+      "idx": 4,
+      "bbox": {
+        "x": 218,
+        "y": 3520,
+        "w": 1004,
+        "h": 320
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-bubble-series highcharts-tracker",
+      "pointCount": 8,
+      "hasOverflow": false,
+      "dataLabels": [
+        {
+          "text": "Alpha 3PL​Alpha 3PL",
+          "bbox": {
+            "x": 1139,
+            "y": 3677,
+            "w": 51,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "Beta Logistics​Beta Logistics",
+          "bbox": {
+            "x": 973,
+            "y": 3694,
+            "w": 72,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "Gamma Cold​Gamma Cold",
+          "bbox": {
+            "x": 689,
+            "y": 3648,
+            "w": 68,
+            "h": 14
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "Delta Reefer​Delta Reefer",
+          "bbox": {
+            "x": 368,
+            "y": 3584,
+            "w": 63,
+            "h": 14
+          },
+          "opacity": "1"
+        }
+      ],
+      "colors": [
+        "rgba(148,136,236,0.5)",
+        "rgba(148,136,236,0.5)",
+        "rgba(148,136,236,0.5)",
+        "rgba(148,136,236,0.5)",
+        "rgba(148,136,236,0.5)",
+        "rgba(148,136,236,0.5)"
+      ]
+    },
+    {
+      "idx": 5,
+      "bbox": {
+        "x": 219,
+        "y": 4052,
+        "w": 1002,
+        "h": 260
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-pie-series highcharts-tracker",
+      "pointCount": 5,
+      "hasOverflow": false,
+      "dataLabels": [
+        {
+          "text": "",
+          "bbox": {
+            "x": 823,
+            "y": 4111,
+            "w": 0,
+            "h": 0
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "",
+          "bbox": {
+            "x": 771,
+            "y": 4273,
+            "w": 0,
+            "h": 0
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "",
+          "bbox": {
+            "x": 572,
+            "y": 4235,
+            "w": 0,
+            "h": 0
+          },
+          "opacity": "1"
+        },
+        {
+          "text": "",
+          "bbox": {
+            "x": 539,
+            "y": 4127,
+            "w": 0,
+            "h": 0
+          },
+          "opacity": "1"
+        }
+      ],
+      "colors": [
+        "#9488ec",
+        "#c3c6f9",
+        "#86b3e5",
+        "#7075c8",
+        "#a7c9ed"
+      ]
+    },
+    {
+      "idx": 6,
+      "bbox": {
+        "x": 219,
+        "y": 4525,
+        "w": 1002,
+        "h": 300
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-spline-series",
+      "pointCount": 78,
+      "hasOverflow": false,
+      "dataLabels": [],
+      "colors": [
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff"
+      ]
+    },
+    {
+      "idx": 7,
+      "bbox": {
+        "x": 219,
+        "y": 5038,
+        "w": 1002,
+        "h": 300
+      },
+      "parentClass": "highcharts-container ",
+      "seriesType": "highcharts-series highcharts-series-0 highcharts-arearange-series",
+      "pointCount": 21,
+      "hasOverflow": false,
+      "dataLabels": [],
+      "colors": [
+        "#86b3e5",
+        "#86b3e5",
+        "#86b3e5",
+        "#86b3e5",
+        "#86b3e5",
+        "#86b3e5"
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "idx": 0,
+      "bbox": {
+        "x": 219,
+        "y": 1043,
+        "w": 1002,
+        "h": 163
+      },
+      "rowCount": 4,
+      "colCount": 6,
+      "headerBG": "rgba(0, 0, 0, 0)",
+      "headerSticky": "static",
+      "headerColor": "rgb(0, 0, 0)",
+      "rowHeight": 42,
+      "borderCollapse": "collapse",
+      "hasAltRow": true,
+      "parentBG": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "idx": 1,
+      "bbox": {
+        "x": 219,
+        "y": 1043,
+        "w": 1002,
+        "h": 163
+      },
+      "rowCount": 4,
+      "colCount": 6,
+      "headerBG": "rgba(0, 0, 0, 0)",
+      "headerSticky": "static",
+      "headerColor": "rgb(0, 0, 0)",
+      "rowHeight": 42,
+      "borderCollapse": "collapse",
+      "hasAltRow": true,
+      "parentBG": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "idx": 2,
+      "bbox": {
+        "x": 219,
+        "y": 5684,
+        "w": 1002,
+        "h": 414
+      },
+      "rowCount": 9,
+      "colCount": 9,
+      "headerBG": "rgba(0, 0, 0, 0)",
+      "headerSticky": "static",
+      "headerColor": "rgb(0, 0, 0)",
+      "rowHeight": 40,
+      "borderCollapse": "collapse",
+      "hasAltRow": true,
+      "parentBG": "rgba(0, 0, 0, 0)"
+    },
+    {
+      "idx": 3,
+      "bbox": {
+        "x": 219,
+        "y": 6327,
+        "w": 1002,
+        "h": 322
+      },
+      "rowCount": 8,
+      "colCount": 14,
+      "headerBG": "rgba(0, 0, 0, 0)",
+      "headerSticky": "static",
+      "headerColor": "rgba(0, 0, 0, 0.6)",
+      "rowHeight": 40,
+      "borderCollapse": "collapse",
+      "hasAltRow": true,
+      "parentBG": "rgba(0, 0, 0, 0)"
+    }
+  ],
+  "headings": [
+    {
+      "tag": "H1",
+      "text": "Ken Research · Chart Library Showcase",
+      "fontSize": "48px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 64,
+        "h": 53
+      }
+    },
+    {
+      "tag": "H2",
+      "text": "1 · Primitives",
+      "fontSize": "28px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 230,
+        "h": 45
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "ChartFigure",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 352,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Revenue · AUD Mn · 2017–2027F",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 430,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "ChartReveal",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 745,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "TableShell",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 981,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H2",
+      "text": "2 · Charts",
+      "fontSize": "28px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 1295,
+        "h": 45
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenColumnChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 1417,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Revenue by month · AUD Mn",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 1534,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Revenue · AUD Mn · projected bars lighter",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 1983,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenBarChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 2378,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Revenue share by metro · %",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 2456,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenDualColumnChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 2871,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Cold Storage vs Cold Transport · AUD Mn",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 2949,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenBubbleChart · Cinematic dark surface demo",
+      "fontSize": "12px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "600",
+      "color": "rgba(255, 255, 255, 0.5)",
+      "bbox": {
+        "y": 3383,
+        "h": 19
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Market participants · x = revenue · y = growth % · z = fleet capacity",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 3476,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenDonutChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 3910,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Revenue share by end-user sector",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 4008,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenMultiLineChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 4383,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "6 macro indicators · % YoY",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 4481,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "KenScenarioFanChart",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 4897,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "Market size under Bear / Base / Bull scenarios · AUD Mn",
+      "fontSize": "19px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(0, 0, 0)",
+      "bbox": {
+        "y": 4994,
+        "h": 24
+      }
+    },
+    {
+      "tag": "H2",
+      "text": "3 · Tables",
+      "fontSize": "28px",
+      "fontFamily": "\"Noto Serif\"",
+      "fontWeight": "300",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 5425,
+        "h": 45
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "PropertyTable",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 5547,
+        "h": 22
+      }
+    },
+    {
+      "tag": "H3",
+      "text": "RankingTable",
+      "fontSize": "14px",
+      "fontFamily": "\"DM Sans\"",
+      "fontWeight": "500",
+      "color": "rgb(23, 23, 23)",
+      "bbox": {
+        "y": 6191,
+        "h": 22
+      }
+    }
+  ],
+  "overflowIssues": []
+}

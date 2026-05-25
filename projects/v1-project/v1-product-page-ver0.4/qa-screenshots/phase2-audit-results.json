@@ -1,0 +1,226 @@
+[
+  {
+    "sev": "INFO",
+    "msg": "A1: screenshot → a1-mobile-drawer-open.png"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: Sheet drawer opens on hamburger click"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: drawer has 25 nav items ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: aria-expanded=\"true\" after open ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: clicking nav item closes drawer ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: scrolled to section, scrollY=996 ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: Escape key closes drawer ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A1: overlay click closes drawer ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A2: TOC desktop sidebar hidden at mobile-390 ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A2: TOC desktop sidebar hidden at tablet-768 ✓"
+  },
+  {
+    "sev": "INFO",
+    "msg": "A3: active item at scroll=0: \"Talk to Analyst\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A3: active item at scroll=1500: \"null\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A3: active item at scroll=3000: \"null\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A3: active item at scroll=6000: \"null\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A3: TOC active links found: [{\"text\":\"09Market Size & Growth\",\"dataActive\":null,\"ariaCurrent\":\"step\",\"className\":\"\"}]"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A3: scroll-spy active state detected ✓"
+  },
+  {
+    "sev": "INFO",
+    "msg": "A4: sidebar width 255px → 80px after toggle"
+  },
+  {
+    "sev": "PASS",
+    "msg": "A4: TOC collapse works: 255px → 80px ✓"
+  },
+  {
+    "sev": "BLOCKER",
+    "msg": "A5: TOC link href=\"#industry\" NOT FOUND in desktop sidebar"
+  },
+  {
+    "sev": "INFO",
+    "msg": "A6: scaleX at scroll=0: \"scaleX(0)\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A6: scaleX at 50% scroll: \"scaleX(0.5)\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "A6: scaleX at 100% scroll: \"scaleX(1)\""
+  },
+  {
+    "sev": "PASS",
+    "msg": "A6: PageProgressBar scaleX(0.5) at 50% scroll ✓"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-390-top.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-390-mid.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-390-bottom.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-390-drawer-open.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-390: header z-index computed = 50"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-390: StatPairRow grid-template-columns = \"358px\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-390: breadcrumb last=\"Australia Cold Chain\" color=rgb(249, 155, 133)"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-768-top.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-768-mid.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-768-bottom.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-768: header z-index computed = 50"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-768: StatPairRow grid-template-columns = \"197.328px 197.328px 197.328px\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-768: breadcrumb last=\"Australia Cold Chain\" color=rgb(249, 155, 133)"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-1440-top.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-1440-mid.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B: screenshot → b-1440-bottom.png"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-1440: header z-index computed = 50"
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-1440: StatPairRow grid-template-columns = \"165.328px 165.328px 165.328px\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "B-1440: breadcrumb last=\"Australia Cold Chain\" color=rgb(249, 155, 133)"
+  },
+  {
+    "sev": "SERIOUS",
+    "msg": "C axe SERIOUS [color-contrast]: Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds — .text-\\[var\\(--semantic-ink-subtle\\)\\].text-\\[13px\\].leading-none | .text-\\[var\\(--semantic-ink-subtle\\)\\].mb-3.text-\\[12px\\]"
+  },
+  {
+    "sev": "SERIOUS",
+    "msg": "C axe SERIOUS [definition-list]: Ensure <dl> elements are structured correctly — .items-start[data-component=\"InlineStats\"][data-orientation=\"vertical\"]:nth-child(1) > dl | .items-start[data-component=\"InlineStats\"][data-orientation=\"vertical\"]:nth-child(2) > dl"
+  },
+  {
+    "sev": "INFO",
+    "msg": "C: nav landmarks with aria-label count = 4"
+  },
+  {
+    "sev": "PASS",
+    "msg": "C: aria-current found: {\"tag\":\"SPAN\",\"ariaCurrent\":\"page\",\"text\":\"Australia Cold Chain\"} ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "C: hamburger aria-expanded=\"false\" ✓"
+  },
+  {
+    "sev": "SERIOUS",
+    "msg": "C: aria-controls=\"side-toc-drawer\" but element #side-toc-drawer NOT IN DOM — broken linkage"
+  },
+  {
+    "sev": "PASS",
+    "msg": "C: skip link \"#main\" → target exists ✓"
+  },
+  {
+    "sev": "INFO",
+    "msg": "C: focusable TOC items (aside a/button) = 26"
+  },
+  {
+    "sev": "PASS",
+    "msg": "C: 26 focusable TOC items in desktop sidebar ✓"
+  },
+  {
+    "sev": "SERIOUS",
+    "msg": "C: hamburger touch target 0×0px < 44×44px min"
+  },
+  {
+    "sev": "PASS",
+    "msg": "E: Hero h1 opacity=1 under reduced-motion ✓"
+  },
+  {
+    "sev": "PASS",
+    "msg": "E: no elements stuck at opacity:0 under reduced-motion ✓"
+  },
+  {
+    "sev": "INFO",
+    "msg": "E: orb animation under reduced-motion = \"no-orbs\""
+  },
+  {
+    "sev": "INFO",
+    "msg": "E: Button shimmer animation = \"1e-05s\""
+  }
+]
