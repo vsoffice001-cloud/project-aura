@@ -1,10 +1,10 @@
-# Skill Routing — Active Set (post-prune 2026-05-08)
+# Skill Routing — Active Set (post-WORKFLOW-RESET 2026-05-20)
 
-Read first before invoking any skill. Verbose copy: [SKILL_ROUTING.original.md](SKILL_ROUTING.original.md).
+Read first before invoking any skill. Verbose copy archived: `_archive/SKILL_ROUTING.original.md.deprecated-2026-05-20`.
 
-**Core rule:** load a SKILL.md only when task matches its trigger. Active set = **8 workspace + 4 external = 12 active** (2026-05-12 update: added `aura-craft` workspace skill + `webapp-testing` Anthropic skill + 3 reference repos). **72 archived** (see `_archive/README.md`).
+**Core rule:** load a SKILL.md only when task matches its trigger. Active set = **6 workspace + 4 external + 1 graphify + 1 caveman = 12 active** (2026-05-20 update: removed `skill-creator` · ARCHIVED). `_archive/` contains all superseded skills.
 
-**Pair w/:** [INDEX_BY_CATEGORY.md](INDEX_BY_CATEGORY.md) (full what/where/why/when/how) · [../workflows/ROUTING.md](../workflows/ROUTING.md) (workflow → skill map) · [../CLAUDE.md](../CLAUDE.md) skill-routing table.
+**Pair w/:** [INDEX_BY_CATEGORY.md](INDEX_BY_CATEGORY.md) (full what/where/why/when/how) · [../workflows/CANONICAL-WORKFLOW.md](../workflows/CANONICAL-WORKFLOW.md) (workflow → skill map · canonical 2026-05-20) · [../CLAUDE.md](../CLAUDE.md) skill-routing table · [../design-system/core-v2/docs/AI-CONSUMPTION-PROTOCOL.md](../design-system/core-v2/docs/AI-CONSUMPTION-PROTOCOL.md).
 
 ---
 

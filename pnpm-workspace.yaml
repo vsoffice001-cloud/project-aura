@@ -7,6 +7,9 @@ packages:
   - 'projects/report-store'    # enabled 2026-05-08 (Phase D step 1)
   - 'projects/V0.2_report'     # enabled 2026-05-08 (Phase E step 1)
   - 'projects/reports-pdp-v2'  # enabled 2026-05-11 (DS consumption alignment)
+  - 'projects/v1-project/v1-product-page-ver0.3'  # v0.3 active rebuild 2026-05-18 (v0.2 stays standalone)
+  - 'projects/v1-project/v1-product-page-ver0.4'  # v0.4 active rebuild 2026-05-20 (section-by-section)
+  - 'projects/charts-showcase'  # Sprint A.3 DS chart library showcase 2026-05-22
   # Verification consumer
   # - 'projects/_ds-verify'
   # Excluded (legacy, read-only):
