@@ -24,6 +24,8 @@ export interface SectionHeadingProps {
   labelPulse?: boolean;
   align?: HeadingAlign;
   className?: string;
+  /** Optional id on the heading element · for aria-labelledby targets · added Batch 3.2c (2026-05-19) */
+  id?: string;
 }
 
 const alignClass: Record<HeadingAlign, string> = {
@@ -55,13 +57,18 @@ export function SectionHeading({
   action,
   endSlot,
   labelPulse,
-  align = 'center',
+  align = 'left',
   className,
+  id,
 }: SectionHeadingProps) {
+  /* Major Third scale (1.25× ratio · matches Figma + legacy) — 2026-05-14 legacy-vs-new parity fix
+     L1 = h1 backup: 2.441 → 3.052rem (39 → 48.8px)
+     L2 = h2 default: 1.953 → 2.441rem (31.3 → 39px) · was undersized text-xl/text-2xl (20/24px)
+     L3 = h3: 1.563 → 1.953rem (25 → 31.3px) */
   const sizeClass = {
-    1: 'text-2xl sm:text-3xl leading-tight',
-    2: 'text-xl  sm:text-2xl leading-tight',
-    3: 'text-lg  sm:text-xl  leading-tight',
+    1: 'text-[2.441rem] sm:text-[3.052rem] leading-tight tracking-[-0.02em]',
+    2: 'text-[1.953rem] sm:text-[2.441rem] leading-tight tracking-[-0.015em]',
+    3: 'text-[1.563rem] sm:text-[1.953rem] leading-tight tracking-[-0.01em]',
   } as const;
 
   const fontClass = {
@@ -77,15 +84,16 @@ export function SectionHeading({
 
   const headingEl =
     level === 1 ? (
-      <h1 className={cn(fontClass[1], sizeClass[1])}>{headingContent}</h1>
+      <h1 id={id} className={cn(fontClass[1], sizeClass[1])}>{headingContent}</h1>
     ) : level === 2 ? (
-      <h2 className={cn(fontClass[2], sizeClass[2])}>{headingContent}</h2>
+      <h2 id={id} className={cn(fontClass[2], sizeClass[2])}>{headingContent}</h2>
     ) : (
-      <h3 className={cn(fontClass[3], sizeClass[3])}>{headingContent}</h3>
+      <h3 id={id} className={cn(fontClass[3], sizeClass[3])}>{headingContent}</h3>
     );
 
   return (
     <div
+      data-component="SectionHeading"
       className={cn(
         alignClass[align],
         hasRightSlot && 'flex items-end justify-between gap-6',
@@ -94,11 +102,11 @@ export function SectionHeading({
     >
       <div className={cn(hasRightSlot && 'flex-1')}>
         {eyebrowText && (
-          <p className="text-xs uppercase tracking-wider mb-3 text-[var(--surface-text-muted)] font-body inline-flex items-center gap-2">
+          <p className="text-xs uppercase tracking-wider mb-3 text-[var(--semantic-ink-body)] font-body inline-flex items-center gap-2">
             {labelPulse && (
               <span
                 className="inline-block w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ backgroundColor: 'var(--color-brand-red, #b01f24)' }}
+                style={{ backgroundColor: 'var(--brand-red)' }}
                 aria-hidden
               />
             )}
@@ -107,7 +115,7 @@ export function SectionHeading({
         )}
         {headingEl}
         {subtitle && (
-          <p className="mt-3 text-base text-[var(--surface-text-muted)] font-body max-w-2xl">
+          <p className="mt-3 text-base text-[var(--semantic-ink-body)] font-body max-w-2xl">
             {subtitle}
           </p>
         )}

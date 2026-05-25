@@ -29,6 +29,7 @@ interface QuickAccessBarProps {
 export function QuickAccessBar({ onActionClick }: QuickAccessBarProps) {
   return (
     <div
+      data-component="QuickAccessBar"
       className="w-full py-4"
       style={{
         borderBottomWidth: '1px',
@@ -43,7 +44,7 @@ export function QuickAccessBar({ onActionClick }: QuickAccessBarProps) {
             <button
               key={action.label}
               onClick={() => onActionClick?.(action.label)}
-              className="flex items-center gap-2.5 px-4 py-2.5 flex-shrink-0 transition-all duration-150 cursor-pointer group"
+              className="flex items-center gap-2.5 px-4 py-2.5 flex-shrink-0 transition-all duration-150 cursor-pointer group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-inset"
               style={{
                 borderRadius: 'var(--radius-element)',
               }}

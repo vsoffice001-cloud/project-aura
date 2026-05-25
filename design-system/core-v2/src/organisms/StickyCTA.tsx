@@ -1,3 +1,26 @@
+/**
+ * StickyCTA
+ *
+ * WHY · Long case-study pages lose conversion momentum mid-scroll — a context-aware floating CTA
+ *       keeps the action visible without blocking content (collapses to icon when not hovered).
+ * WHAT · Fixed bottom-right button (lg+ only) that changes label/icon based on `useActiveSection()`.
+ *        Collapsed (56px icon) → hover expands to full label + tooltip. Ken red gradient · pulse ring · 500ms transitions.
+ *        7 section-specific CTAs (client-context/challenges/engagement/methodology/impact/testimonial/resources).
+ *        Hidden when hero or final-cta section is active.
+ * WHEN · Case-study pages with 6+ scroll sections needing persistent conversion access.
+ * WHEN NOT · Landing pages (use fixed nav CTA) · listing pages (use inline CTAs per card).
+ * WHERE · Case-study template — fixed layer alongside `ReadingProgressBar`.
+ * HOW ·
+ *   ```tsx
+ *   // No props — section tracking is automatic via useActiveSection hook
+ *   <StickyCTA />
+ *   ```
+ *
+ * @reusabilityScore 3
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
 import { useState, useEffect } from 'react';
 import { Calendar, MessageSquare, TrendingUp } from 'lucide-react';
 import { useActiveSection } from '../hooks/useActiveSection';
@@ -85,7 +108,7 @@ export function StickyCTA() {
   if (!isVisible) return null;
 
   return (
-    <div className="hidden lg:block fixed bottom-8 right-8 z-40">
+    <div data-component="StickyCTA" className="hidden lg:block fixed bottom-8 right-8 z-40">
       <div 
         className={`group transition-all duration-500 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
@@ -108,7 +131,7 @@ export function StickyCTA() {
         {/* Main CTA Button */}
         <button
           onClick={handleClick}
-          className="text-white transition-all duration-300 rounded-[10px] flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-offset-2 overflow-hidden group"
+          className="text-white transition-all duration-300 rounded-[10px] flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 focus-visible:ring-offset-white overflow-hidden group"
           style={{ 
             padding: isExpanded ? '14px 24px 14px 20px' : '14px 20px',
             width: isExpanded ? 'auto' : '56px',

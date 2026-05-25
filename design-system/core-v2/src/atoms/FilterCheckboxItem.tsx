@@ -45,10 +45,11 @@ export function FilterCheckboxItem({
 
   return (
     <div
+      data-component="FilterCheckboxItem"
       role="checkbox"
       aria-checked={checked}
       tabIndex={0}
-      className="flex items-center gap-2.5 cursor-pointer transition-all duration-100 select-none"
+      className="flex items-center gap-2.5 cursor-pointer transition-all duration-100 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
       style={{
         padding: '6px 16px',
         backgroundColor: checked ? 'rgba(0,0,0,0.03)' : hovered ? 'rgba(0,0,0,0.02)' : 'rgba(0,0,0,0)',

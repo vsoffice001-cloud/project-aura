@@ -40,12 +40,14 @@ export { NextSectionCTA, type NextSectionCTAProps } from './NextSectionCTA';
 export { SubtleVariantSwitcher, type SubtleVariantSwitcherProps, type VariantOption } from './SubtleVariantSwitcher';
 
 // Promoted from Design_system_vs_26 OG (DS Port Batch 3, 2026-05-12)
-export { FilterChip } from './FilterChip';
+// REWRITTEN Batch 3.1a 2026-05-19 — FilterChip is now a toggle chip matching report-store-legacy canonical
+export { FilterChip, type FilterChipProps } from './FilterChip';
 export { ImageWithFallback } from './ImageWithFallback';
 
 // Promoted from Design_system_vs_26 OG (DS Port Batch 6, 2026-05-13)
 export { CategoryListItem } from './CategoryListItem';
-export { FilterCheckbox } from './FilterCheckbox';
+// REWRITTEN Batch 3.1a 2026-05-19 — FilterCheckbox now has canonical 16×16 custom checkbox box
+export { FilterCheckbox, type FilterCheckboxProps } from './FilterCheckbox';
 
 // Promoted from Design_system_vs_26 OG (DS Port Batch 8, 2026-05-13)
 export { ContactModal } from './ContactModal';
@@ -57,6 +59,39 @@ export { FilterSectionHeader } from './FilterSectionHeader';
 export { AnimatedArrowQuickRef } from './AnimatedArrowQuickRef';
 // SpacingHelpers exports multiple components (visualization helpers · doc-page use only)
 export { SpacingScaleVisualization, MarginPaddingGuide, ComponentSpacingExamples, ListFormSpacingDemo, ResponsiveSpacingDemo, VisualRhythmDemo } from './SpacingHelpers';
+
+// Promoted from Design_system_vs_26 OG (DS Port Phase 6, 2026-05-15 · Tier 3)
+export { TableOfContents, type TableOfContentsProps, type TOCSection, type TOCSubsection } from './TableOfContents';
+export { CodeBlockWithCopy, CodeBlock, type CodeBlockWithCopyProps, type CodeLanguage } from './CodeBlockWithCopy';
+
+// Blur-blob composition background atoms (§16 · 2026-05-15)
+export { HeroBackground, type HeroBackgroundProps } from './HeroBackground';
+export { CTABackground, type CTABackgroundProps } from './CTABackground';
+
+// Promoted from v1-product-page-ver0.2 (Sprint 1 Foundation · 2026-05-18 · day-1 promotion per PHASE-2-PROPOSAL 2c)
+export { AnswerBlock, type AnswerBlockProps } from './AnswerBlock';
+
+// Batch 3.1b · 2026-05-19 · Type + Stat atoms (V0.2-for-ds + V0_lite canonical sources)
+export { SectionHeader, type SectionHeaderProps } from './SectionHeader';
+export { OverheadText, type OverheadTextProps } from './OverheadText';
+export { BodyText, type BodyTextProps } from './BodyText';
+export { StatPair, type StatPairProps } from './StatPair';
+export { StatBadge, type StatBadgeProps, type StatBadgeVariant } from './StatBadge';
+export { IconBox, type IconBoxProps, type IconBoxColor, type IconBoxSize } from './IconBox';
+export { InlineStats, type InlineStatsProps } from './InlineStats';
+
+// Batch 3.2a-REDO · 2026-05-19 · V0.2 canonical re-port (v0.3-sourced DELETED · V0.2 canonical replaces)
+export { ProgressBar, type ProgressBarProps, type ProgressBarSize } from './ProgressBar';
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from './Table';
 
 // NOTE: 13 of 14 "atoms" originally deferred to `_consumer-coupled/` were promoted to organisms in
 // Phase 2 (2026-05-13) after lifting required hooks (useActiveSection · useScrollDirection · useHeroVisibility ·

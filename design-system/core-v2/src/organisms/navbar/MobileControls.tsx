@@ -31,7 +31,7 @@ export function MobileControls({
   authPopover,
 }: MobileControlsProps) {
   return (
-    <div className="md:hidden flex items-center gap-1">
+    <div data-component="MobileControls" className="md:hidden flex items-center gap-1">
       <div className="relative">
         <Avatar
           ref={authPopover.mobileButtonRef}

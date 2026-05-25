@@ -1,0 +1,17 @@
+{
+  "url": "http://localhost:3000/reports/gcc-pharmaceutical-market-2024-2030",
+  "viewport": {
+    "label": "desktop",
+    "width": 1440,
+    "height": 900
+  },
+  "transparentContainers": [],
+  "literalVarText": [],
+  "brokenImages": [],
+  "consoleErrors": [
+    "[error] Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "networkFailures": [
+    "HTTP 404 http://localhost:3000/reports/gcc-pharmaceutical-market-2024-2030"
+  ]
+}

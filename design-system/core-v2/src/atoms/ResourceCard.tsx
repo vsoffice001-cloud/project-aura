@@ -147,7 +147,7 @@ export function ResourceCard({
   // ── VARIANT: full-featured ──
   if (variant === 'full-featured') {
     return (
-      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
         <article>
           <div className="relative overflow-hidden rounded-t-[5px] aspect-[16/10]">
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -178,7 +178,7 @@ export function ResourceCard({
   // ── VARIANT: minimal ──
   if (variant === 'minimal') {
     return (
-      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
         <article className={cardStyle === 'bordered' ? 'p-3' : ''}>
           <div className="relative overflow-hidden rounded-[3px] aspect-[3/2] mb-3">
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -195,7 +195,7 @@ export function ResourceCard({
   // ── VARIANT: category-featured ──
   if (variant === 'category-featured') {
     return (
-      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
         <article>
           <div className="relative overflow-hidden rounded-t-[5px] aspect-[4/3]">
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -220,8 +220,9 @@ export function ResourceCard({
   if (variant === 'clean') {
     return (
       <a
+        data-component="ResourceCard"
         href="#"
-        className={`group block cursor-pointer transition-all duration-300 ${
+        className={`group block cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 ${
           cardStyle === 'bordered'
             ? cardWrapperClass
             : isDark
@@ -246,7 +247,7 @@ export function ResourceCard({
   // ── VARIANT: featured-focus ──
   if (variant === 'featured-focus') {
     return (
-      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
         <article className="relative">
           <div className="relative overflow-hidden rounded-[5px] aspect-[4/5]">
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -266,7 +267,7 @@ export function ResourceCard({
   // ── VARIANT: latest ──
   if (variant === 'latest') {
     return (
-      <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+      <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
         <article>
           <div className="relative overflow-hidden rounded-t-[5px] aspect-[16/9]">
             <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -296,7 +297,7 @@ export function ResourceCard({
 
   // ── VARIANT: standard (default) ──
   return (
-    <a href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300`}>
+    <a data-component="ResourceCard" href="#" className={`group block cursor-pointer ${cardWrapperClass} overflow-hidden transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2`}>
       <article>
         <div className="relative overflow-hidden rounded-[3px] mb-4 aspect-[4/3]">
           <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />

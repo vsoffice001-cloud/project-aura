@@ -53,7 +53,7 @@ export function PrimaryNav({
   ctaButton,
 }: PrimaryNavProps) {
   return (
-    <div className="max-w-[var(--container-page)] mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between">
+    <div data-component="PrimaryNav" className="max-w-[var(--container-page)] mx-auto px-4 sm:px-6 md:px-8 h-full flex items-center justify-between">
       <LogoButton onClick={onLogoClick}>{logo}</LogoButton>
 
       <MobileControls

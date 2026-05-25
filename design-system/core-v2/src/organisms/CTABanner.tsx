@@ -40,6 +40,8 @@ export interface CTABannerProps {
   children?: ReactNode;
   /** className for outer wrapper */
   className?: string;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 export function CTABanner({
@@ -55,9 +57,10 @@ export function CTABanner({
   onSecondaryClick,
   children,
   className,
+  ...dataProps
 }: CTABannerProps) {
   return (
-    <SectionWrapper background={background} spacing="lg" maxWidth="wide" className={className}>
+    <SectionWrapper data-component="CTABanner" {...dataProps} background={background} spacing="lg" maxWidth="wide" className={className}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8 text-center">
         <SectionHeading
           label={label}
@@ -67,11 +70,11 @@ export function CTABanner({
           level={2}
         />
         <div className="mt-8 flex justify-center gap-4">
-          <Button variant="primary" size="lg" icon={primaryIcon} animatedArrow={primaryShowArrow} onClick={onPrimaryClick}>
+          <Button variant="primary" size="lg" icon={primaryIcon} animatedArrow={primaryShowArrow} onClick={onPrimaryClick} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2">
             {primaryText}
           </Button>
           {secondaryText && (
-            <Button variant="secondary" size="lg" onClick={onSecondaryClick}>
+            <Button variant="secondary" size="lg" onClick={onSecondaryClick} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2">
               {secondaryText}
             </Button>
           )}

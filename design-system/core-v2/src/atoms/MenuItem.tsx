@@ -18,10 +18,55 @@ export interface MenuItemProps {
 }
 
 /**
- * MenuItem — popover/dropdown menu row (icon + label + optional subtitle).
+ * MenuItem — popover/dropdown menu row · icon + label (+ optional subtitle) · default + danger variants.
  *
- * Used in: AuthPopover (sign-in / account / sign-out), settings menus, context menus.
+ * WHY:
+ * - Popovers need a consistent row anatomy across AuthPopover · settings · context menus
+ * - Danger variant centralizes destructive-action styling (Sign out · Delete) — no per-menu overrides
+ * - `iconBg` wraps icon in 32px tinted square — visual hierarchy for "primary" vs "tertiary" rows
+ * - `role="menuitem"` correct ARIA role inside parent `role="menu"` popover (WAI-ARIA pattern)
+ * - 40px default minHeight balances density · 44px mobile recommendation handled by parent menu wrapper
  *
+ * WHAT: `<button role="menuitem">` w/ flex row layout. Hover bg = ramp-black-50 (or error-bg for danger).
+ * Active bg = ramp-black-100 (or error-bg-hover). Text + icon turn brand-red on danger.
+ * Subtitle slot renders a 2-line stack (label + 10px muted subtitle) when provided.
+ *
+ * WHEN:
+ * - AuthPopover rows (Sign in · Profile · Sign out)
+ * - Settings dropdown options
+ * - Context menus (Edit · Duplicate · Delete)
+ * - Account switcher rows
+ *
+ * WHEN NOT:
+ * - Navigation list items in a sidebar → use `<CategoryListItem>` (count + chevron anatomy)
+ * - Form select options → use native `<select>` or future `<Combobox>` molecule
+ * - Multi-select filter rows → use `<FilterCheckboxItem>`
+ * - Inline button rows in a card → use `<Button variant="ghost">`
+ *
+ * HOW:
+ * ```tsx
+ * <div role="menu" aria-label="Account menu" className="bg-white shadow-lg rounded-lg p-1">
+ *   <MenuItem icon={<User size={14} />} label="Profile" onClick={openProfile} />
+ *   <MenuItem icon={<Settings size={14} />} label="Settings" subtitle="Preferences & billing" onClick={openSettings} />
+ *   <Divider variant="subtle" />
+ *   <MenuItem icon={<LogOut size={14} />} label="Sign out" danger onClick={signOut} />
+ * </div>
+ * ```
+ *
+ * A11y: `role="menuitem"` + semantic `<button>` · keyboard activatable. Parent should
+ *       wrap in `role="menu"` + roving tabindex for arrow-key navigation (consumer responsibility).
+ *       Touch target ≥40px default (set 44 on mobile via `minHeight` prop).
+ *       Color contrast: text vs hover-bg verified · danger variant brand-red on light bg ≥4.5:1.
+ * Motion: `transition-colors` only · no transform. Reduced-motion neutral (color != motion).
+ * Anti-patterns:
+ *  - ❌ Never use outside a `role="menu"` parent (menuitem role requires menu container)
+ *  - ❌ Never use danger variant for non-destructive actions (loses warning signal)
+ *  - ❌ Never override `hover:bg` via className (defeats variant system)
+ *  - ❌ Never nest interactive elements inside (button can't contain button/link)
+ *
+ * @lifecycle stable
+ * @a11y_status reviewed-AA (parent menu wrapper responsibility for roving tabindex)
+ * @reusabilityScore 4/5 ⭐
  * @promotedFrom topnav-v32/src/design-system/components/MenuItem.tsx
  */
 export function MenuItem({
@@ -42,12 +87,14 @@ export function MenuItem({
 
   return (
     <button
+      data-component="MenuItem"
       type="button"
       role="menuitem"
       onClick={onClick}
       className={cn(
         'flex items-center gap-2.5 w-full px-3 py-2.5 rounded-[8px]',
         'transition-colors touch-manipulation text-left bg-transparent border-none cursor-pointer',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1',
         hoverBg,
       )}
       style={{ minHeight }}

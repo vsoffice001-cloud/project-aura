@@ -49,7 +49,7 @@ export function CardListing({
     : 'flex flex-col gap-3';
 
   return (
-    <div className="mt-4">
+    <div data-component="CardListing" className="mt-4">
       {loading ? (
         <div className={gridClass}>
           {Array.from({ length: PAGE_SIZE }).map((_, i) => (
@@ -81,7 +81,7 @@ export function CardListing({
               projection={report.projection}
               region={report.region}
               date={report.date}
-              layout={viewMode}
+              variant={viewMode}
               description={report.description}
             />
           ))}
@@ -101,7 +101,8 @@ export function CardListing({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="w-8 h-8 flex items-center justify-center transition-all disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
+              aria-label="Go to previous page"
+              className="w-11 h-11 flex items-center justify-center transition-all disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
               style={{
                 borderRadius: 'var(--radius-element)',
                 borderWidth: '1px',
@@ -116,7 +117,7 @@ export function CardListing({
               <button
                 key={i}
                 onClick={() => onPageChange(i + 1)}
-                className="w-8 h-8 flex items-center justify-center transition-all cursor-pointer"
+                className="w-9 h-9 flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
                 style={{
                   borderRadius: 'var(--radius-element)',
                   fontSize: 'var(--text-xs)',
@@ -132,7 +133,8 @@ export function CardListing({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="w-8 h-8 flex items-center justify-center transition-all disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer"
+              aria-label="Go to next page"
+              className="w-11 h-11 flex items-center justify-center transition-all disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
               style={{
                 borderRadius: 'var(--radius-element)',
                 borderWidth: '1px',

@@ -1,3 +1,35 @@
+/**
+ * HorizontalScroll
+ *
+ * WHY · Analyst picks, featured carousels, and tag filters need a drag-scrollable
+ *        horizontal track with mouse/touch/wheel support and fade-edge affordances.
+ *        Native CSS `overflow-x: scroll` lacks the fade-mask + momentum physics needed
+ *        for premium cinematic feel.
+ * WHAT · Viewport div + CSS-transformed track. Handles wheel, touch swipe, mouse drag
+ *        with momentum. Renders left/right chevron nav buttons on hover. Fade gradients
+ *        indicate scrollability. Props: children (ReactNode), fadeBg (string, default
+ *        "white"), gap (Tailwind class, default "gap-4"), className (string).
+ * WHEN · Any horizontally scrollable carousel: AnalystPicks, TopDownloads,
+ *        RecommendedForYou, ExploreByRegion, tag/filter chips row.
+ * WHEN NOT · Don't use for vertical lists. Don't use when items should wrap to next
+ *             line — use a flex-wrap container. Don't wrap CardReveal children inside
+ *             HorizontalScroll (scroll container clips entrance animations).
+ * WHERE · report-store-legacy AnalystPicks.tsx + TopDownloads.tsx + RecommendedForYou.tsx
+ *          + ExploreByRegion.tsx + ListingContextBanner.tsx ·
+ *          competition-benchmarking-listing-v02 AnalystPicks.tsx + TopDownloads.tsx +
+ *          RecommendedForYou.tsx
+ * HOW ·
+ *   ```tsx
+ *   <HorizontalScroll fadeBg="var(--warm-100)" gap="gap-3">
+ *     {items.map((item) => <Card key={item.id} {...item} />)}
+ *   </HorizontalScroll>
+ *   ```
+ *
+ * @reusabilityScore 5     // used in 5+ sections across 2+ projects
+ * @a11y_status pending-review  // keyboard scroll not wired; nav buttons have aria-label
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
+ */
 import { useRef, useState, useEffect, useCallback, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -128,11 +160,11 @@ export function HorizontalScroll({ children, fadeBg = "white", gap = "gap-4", cl
   }, [scrollTo]);
 
   return (
-    <div className={`relative group/scroll ${className}`}>
+    <div data-component="HorizontalScroll" className={`relative group/scroll ${className}`}>
       {canScrollLeft && (
         <>
           <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, ${fadeBg}, transparent)` }} />
-          <button onClick={() => scrollByDirection("left")} className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-black/[0.06] opacity-0 group-hover/scroll:opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-105 cursor-pointer" aria-label="Scroll left">
+          <button onClick={() => scrollByDirection("left")} className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-black/[0.06] opacity-0 group-hover/scroll:opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-105 cursor-pointer focus-visible:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1" aria-label="Scroll left">
             <ChevronLeft className="h-4 w-4 text-black/60" />
           </button>
         </>
@@ -140,7 +172,7 @@ export function HorizontalScroll({ children, fadeBg = "white", gap = "gap-4", cl
       {canScrollRight && (
         <>
           <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none" style={{ background: `linear-gradient(to left, ${fadeBg}, transparent)` }} />
-          <button onClick={() => scrollByDirection("right")} className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-black/[0.06] opacity-0 group-hover/scroll:opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-105 cursor-pointer" aria-label="Scroll right">
+          <button onClick={() => scrollByDirection("right")} className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-black/[0.06] opacity-0 group-hover/scroll:opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg hover:scale-105 cursor-pointer focus-visible:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1" aria-label="Scroll right">
             <ChevronRight className="h-4 w-4 text-black/60" />
           </button>
         </>

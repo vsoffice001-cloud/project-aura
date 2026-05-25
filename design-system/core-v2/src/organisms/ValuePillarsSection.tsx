@@ -1,3 +1,27 @@
+/**
+ * ValuePillarsSection
+ *
+ * WHY · Engagement objectives / value pillars in long-form editorial need large-number anchors with
+ *       full-width divider rows — a card grid loses the "sequential equal weight" editorial feel.
+ * WHAT · Stacked 12-col rows: serif large number (2-col, black/20) · title + description prose (10-col).
+ *        Border-top per row creates visual rhythm. White bg. Props: `pillars[]` with number/title/description.
+ * WHEN · Case-study engagement objectives or product value propositions needing editorial numbered treatment.
+ * WHEN NOT · Consulting steps with descriptions (use `MethodologySection`) ·
+ *            numbered metrics (use `ImpactSection`) · horizontally scrolled cards (use `ChallengesSection`).
+ * WHERE · Case-study template — alternative to `EngagementObjectivesSection` for simpler 2-col layout needs.
+ * HOW ·
+ *   ```tsx
+ *   <ValuePillarsSection pillars={[
+ *     { number: "01", title: "Market Intelligence", description: "Quantify TAM/SAM with primary data..." },
+ *     { number: "02", title: "Competitive Positioning", description: "Map rivals across 4 dimensions..." }
+ *   ]} />
+ *   ```
+ *
+ * @reusabilityScore 3
+ * @a11y_status pending-review
+ * @lifecycle beta
+ * @promotedFrom casestudy-templates/template-v3
+ */
 interface ValuePillar {
   number: string;
   title: string;
@@ -10,7 +34,7 @@ interface ValuePillarsSectionProps {
 
 export function ValuePillarsSection({ pillars }: ValuePillarsSectionProps) {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-white">
+    <section data-component="ValuePillarsSection" className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Header */}
         <div className="mb-12 sm:mb-16 md:mb-20">

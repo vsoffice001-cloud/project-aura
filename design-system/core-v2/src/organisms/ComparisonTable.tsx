@@ -39,7 +39,7 @@ const FORMATS = [
 
 export function ComparisonTable() {
   return (
-    <SectionWrapper background="warm" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="ComparisonTable" background="warm" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label="Formats"

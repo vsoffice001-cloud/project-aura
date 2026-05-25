@@ -44,6 +44,7 @@ export function SecondaryBar({
 }: SecondaryBarProps) {
   return (
     <div
+      data-component="SecondaryBar"
       className="bg-[var(--color-ramp-black-50)] border-b border-[var(--border-soft)] h-[40px] relative w-full z-[60] hidden md:block"
       onMouseLeave={onMouseLeave}
     >

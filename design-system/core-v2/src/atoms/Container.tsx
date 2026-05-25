@@ -71,6 +71,7 @@ export function Container({
 }: ContainerProps) {
   return (
     <Tag
+      data-component="Container"
       className={cn('mx-auto px-4 sm:px-6 md:px-8', className)}
       style={{ maxWidth: MAX_WIDTH_TOKEN[maxWidth] }}
     >

@@ -27,5 +27,5 @@ export function KeyMarketIndicators({
   subtitle = 'Real-time market sizing and growth metrics from our research coverage',
   columns = 4,
 }: KeyMarketIndicatorsProps) {
-  return <StatsRow label={label} title={title} subtitle={subtitle} stats={stats} columns={columns} />;
+  return <StatsRow data-component="KeyMarketIndicators" label={label} title={title} subtitle={subtitle} stats={stats} columns={columns} />;
 }

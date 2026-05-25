@@ -51,6 +51,7 @@ export function FilterSearchInput({
 
   return (
     <div
+      data-component="FilterSearchInput"
       className="flex items-center gap-2 px-3 py-2 transition-colors duration-150"
       style={{
         minWidth,

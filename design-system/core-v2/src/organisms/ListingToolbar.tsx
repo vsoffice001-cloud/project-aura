@@ -46,15 +46,16 @@ export function ListingToolbar({
   selectedIndustry,
 }: ListingToolbarProps) {
   return (
-    <div className="flex items-center gap-3 mb-4 flex-wrap">
+    <div data-component="ListingToolbar" className="flex items-center gap-3 mb-4 flex-wrap">
       {/* Back nav */}
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-1.5 transition-colors group cursor-pointer"
+        aria-label="Back to Report Store"
+        className="inline-flex items-center gap-1.5 transition-colors group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm min-h-[44px]"
         style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.5)' }}
       >
         <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-        <span className="hidden sm:inline">Back to Report Store</span>
+        <span className="hidden sm:inline" aria-hidden="true">Back to Report Store</span>
       </button>
 
       <div className="h-5 w-px flex-shrink-0" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }} />
@@ -74,7 +75,7 @@ export function ListingToolbar({
         {/* Mobile filter trigger — visible < lg */}
         {onOpenMobileFilters && (
           <button
-            className="lg:hidden inline-flex items-center justify-center relative min-h-[44px] min-w-[44px] p-2 transition-colors hover:bg-black/[0.03] cursor-pointer"
+            className="lg:hidden inline-flex items-center justify-center relative min-h-[44px] min-w-[44px] p-2 transition-colors hover:bg-black/[0.03] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
             aria-label="Open filters"
             style={{ borderRadius: 'var(--radius-element)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(0,0,0,0.1)' }}
             onClick={onOpenMobileFilters}
@@ -111,10 +112,12 @@ export function ListingToolbar({
           }}
         >
           <ArrowUpDown size={12} style={{ color: 'rgba(0,0,0,0.5)' }} />
+          <label htmlFor="listing-sort" className="sr-only">Sort reports by</label>
           <select
+            id="listing-sort"
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
-            className="bg-transparent border-none outline-none cursor-pointer"
+            className="bg-transparent border-none outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
             style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.6)' }}
           >
             {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}

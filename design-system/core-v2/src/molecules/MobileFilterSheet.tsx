@@ -1,32 +1,39 @@
 /**
- * MobileFilterSheet — Molecule (DS v4.3)
+ * MobileFilterSheet
  *
- * WHAT: Bottom-slide sheet overlay for mobile filter access (< lg breakpoints).
- * WHY:  Desktop sidebar is hidden below lg — mobile users need filter access.
- *       Sheet pattern matches mobile-first UX (Fitts's Law: thumb-reachable,
- *       Miller's Law: progressive disclosure of filter options).
- * WHEN: Triggered by the SlidersHorizontal button visible at `lg:hidden`.
- * HOW:  Fixed overlay with backdrop + bottom-sliding panel containing
- *       the same `sidebarContent` JSX shared with the desktop SidebarPanel.
+ * WHY · Desktop filter sidebar is hidden at `lg:hidden` — mobile users need filter access
+ *        via a thumb-reachable pattern. Bottom-sheet follows iOS/Android platform conventions
+ *        (Fitts's Law: thumb zone · Miller's Law: progressive disclosure of options).
+ * WHAT · Fixed-position bottom sheet with backdrop, drag handle, filter header (title +
+ *        active-count badge + close button), scrollable children body, and footer with
+ *        "Show N results" CTA + optional "Clear all". Props: isOpen, onClose, activeCount,
+ *        resultCount, onClearAll, children (same FilterAccordion JSX as desktop sidebar).
+ *        Body scroll locked while open. Closes on Escape key.
+ * WHEN · Triggered by the SlidersHorizontal icon button in the listing toolbar at mobile
+ *        breakpoints. Pass the same FilterAccordion children used in the desktop SidebarPanel.
+ * WHEN NOT · Don't use above lg breakpoint — use SidebarPanel instead. Don't use for
+ *             non-filter content (use shadcn Sheet for general overlays). Don't nest
+ *             another modal inside it.
+ * WHERE · report-store-legacy App.tsx + ReportStorePage.tsx ·
+ *          competition-benchmarking-listing-v02 ReportStorePage.tsx (BenchmarkMobileFilterSheet
+ *          is a local variant with extended props)
+ * HOW ·
+ *   ```tsx
+ *   <MobileFilterSheet
+ *     isOpen={sheetOpen}
+ *     onClose={() => setSheetOpen(false)}
+ *     activeCount={activeFilters.length}
+ *     resultCount={filteredCount}
+ *     onClearAll={clearAllFilters}
+ *   >
+ *     <FilterAccordion title="Industry" options={industries} ... />
+ *   </MobileFilterSheet>
+ *   ```
  *
- * ANATOMY:
- *   [backdrop]
- *     [sheet panel]
- *       [drag handle bar]
- *       [header: "Filters" + count badge + close button]
- *       [scrollable body: children (sidebarContent)]
- *       [footer: "Show N results" button + "Clear all"]
- *
- * INTERACTION STATES:
- *   Closed  → Not rendered (portal unmounted)
- *   Opening → backdrop fades in, sheet slides up from bottom
- *   Open    → Full interaction, scroll within body
- *   Closing → Reverse animation, then unmount
- *
- * COLOR SYSTEM: All colors via inline style rgba(). No Tailwind color classes.
- * RADIUS: Top corners → 10px (DS container radius).
- * MAX HEIGHT: 85vh (leaves status bar visible on mobile).
- * FONT TOKENS: Header → var(--text-xs), Footer → var(--text-xs)
+ * @reusabilityScore 4     // every listing page with filters at mobile breakpoints
+ * @a11y_status reviewed-AA  // Escape closes · aria-label on close btn · body scroll lock
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
  */
 import { ReactNode, useEffect, useState } from 'react';
 import { X, SlidersHorizontal } from 'lucide-react';
@@ -77,7 +84,7 @@ export function MobileFilterSheet({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
+    <div data-component="MobileFilterSheet" className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
       <div
         className="absolute inset-0"
@@ -147,7 +154,7 @@ export function MobileFilterSheet({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center transition-colors"
+            className="w-11 h-11 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
             style={{
               borderRadius: 'var(--radius-element)',
               backgroundColor: closeHovered ? 'rgba(0,0,0,0.04)' : 'rgba(0,0,0,0)',
@@ -178,7 +185,7 @@ export function MobileFilterSheet({
           {activeCount > 0 && onClearAll && (
             <button
               onClick={() => { onClearAll(); onClose(); }}
-              className="flex items-center gap-1 transition-colors cursor-pointer"
+              className="flex items-center gap-1 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
               style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.4)' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.6)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.4)'; }}
@@ -189,7 +196,7 @@ export function MobileFilterSheet({
           )}
           <button
             onClick={onClose}
-            className="ml-auto flex-shrink-0 px-5 py-2.5 transition-all cursor-pointer"
+            className="ml-auto flex-shrink-0 px-5 py-2.5 min-h-[44px] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2"
             style={{
               borderRadius: 'var(--radius-element)',
               fontSize: 'var(--text-xs)',

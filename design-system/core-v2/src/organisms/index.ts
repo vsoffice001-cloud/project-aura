@@ -58,3 +58,158 @@ export { RecentlyViewed, type RecentlyViewedProps } from './RecentlyViewed';
 export { RecommendedForYou, type RecommendedForYouProps } from './RecommendedForYou';
 export { ReportPreview, type ReportPreviewProps } from './ReportPreview';
 export { ReportStoreHero, type ReportStoreHeroProps } from './ReportStoreHero';
+
+// Dummy stub organisms — Doc-first methodology proof (P1-18 + P1-19 · 2026-05-14)
+// Tech team replaces with real TopNavigation / Footer organisms post-handover.
+export { DummyHeader, type DummyHeaderProps } from './DummyHeader';
+export { DummyFooter, type DummyFooterProps } from './DummyFooter';
+
+// Promoted from V0_lite_report-legacy (DS Port 2026-05-15 · report PDP organisms)
+export { FAQSection, type FAQSectionProps, type FAQItem } from './FAQSection';
+export { MegaBreadcrumb, type MegaBreadcrumbProps, type BreadcrumbItem } from './MegaBreadcrumb';
+
+// Promoted from report-store-legacy (DS Port 2026-05-15 · listing context + geographic discovery)
+export { ListingContextBanner, type ListingContextBannerProps, type IndustryEntry } from './ListingContextBanner';
+export { ExploreByRegion, type ExploreByRegionProps, type RegionEntry, type RegionReport } from './ExploreByRegion';
+
+// Batch 3.2b organisms — ported 2026-05-19 (TableOfContentsSidebar · KeyStatsStrip · ResearchMethodology · SampleReportPreview · AssociationStrip)
+export {
+  TableOfContentsSidebar,
+  type TableOfContentsSidebarProps,
+  type TOCSectionItem,
+} from './TableOfContentsSidebar';
+export {
+  KeyStatsStrip,
+  type KeyStatsStripProps,
+  type StatItem as KeyStatItem,
+} from './KeyStatsStrip';
+export {
+  SampleReportPreview,
+  type SampleReportPreviewProps,
+  type SampleTOCItem,
+  type SampleChapter,
+  type SidebarTOCState,
+} from './SampleReportPreview';
+export {
+  AssociationStrip,
+  type AssociationStripProps,
+  type AssociationCertification,
+  type AssociationLogo,
+} from './AssociationStrip';
+// ResearchMethodology re-exported (was already exported above — no-op duplicate removed)
+
+// New organisms — DS Port Phase 4 (2026-05-15 · long-form reader + industry browse)
+export { LongFormReader, type LongFormReaderProps, type Chapter } from './LongFormReader';
+export {
+  IndustryReportSection,
+  type IndustryReportSectionProps,
+  type Industry,
+  type IndustryReportItem,
+} from './IndustryReportSection';
+
+// Batch 3.2c organisms — D3 MindMap engine + Scope + Taxonomy (ported 2026-05-19 · V0.2 canonical)
+export {
+  MindMap,
+  type MindMapProps,
+  type MindMapNode,
+  type MindMapHierarchyNode,
+} from './MindMap';
+export { MindMapModal, type MindMapModalProps } from './MindMapModal';
+export { ScopeOfReport, type ScopeOfReportProps } from './ScopeOfReport';
+export { TaxonomyTree, type TaxonomyTreeProps } from './TaxonomyTree';
+
+// Batch 3.3a · 2026-05-19 · Map UI story (NEW research-driven + V0.2 port)
+export {
+  MapChart,
+  type MapChartProps,
+  type MapRegion,
+  type MapColorScale,
+  type MapProjection,
+} from './MapChart';
+export {
+  RegionalComparison,
+  type RegionalComparisonProps,
+} from './RegionalComparison';
+
+// Batch 3.3b · 2026-05-19 · CHROME organisms (Navbar · Footer · ReportHeroSection)
+export { Navbar, type NavbarProps } from './Navbar';
+export { Footer, type FooterProps, type FooterLink } from './Footer';
+export {
+  ReportHeroSection,
+  type ReportHeroSectionProps,
+  type HeroBadge,
+} from './ReportHeroSection';
+// Convenience re-exports · types used by ReportHeroSection consumers (sourced from molecules)
+export type { BreadcrumbLevel, BreadcrumbNavItem } from '../molecules/Breadcrumb';
+export type { MetadataItem } from '../molecules/MetadataStrip';
+
+// Batch 3.3c · 2026-05-19 · DATA organisms (7 V0.2 canonical ports)
+export {
+  SegmentationSection,
+  type SegmentationSectionProps,
+  type SegmentationCardData,
+  type SegmentationStat,
+  type TakeawayPoint,
+} from './SegmentationSection';
+export {
+  GrowthDriversChallenges,
+  type GrowthDriversChallengesProps,
+  type ColumnCategory,
+  type ColumnData,
+  type TopicItem,
+  type GDCStatItem,
+} from './GrowthDriversChallenges';
+export {
+  MarketDataTable,
+  type MarketDataTableProps,
+  type MarketDataColumn,
+  type MarketDataRow,
+  type TableRowPeriod,
+  type TextCardInsight,
+} from './MarketDataTable';
+export {
+  CompetitiveLandscape,
+  type CompetitiveLandscapeProps,
+  type CompetitorEntry,
+  type MarketDynamicsBar,
+  type ComparisonParam,
+  type AnalysisItem,
+  type TopPlayer,
+  type GDCStat,
+} from './CompetitiveLandscape';
+export {
+  TargetAudience,
+  type TargetAudienceProps,
+  type StakeholderEntry,
+  type AudienceCallout,
+  type CalloutStat,
+} from './TargetAudience';
+export {
+  MarketAnalysis,
+  type MarketAnalysisProps,
+  type ChartSlotItem,
+  type MarketInsight,
+} from './MarketAnalysis';
+export {
+  MarketOverview,
+  type MarketOverviewProps,
+  type MarketOverviewStat,
+  type OutlookStat,
+  type TimelinePeriod,
+} from './MarketOverview';
+
+// Batch 3.3d · 2026-05-19 · LISTING organisms (report-store-legacy canonical ports)
+// REMOVED 2026-05-19: ReportCardOrganism (duplicate of molecules/ReportCard · molecule wins · canonical established May 15)
+// REMOVED 2026-05-19: ReportCardListing (duplicate of CardListing · CardListing wins · OG canonical)
+// RelatedReports now consumes molecules/ReportCard directly
+export {
+  RelatedReports,
+  type RelatedReportsProps,
+} from './RelatedReports';
+
+// Stage 4d · 2026-05-20 · Report PDP final-CTA organism (red-gradient + email-capture form)
+export {
+  ReportFinalCTASection,
+  type ReportFinalCTASectionProps,
+  type ReportFinalCTABackground,
+} from './ReportFinalCTASection';

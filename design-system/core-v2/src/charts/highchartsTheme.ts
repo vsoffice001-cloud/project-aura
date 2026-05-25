@@ -1,5 +1,17 @@
 /**
- * Ken Research Highcharts theme — DS-token-only.
+ * @deprecated Use `buildKenChartBase` from './theme/highcharts-base' instead.
+ *
+ * This file reads CSS custom properties at runtime (ANTI_PATTERNS.md Cat 1.1)
+ * which is incompatible with Highcharts (resolves before CSS cascade).
+ * It is kept for backward compatibility with v1 DS consumers only.
+ * DO NOT use in new chart wrappers — use '../theme/highcharts-base' directly.
+ *
+ * Migration: replace `buildKenHighchartsTheme()` / `mergePreset` with:
+ *   import { buildKenChartBase } from '../theme/highcharts-base';
+ *   const base = buildKenChartBase();
+ *   const options = deepMerge(base, instanceOptions);
+ *
+ * Ken Research Highcharts theme — DS-token-only (DEPRECATED).
  *
  * READS CSS custom properties at runtime (ANTI_PATTERNS.md Cat 1.1):
  *   --chart-palette-1..8     series colors

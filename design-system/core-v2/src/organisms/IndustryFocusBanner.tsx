@@ -37,6 +37,7 @@ export function IndustryFocusBanner({
 }: IndustryFocusBannerProps) {
   return (
     <div
+      data-component="IndustryFocusBanner"
       className="relative mb-5"
       style={{
         backgroundColor: 'rgba(30,30,30,1)',
@@ -65,10 +66,10 @@ export function IndustryFocusBanner({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="flex items-center justify-center cursor-pointer transition-colors"
+          className="flex items-center justify-center cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[rgba(30,30,30,1)]"
           style={{
-            width: '28px',
-            height: '28px',
+            width: '44px',
+            height: '44px',
             borderRadius: '50%',
             backgroundColor: 'rgba(255,255,255,0.08)',
             color: 'rgba(255,255,255,0.5)',
@@ -133,7 +134,7 @@ export function IndustryFocusBanner({
               <button
                 key={sub}
                 onClick={() => onToggleSub(sub)}
-                className="inline-flex items-center gap-1 px-3 py-1.5 cursor-pointer transition-all duration-150"
+                className="inline-flex items-center gap-1 px-3 py-1.5 cursor-pointer transition-all duration-150 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-[rgba(30,30,30,1)]"
                 style={{
                   fontSize: 'var(--text-xs)',
                   borderRadius: '20px',

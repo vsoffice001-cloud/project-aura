@@ -41,6 +41,8 @@ export interface StatsRowProps {
   children?: ReactNode;
   /** className for outer wrapper */
   className?: string;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 export function StatsRow({
@@ -52,6 +54,7 @@ export function StatsRow({
   columns = 4,
   children,
   className,
+  ...dataProps
 }: StatsRowProps) {
   const colClass =
     columns === 2
@@ -61,7 +64,7 @@ export function StatsRow({
       : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
 
   return (
-    <SectionWrapper background={background} spacing="lg" maxWidth="wide" className={className}>
+    <SectionWrapper data-component="StatsRow" {...dataProps} background={background} spacing="lg" maxWidth="wide" className={className}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label={label}

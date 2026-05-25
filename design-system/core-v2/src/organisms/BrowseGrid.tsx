@@ -45,6 +45,8 @@ export interface BrowseGridProps<T> {
   onViewModeChange?: (mode: ViewMode) => void;
   /** className for outer wrapper */
   className?: string;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 export function BrowseGrid<T extends { id: string }>({
@@ -62,6 +64,7 @@ export function BrowseGrid<T extends { id: string }>({
   viewMode: controlledViewMode,
   onViewModeChange,
   className,
+  ...dataProps
 }: BrowseGridProps<T>) {
   const [internalViewMode, setInternalViewMode] = useState<ViewMode>('grid');
   const viewMode = controlledViewMode ?? internalViewMode;
@@ -79,7 +82,7 @@ export function BrowseGrid<T extends { id: string }>({
     : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
 
   return (
-    <SectionWrapper background={background} spacing="lg" maxWidth="wide" className={className}>
+    <SectionWrapper data-component="BrowseGrid" {...dataProps} background={background} spacing="lg" maxWidth="wide" className={className}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <div className="flex items-start justify-between gap-4 mb-8">
           <SectionHeading

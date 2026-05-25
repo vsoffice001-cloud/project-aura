@@ -1,13 +1,51 @@
 /**
- * ANIMATED ARROW - QUICK REFERENCE CARD
- * ======================================
- * 
- * Copy-paste ready examples for the AnimatedArrow component.
+ * AnimatedArrowQuickRef — design-time copy-paste reference card for AnimatedArrow.
+ *
+ * WHY:
+ * - Designers + engineers adopting AnimatedArrow need ready-made code snippets
+ * - Single-page reference reduces churn vs reading source / props inline
+ * - Lives in DS for discoverability (not docs/ MDX) — devs grep here first
+ * - Keeps usage examples in-sync w/ atom source (co-located)
+ * - Doc-helper atom — NOT mounted in production pages
+ *
+ * WHAT: Static React component that renders code blocks + usage examples
+ * for AnimatedArrow (basic · in buttons · with shimmer · color variants).
+ * Renders only formatted `<pre>` blocks — no live interaction.
+ *
+ * WHEN:
+ * - Internal design-system browse pages (`/design-system/atoms`)
+ * - Storybook/docs MDX where you want a self-contained reference
+ * - Onboarding new contributors who need quick visual + code together
+ *
+ * WHEN NOT:
+ * - Never mount in user-facing production pages (zero end-user value)
+ * - Never use as a real CTA (only renders code samples, no behavior)
+ * - Never link to from production navigation
+ * - Not a substitute for the atom's JSDoc — read JSDoc first
+ *
+ * HOW:
+ * ```tsx
+ * // Inside DS-browse page only
+ * import { AnimatedArrowQuickRef } from '@/atoms/AnimatedArrowQuickRef';
+ * <AnimatedArrowQuickRef />
+ * ```
+ *
+ * A11y: Decorative reference page · no interactive controls · `<pre>` blocks are AT-readable.
+ * Motion: None — static doc page.
+ * Anti-patterns:
+ *  - ❌ Never bundle into prod page build (dead weight · increases JS payload)
+ *  - ❌ Never edit examples to diverge from atom source (drift)
+ *  - ❌ Never duplicate this pattern for other atoms w/o discussion (sprawls quickly)
+ *
+ * @lifecycle beta (doc-helper · may be replaced by Storybook later)
+ * @a11y_status reviewed-AA (static text content)
+ * @reusabilityScore 1/5 ⭐ (single-purpose · DS-internal)
+ * @promotedFrom V0_lite_report developer-docs scaffolding
  */
 
 export function AnimatedArrowQuickRef() {
   return (
-    <div className="max-w-4xl mx-auto p-8 space-y-6">
+    <div data-component="AnimatedArrowQuickRef" className="max-w-4xl mx-auto p-8 space-y-6">
       <h1 className="text-3xl font-normal mb-6">AnimatedArrow - Quick Reference</h1>
       
       {/* Basic Usage */}
@@ -22,11 +60,11 @@ export function AnimatedArrowQuickRef() {
 // Custom size
 <AnimatedArrow size={24} />
 
-// Custom color
-<AnimatedArrow color="#b01f24" />
+// Brand red
+<AnimatedArrow color="brand" />
 
 // Inherit parent color
-<AnimatedArrow color="currentColor" />`}</pre>
+<AnimatedArrow color="black" />`}</pre>
         </div>
       </div>
 
@@ -50,7 +88,7 @@ export function AnimatedArrowQuickRef() {
   className="inline-flex items-center gap-2 text-brand-red hover:underline"
 >
   <span>View case study</span>
-  <AnimatedArrow size={16} color="#b01f24" />
+  <AnimatedArrow size={16} color="brand" />
 </a>`}</pre>
         </div>
       </div>
@@ -67,7 +105,7 @@ export function AnimatedArrowQuickRef() {
     className="inline-flex items-center gap-2 text-sm font-medium text-brand-red"
   >
     <span>Read more</span>
-    <AnimatedArrow size={14} color="#b01f24" />
+    <AnimatedArrow size={14} color="brand" />
   </a>
 </div>`}</pre>
         </div>
@@ -169,23 +207,23 @@ export function AnimatedArrowQuickRef() {
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-between">
             <span className="text-black/60">Ken Bold Red:</span>
-            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;#b01f24&quot;</code>
+            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;brand&quot;</code>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-black/60">Purple:</span>
-            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;#806ce0&quot;</code>
+            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;purple&quot;</code>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-black/60">Coral:</span>
-            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;#ea7a5f&quot;</code>
+            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;coral&quot;</code>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-black/60">Black:</span>
-            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;#000000&quot;</code>
+            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;black&quot;</code>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-black/60">White:</span>
-            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;#ffffff&quot;</code>
+            <code className="bg-black/5 px-2 py-1 rounded-[5px] font-mono text-xs">color=&quot;white&quot;</code>
           </div>
         </div>
       </div>

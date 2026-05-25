@@ -36,11 +36,53 @@ const sizeIcon: Record<AvatarSize, string> = {
 };
 
 /**
- * Avatar — circular avatar w/ initials, icon fallback, optional status dot.
+ * Avatar — circular user-identity affordance · initials · icon fallback · optional status dot.
  *
- * Renders user initials if provided, otherwise person silhouette. Active state
- * darkens border. Pairs w/ `<StatusDot>` for notification indicator.
+ * WHY:
+ * - Account/profile signal needed in nav across both authenticated + unauthenticated states
+ * - Initials > silhouette > generic icon as personalization signal (status hierarchy)
+ * - Active border state communicates "popover/menu open" (paired w/ AuthPopover)
+ * - StatusDot composition keeps notification logic out of Avatar (separation of concerns)
+ * - Two sizes match nav contexts: 28px inline desktop · 40px standalone mobile
  *
+ * WHAT: `forwardRef` button atom rendering 28/40px circle. Shows initials when provided,
+ * person SVG silhouette otherwise. `isActive` darkens border to indicate expanded state.
+ * Composes `<StatusDot>` for notification badge (default visible when unauthenticated).
+ *
+ * WHEN:
+ * - Top-nav account affordance (desktop + mobile)
+ * - User profile menu triggers across surfaces
+ * - Comment/reply attribution rows (sm size, inline w/ name)
+ * - Team member listings (md size)
+ *
+ * WHEN NOT:
+ * - Display-only profile pictures → use raw `<img>` (no button affordance · no click)
+ * - Large hero profile imagery → use dedicated `ProfileHero` molecule (Avatar caps at 40px)
+ * - Anonymous/system actors → use a `<Badge>` or icon, not Avatar
+ * - Stack/group avatars (overlapping circles) → use future `AvatarStack` molecule
+ *
+ * HOW:
+ * ```tsx
+ * // Authenticated · md (standalone)
+ * <Avatar size="md" initials="VC" isActive={open} onClick={togglePopover} />
+ *
+ * // Unauthenticated · sm (inline) · shows red dot prompting sign-in
+ * <Avatar size="sm" initials={null} isActive={false} onClick={openSignIn} />
+ * ```
+ *
+ * A11y: `aria-label` (default "Account options") · `aria-expanded={isActive}` · `aria-haspopup="true"`.
+ *       Focus ring `ring-2 ring-[rgba(20,16,22,0.5)]` 2px offset. Touch-manipulation on md size.
+ *       28px sm size below WCAG 2.5.5 44px floor — inline context only (paired w/ larger tap parent).
+ * Motion: 200ms transition on border + bg. No transform animation (would distract in nav context).
+ * Anti-patterns:
+ *  - ❌ Never use sm size as standalone tap target (below 44px touch floor)
+ *  - ❌ Never override border colors (active state intent baked in)
+ *  - ❌ Never strip StatusDot composition (notification signal is the point for unauthenticated)
+ *  - ❌ Never render >2 initials (3+ chars overflow the 28/40px container)
+ *
+ * @lifecycle stable
+ * @a11y_status reviewed-AA (md size · sm exempt for inline context)
+ * @reusabilityScore 4/5 ⭐
  * @promotedFrom topnav-v32/src/design-system/components/Avatar.tsx
  */
 export const Avatar = forwardRef<HTMLButtonElement, AvatarProps>(
@@ -61,6 +103,7 @@ export const Avatar = forwardRef<HTMLButtonElement, AvatarProps>(
 
     return (
       <button
+        data-component="Avatar"
         ref={ref}
         type="button"
         onClick={onClick}

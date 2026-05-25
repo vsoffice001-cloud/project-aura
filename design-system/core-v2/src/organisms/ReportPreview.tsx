@@ -36,7 +36,7 @@ export interface ReportPreviewProps {
 
 export function ReportPreview({ report, toc = DEFAULT_TOC }: ReportPreviewProps) {
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="ReportPreview" background="white" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Left: TOC + Metadata (3 cols) */}
@@ -164,13 +164,13 @@ export function ReportPreview({ report, toc = DEFAULT_TOC }: ReportPreviewProps)
 
               {/* Action buttons */}
               <div className="space-y-2">
-                <Button variant="primary" size="md" className="w-full" icon={<Download size={16} />}>
+                <Button variant="primary" size="md" className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2" icon={<Download size={16} />}>
                   Download Report
                 </Button>
-                <Button variant="secondary" size="md" className="w-full" icon={<FileText size={16} />}>
+                <Button variant="secondary" size="md" className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2" icon={<FileText size={16} />}>
                   Request Sample
                 </Button>
-                <Button variant="ghost" size="sm" className="w-full" icon={<Share2 size={14} />}>
+                <Button variant="ghost" size="sm" className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2" icon={<Share2 size={14} />}>
                   Share
                 </Button>
               </div>

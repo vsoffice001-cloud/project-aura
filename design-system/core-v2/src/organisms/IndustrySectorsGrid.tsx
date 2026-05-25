@@ -38,7 +38,7 @@ export function IndustrySectorsGrid({
   const resolvedSubtitle = subtitle ?? `Explore ${industries.length} industry verticals`;
 
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="content">
+    <SectionWrapper data-component="IndustrySectorsGrid" background="white" spacing="lg" maxWidth="content">
       <SectionHeading label={label} title={title} subtitle={resolvedSubtitle} />
       <div className="mt-8 grid sm:grid-cols-2 gap-0 sm:gap-5">
         <IndustryColumn items={leftColumn} onItemClick={onSectorClick} />

@@ -1,3 +1,28 @@
+/**
+ * ChallengesSection
+ *
+ * WHY · Case-study "key problem statements" need a horizontally scrollable card carousel that adapts
+ *       to 1-5+ challenge count — static grid breaks or wastes space at edge counts.
+ * WHAT · Horizontal scroll container with dynamic card widths (1→xl, 2→lg, 3→md, 4→4-fit, 5+→peek).
+ *        Arrow-key keyboard nav · dot indicator navigation · scroll-to-card snap · fade gradients on edges.
+ *        Props: `challenges[]` — each with number, title, questions[].
+ * WHEN · Case-study pages displaying client problem statements / key challenge questions.
+ * WHEN NOT · Listing pages (use `BrowseGrid`) · single challenge (use `Card` + text block) ·
+ *            non-question content (use `ValuePillarsSection`).
+ * WHERE · Case-study template — section 2 (warm bg · after ClientContextSection).
+ * HOW ·
+ *   ```tsx
+ *   <ChallengesSection challenges={[
+ *     { number: "01", title: "Market Sizing", questions: ["What is the TAM?", "..."] },
+ *     { number: "02", title: "Competitive Gaps", questions: ["Who are tier-1 rivals?"] }
+ *   ]} />
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status reviewed-AA
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
 import { useRef, useEffect, useState } from 'react';
 
 interface Challenge {
@@ -89,7 +114,7 @@ export function ChallengesSection({ challenges }: ChallengesSectionProps) {
   cardWidthClass = `w-[85vw] sm:w-[380px] ${desktopCardWidth}`;
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 overflow-hidden" style={{ background: 'var(--bg-warm)' }}>
+    <section data-component="ChallengesSection" className="py-12 sm:py-16 md:py-20 overflow-hidden" style={{ background: 'var(--bg-warm)' }}>
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Header */}
         <div className="mb-12 md:mb-16">
@@ -112,10 +137,10 @@ export function ChallengesSection({ challenges }: ChallengesSectionProps) {
       {/* Horizontal Scroll Container */}
       <div className="relative">
         {/* Fade Gradient - Left - Hidden on Mobile and when all cards fit */}
-        <div className={`absolute left-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none ${cardCount <= 4 ? 'lg:hidden' : ''}`} style={{ background: 'linear-gradient(to right, #f5f2f1, transparent)' }} />
-        
+        <div className={`absolute left-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none ${cardCount <= 4 ? 'lg:hidden' : ''}`} style={{ background: 'linear-gradient(to right, var(--bg-warm), transparent)' }} />
+
         {/* Fade Gradient - Right - Hidden on Mobile and when all cards fit */}
-        <div className={`absolute right-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none ${cardCount <= 4 ? 'lg:hidden' : ''}`} style={{ background: 'linear-gradient(to left, #f5f2f1, transparent)' }} />
+        <div className={`absolute right-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none ${cardCount <= 4 ? 'lg:hidden' : ''}`} style={{ background: 'linear-gradient(to left, var(--bg-warm), transparent)' }} />
 
         {/* Scrollable Cards Container */}
         <div 
@@ -222,12 +247,16 @@ export function ChallengesSection({ challenges }: ChallengesSectionProps) {
             key={index}
             onClick={() => scrollToCard(index)}
             aria-label={`Go to challenge ${index + 1}`}
-            className={`w-2 h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${
-              activeCardIndex === index 
-                ? 'bg-black w-8' 
-                : 'bg-black/20 hover:bg-black/40'
-            }`}
-          />
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 rounded-sm"
+          >
+            <span
+              className={`block rounded-full transition-all duration-300 ${
+                activeCardIndex === index
+                  ? 'bg-black w-8 h-2'
+                  : 'bg-black/20 hover:bg-black/40 w-2 h-2'
+              }`}
+            />
+          </button>
         ))}
       </div>
 

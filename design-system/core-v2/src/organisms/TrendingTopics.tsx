@@ -33,7 +33,7 @@ interface TrendingTopicsProps {
 
 export function TrendingTopics({ onTopicClick }: TrendingTopicsProps) {
   return (
-    <SectionWrapper background="white" spacing="md" maxWidth="wide">
+    <SectionWrapper data-component="TrendingTopics" background="white" spacing="md" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label="Trending"
@@ -45,7 +45,7 @@ export function TrendingTopics({ onTopicClick }: TrendingTopicsProps) {
             <button
               key={topic.label}
               onClick={() => onTopicClick?.(topic.label)}
-              className="group inline-flex items-center gap-2 px-4 py-2.5 transition-all duration-150 cursor-pointer"
+              className="group inline-flex items-center gap-2 px-4 py-2.5 transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2"
               style={{
                 borderRadius: 'var(--radius-element)',
                 borderWidth: '1px',

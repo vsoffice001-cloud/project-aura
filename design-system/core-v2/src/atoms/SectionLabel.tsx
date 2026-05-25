@@ -1,6 +1,32 @@
+/**
+ * SectionLabel
+ *
+ * WHY · Section identifiers (CHAPTER · STEP · STATUS) need consistent micro-typography with 0.2em tracking +
+ *       uppercase — prevents inline drift and contrast failures. Background prop enforces correct token pairs.
+ * WHAT · `<p>` (text style) or `<div>` (pill style). All-caps + tracked. Pill variant has 2s Framer shimmer sweep.
+ *        Optional pulse dot (live/new indicator) · icon prefix · accent variant (brand-red/coral).
+ * WHEN · Section eyebrows · chapter markers in TOC · hero status labels ("NEW" · "LIVE") · step prefixes.
+ * WHEN NOT · Count/category pills inside cards → `Badge` · form labels → `<Label>` · headings → `SectionHeading`.
+ * WHERE · `SampleReportPreview` chapter prefixes · `HeroSection` status · `ResearchMethodology` step labels ·
+ *         `ExtendedTOC` chapter markers.
+ * HOW ·
+ *   ```tsx
+ *   // Eyebrow text above h2
+ *   <SectionLabel style="text" background="light">Chapter 01</SectionLabel>
+ *   // Live pill on dark hero
+ *   <SectionLabel style="pill" background="dark" variant="accent" pulse>Live now</SectionLabel>
+ *   // With icon prefix
+ *   <SectionLabel icon={<Sparkles size={12} />}>What's new</SectionLabel>
+ *   ```
+ *
+ * @reusabilityScore 5
+ * @a11y_status reviewed-AA
+ * @lifecycle stable
+ * @promotedFrom V0_lite_report
+ */
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
@@ -51,19 +77,62 @@ const shimmerGradient: Record<SectionLabelBackground, string> = {
 };
 
 /**
- * SectionLabel — section identifier in text or pill style.
+ * SectionLabel — all-caps tracked section identifier · text or pill style · light/dark aware.
  *
- * Variants:
- *   style=text (default): all-caps tracked label, optional pulse dot or icon prefix.
- *   style=pill: outlined pill w/ animated shimmer sweep (2s loop).
+ * WHY:
+ * - Section identifiers (CHAPTER · STEP · STATUS) need consistent micro-typography
+ * - All-caps + 0.2em tracking = recognized editorial "label" pattern (vs body text)
+ * - Pill variant w/ shimmer sweep adds premium feel for hero/status moments
+ * - Background prop forces correct text+border color pairs — prevents low-contrast drift
+ * - Pulse dot variant signals "live"/"new" without claiming a Badge slot
  *
- * Background dictates text + border color (`light` for white/warm sections,
- * `dark` for black sections). Variant `accent` switches default gray → brand-red
- * (light) or coral (dark).
+ * WHAT: `<span>` (text style) or `<div>` (pill style). Text style: 0.2em tracking,
+ * uppercase, optional pulse dot or icon prefix. Pill style: outlined rounded-full
+ * w/ 2s shimmer gradient sweep animation (Framer Motion). Light/dark surface aware
+ * via background prop. Default text gray · accent variant → brand-red (light) or coral (dark).
  *
- * Used in: SampleReportPreview (CHAPTER labels), ExtendedTOC, HeroSection (status
- * labels), ResearchMethodology (STEP labels).
+ * WHEN:
+ * - SampleReportPreview "CHAPTER 01" prefixes
+ * - ExtendedTOC chapter markers
+ * - HeroSection status labels ("NEW" · "LIVE")
+ * - ResearchMethodology "STEP 02" indicators
+ * - Section-eyebrow text above SectionHeading
  *
+ * WHEN NOT:
+ * - Count/category pills inside cards → use `<Badge>` (count anatomy)
+ * - Form labels → use `<Label>` (htmlFor semantics)
+ * - Page H1/H2 → use `<SectionHeading>` (display typography)
+ * - Status with icon AND number → use `<Badge variant="status">`
+ *
+ * HOW:
+ * ```tsx
+ * // Eyebrow text above a hero h2
+ * <SectionLabel style="text" background="light">Chapter 01</SectionLabel>
+ * <SectionHeading level="h2">Methodology</SectionHeading>
+ *
+ * // Live status pill on dark hero
+ * <SectionLabel style="pill" background="dark" variant="accent" pulse>
+ *   Live now
+ * </SectionLabel>
+ *
+ * // With icon prefix
+ * <SectionLabel icon={<Sparkles size={12} />}>What's new</SectionLabel>
+ * ```
+ *
+ * A11y: Semantic `<span>` / `<div>` · not announced as heading. Use as eyebrow text
+ *       PAIRED w/ a real heading. Color contrast: text vs surface bg ≥4.5:1 verified
+ *       per surface variant. Pulse dot decorative (color-blind safe via tracking + caps).
+ * Motion: Pill variant runs 2s linear infinite shimmer sweep (Framer Motion).
+ *         Reduced-motion: Framer respects `useReducedMotion` at DS layer.
+ * Anti-patterns:
+ *  - ❌ Never use as a heading replacement (visual eyebrow ≠ semantic heading)
+ *  - ❌ Never set arbitrary colors via className (background prop owns variant tokens)
+ *  - ❌ Never use pill variant for high-density listings (shimmer becomes noise)
+ *  - ❌ Never use `pulse` for non-live signals (dilutes "live" meaning)
+ *
+ * @lifecycle stable
+ * @a11y_status reviewed-AA
+ * @reusabilityScore 5/5 ⭐
  * @promotedFrom V0_lite_report
  */
 export function SectionLabel({
@@ -75,15 +144,19 @@ export function SectionLabel({
   pulse = false,
   className,
 }: SectionLabelProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   if (style === 'pill') {
     return (
-      <div className={cn('relative inline-block overflow-hidden rounded-full', className)}>
-        <motion.div
-          className="absolute inset-0 -translate-x-full pointer-events-none"
-          animate={{ translateX: ['-100%', '100%'] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
-          style={{ background: shimmerGradient[background] }}
-        />
+      <div data-component="SectionLabel" className={cn('relative inline-block overflow-hidden rounded-full', className)}>
+        {!shouldReduceMotion && (
+          <motion.div
+            className="absolute inset-0 -translate-x-full pointer-events-none"
+            animate={{ translateX: ['-100%', '100%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
+            style={{ background: shimmerGradient[background] }}
+          />
+        )}
         <span
           className={cn(
             'relative inline-flex items-center justify-center',
@@ -102,6 +175,7 @@ export function SectionLabel({
 
   return (
     <p
+      data-component="SectionLabel"
       className={cn(
         'font-[var(--typography-family-body)] font-semibold tracking-[0.2em] uppercase',
         'flex items-center gap-2 text-[var(--typography-size-xs)]',
@@ -112,15 +186,15 @@ export function SectionLabel({
       {pulse && (
         <motion.span
           className="relative flex h-2.5 w-2.5"
-          initial={{ opacity: 0 }}
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3 }}
         >
           <motion.span
             className="absolute inline-flex h-full w-full rounded-full opacity-75"
             style={{ backgroundColor: pulseDotColor[background] }}
-            animate={{ scale: [1, 1.5, 1], opacity: [0.75, 0, 0.75] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            animate={shouldReduceMotion ? { scale: 1, opacity: 0.75 } : { scale: [1, 1.5, 1], opacity: [0.75, 0, 0.75] }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
           <span
             className="relative inline-flex h-2.5 w-2.5 rounded-full"

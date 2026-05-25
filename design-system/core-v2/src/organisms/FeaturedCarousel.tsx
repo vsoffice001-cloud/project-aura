@@ -32,6 +32,8 @@ export interface FeaturedCarouselProps {
   children: ReactNode;
   /** className for outer wrapper */
   className?: string;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 export function FeaturedCarousel({
@@ -42,9 +44,10 @@ export function FeaturedCarousel({
   background = 'white',
   children,
   className,
+  ...dataProps
 }: FeaturedCarouselProps) {
   return (
-    <SectionWrapper background={background} spacing="lg" maxWidth="wide" className={className}>
+    <SectionWrapper data-component="FeaturedCarousel" {...dataProps} background={background} spacing="lg" maxWidth="wide" className={className}>
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label={label}

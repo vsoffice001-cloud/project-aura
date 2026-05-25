@@ -45,6 +45,7 @@ export function NextSectionCTA({
 
   return (
     <div
+      data-component="NextSectionCTA"
       className={`flex justify-center py-8 md:py-12 ${
         darkMode ? 'bg-black' : 'bg-white'
       } ${className}`}
@@ -52,10 +53,10 @@ export function NextSectionCTA({
       <button
         type="button"
         onClick={scrollToSection}
-        className={`group flex flex-col items-center gap-2 transition-all duration-300 focus:outline-none focus:ring-2 ${
+        className={`group flex flex-col items-center gap-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 rounded-sm ${
           darkMode
-            ? 'text-white/60 hover:text-white focus:ring-white focus:ring-offset-2 focus:ring-offset-black'
-            : 'text-black/40 hover:text-black focus:ring-black focus:ring-offset-2'
+            ? 'text-white/60 hover:text-white focus-visible:ring-offset-black'
+            : 'text-black/40 hover:text-black'
         }`}
         aria-label={`Navigate to ${label}`}
       >

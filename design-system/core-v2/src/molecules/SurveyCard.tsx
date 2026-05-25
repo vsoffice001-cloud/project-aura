@@ -1,13 +1,40 @@
 /**
- * SurveyCard — Molecule (Surveys pillar)
+ * SurveyCard
  *
- * Primary card for survey listings. Supports grid + list layouts
- * (mirrors ReportCard's dual-layout pattern for Component Triad compatibility).
+ * WHY · The Surveys pillar needs a card component that mirrors ReportCard's dual grid/list
+ *        layout pattern so listing pages can reuse the same ViewToggle + grid/list
+ *        infrastructure. Survey-specific concerns (question count, response progress bar,
+ *        completion status) differ enough to warrant a dedicated molecule.
+ * WHAT · Dual-layout card: grid (vertical: category+status header → icon+title →
+ *        description → meta → progress bar → footer) or list (horizontal: status accent
+ *        bar | icon | title+meta | progress | status+date | CTA). Composes Card,
+ *        CompletionBadge, Badge, Button. Props: id, title, description, category,
+ *        questionCount, responseCount, targetCount, status, date, estimatedTime, layout,
+ *        onClick, className, overlayBadge.
+ * WHEN · In survey listing pages and survey management dashboards within the Surveys pillar.
+ *        Use `layout="grid"` in card grids; `layout="list"` in list-view toggle state.
+ * WHEN NOT · Don't use for report data — use ReportCard. Don't use when no response
+ *             progress data is available; the progress bar renders as 0% which is misleading.
+ * WHERE · Surveys pillar pages (no current project consumer · DS sample page only)
+ * HOW ·
+ *   ```tsx
+ *   <SurveyCard
+ *     id="srv-001"
+ *     title="APAC Market Pulse Survey Q2 2025"
+ *     category="Market Intelligence"
+ *     questionCount={12}
+ *     responseCount={78}
+ *     targetCount={200}
+ *     status="active"
+ *     date="May 2025"
+ *     onClick={(id) => router.push(`/surveys/${id}`)}
+ *   />
+ *   ```
  *
- * Grid: vertical stack — status badge → title → question count → response bar → footer
- * List: horizontal — status left | content center | meta+CTA right
- *
- * Uses DS composites: Card, CompletionBadge, CardFooterRow, Badge, Button.
+ * @reusabilityScore 2     // Surveys pillar only
+ * @a11y_status pending-review
+ * @lifecycle beta
+ * @promotedFrom core-v2 native
  */
 import { ClipboardList, Users } from 'lucide-react';
 import { Card } from '../atoms/Card';
@@ -57,8 +84,9 @@ export function SurveyCard({
   if (layout === 'list') {
     return (
       <Card
+        data-component="SurveyCard"
         hover
-        className={`group cursor-pointer flex items-stretch overflow-hidden ${className ?? ''}`}
+        className={`group cursor-pointer flex items-stretch overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 ${className ?? ''}`}
         onClick={() => onClick?.(id)}
       >
         {/* Left accent */}
@@ -66,9 +94,9 @@ export function SurveyCard({
           className="w-1.5 flex-shrink-0 self-stretch"
           style={{
             background: status === 'active'
-              ? 'var(--green-700, #15803d)'
+              ? 'var(--green-700)'
               : status === 'completed'
-              ? '#806ce0'
+              ? 'var(--purple-600)'
               : 'rgba(0,0,0,0.08)',
           }}
         />
@@ -123,7 +151,7 @@ export function SurveyCard({
                 className="h-full rounded-full transition-all"
                 style={{
                   width: `${progressPct}%`,
-                  background: progressPct >= 100 ? '#806ce0' : 'var(--green-700, #15803d)',
+                  background: progressPct >= 100 ? 'var(--purple-600)' : 'var(--green-700)',
                 }}
               />
             </div>
@@ -149,9 +177,10 @@ export function SurveyCard({
   // ─── Grid Layout ─────────────────────────────
   return (
     <Card
+      data-component="SurveyCard"
       hover
       padding="md"
-      className={`group cursor-pointer flex flex-col h-full ${className ?? ''}`}
+      className={`group cursor-pointer flex flex-col h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 ${className ?? ''}`}
       onClick={() => onClick?.(id)}
     >
       {/* Header row: category + status */}
@@ -217,7 +246,7 @@ export function SurveyCard({
             className="h-full rounded-full transition-all"
             style={{
               width: `${progressPct}%`,
-              background: progressPct >= 100 ? '#806ce0' : 'var(--green-700, #15803d)',
+              background: progressPct >= 100 ? 'var(--purple-600)' : 'var(--green-700)',
             }}
           />
         </div>

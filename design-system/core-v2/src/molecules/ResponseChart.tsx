@@ -1,12 +1,33 @@
 /**
- * ResponseChart — Molecule (Surveys pillar)
+ * ResponseChart
  *
- * Lightweight bar chart for survey response distribution.
- * Pure CSS — no chart library dependency. Uses DS tokens.
+ * WHY · Survey results pages need a data-visualisation component that avoids adding a
+ *        heavy chart library (Recharts/Victory) to the DS bundle. A pure-CSS bar chart
+ *        + SVG donut covers the primary survey analytics use cases at negligible cost.
+ * WHAT · Two display modes: `horizontal` (default) — horizontal progress bars with
+ *        label + count; `donut` — SVG ring chart for a single completion percentage.
+ *        Props: title (string), data ({label, value, color?}[]), mode ("horizontal"|"donut"),
+ *        total (optional override), className.
+ * WHEN · On survey result/analytics pages within the Surveys pillar. Use `horizontal`
+ *        for option-by-option response distribution; use `donut` for overall completion rate.
+ * WHEN NOT · Don't use for time-series or multi-series charts — bring in a proper chart
+ *             library for those. Don't use for report market data visualisations — those
+ *             need real axis labels and interactive tooltips.
+ * WHERE · Surveys pillar (no current project consumer · DS sample page only)
+ * HOW ·
+ *   ```tsx
+ *   <ResponseChart title="Preferred region" data={[
+ *     { label: "Asia Pacific", value: 42 },
+ *     { label: "North America", value: 31 },
+ *   ]} />
  *
- * Two modes:
- * - horizontal (default): horizontal bars with labels left, values right
- * - donut: simple donut/ring chart (for overall completion)
+ *   <ResponseChart mode="donut" data={[{ label: "Completed", value: 78 }]} total={100} />
+ *   ```
+ *
+ * @reusabilityScore 2     // Surveys pillar only
+ * @a11y_status pending-review  // SVG chart has no aria-label; bar values visible text only
+ * @lifecycle beta
+ * @promotedFrom core-v2 native
  */
 import { Card } from '../atoms/Card';
 
@@ -25,12 +46,12 @@ interface ResponseChartProps {
 }
 
 const DEFAULT_COLORS = [
-  '#806ce0',          // periwinkle (content)
-  'var(--green-700, #15803d)',
-  'var(--coral-500, #b01f24)',
-  '#eab308',          // amber
-  '#0ea5e9',          // sky
-  'rgba(0,0,0,0.25)', // neutral
+  'var(--chart-palette-3)',   // purple-600 — content signal
+  'var(--green-700)',          // success green
+  'var(--chart-palette-1)',   // brand red
+  'var(--amber-500)',          // amber warning
+  'var(--chart-palette-blue)', // medium blue · canonical chart data series
+  'rgba(0,0,0,0.25)',         // neutral
 ];
 
 export function ResponseChart({ title, data, mode = 'horizontal', total, className }: ResponseChartProps) {
@@ -44,7 +65,7 @@ export function ResponseChart({ title, data, mode = 'horizontal', total, classNa
       : 0;
 
     return (
-      <Card padding="md" className={`flex flex-col items-center ${className ?? ''}`}>
+      <Card data-component="ResponseChart" padding="md" className={`flex flex-col items-center ${className ?? ''}`}>
         {title && (
           <p className="text-black/60 mb-4 self-start" style={{ fontSize: 'var(--text-xs)', fontWeight: 500 }}>{title}</p>
         )}
@@ -59,7 +80,7 @@ export function ResponseChart({ title, data, mode = 'horizontal', total, classNa
             <circle
               cx="18" cy="18" r="15.9"
               fill="none"
-              stroke={data[0]?.color ?? '#806ce0'}
+              stroke={data[0]?.color ?? 'var(--chart-palette-3)'}
               strokeWidth="3"
               strokeDasharray={`${completedPct} ${100 - completedPct}`}
               strokeLinecap="round"
@@ -89,7 +110,7 @@ export function ResponseChart({ title, data, mode = 'horizontal', total, classNa
 
   // ─── Horizontal Bar Chart ─────────────────────
   return (
-    <Card padding="md" className={className}>
+    <Card data-component="ResponseChart" padding="md" className={className}>
       {title && (
         <p className="text-black/60 mb-4" style={{ fontSize: 'var(--text-xs)', fontWeight: 500 }}>{title}</p>
       )}

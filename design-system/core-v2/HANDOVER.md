@@ -2,12 +2,14 @@
 
 **For:** Tech team
 **From:** Design team (Aura-assisted)
-**Date:** 2026-05-13
+**Date:** 2026-05-15
 **Version:** v0.1.0 (workspace) · pre-npm-publish
 
 ## TL;DR
 
 Workspace-published TS library shipping atoms · molecules · organisms · hooks · shadcn UI · types · patterns for Ken Research consumer apps. Tech intake: keep current build (`pnpm build` clean), wire ESLint (lint script aspirational), optionally add Storybook stories. Consumers already wired via `workspace:*` — no breaking changes expected.
+
+**2026-05-15 additions:** 153 `data-component` attributes added across all atoms/molecules/organisms (QA discoverability · grep-able in DOM). Foundation lock complete: 6 categories (colors · typography · spacing · elevation · radius · layout) + extras (motion · z-index · tracking · leading · status · opacity · border-opacity · icon-colors · breakpoints · containers · section-bg) — all in `src/styles/base.css` unlayered `:root` (~500 tokens). `--color-neutral-500` bumped to `#6b6b6b` for WCAG AA. `MethodologySection` eyebrow prop-lifted (hardcoded string removed). COMPOSITION_GRAMMAR.md added as third canonical doc.
 
 ## Run locally (workspace context)
 
@@ -60,16 +62,18 @@ import '@kenresearch/design-system/styles/cinematic-dark.css';    // opt-in
 
 | Layer | Count | Export path |
 |---|---|---|
-| Atoms | 42 | `/atoms` |
-| Molecules | 26 | `/molecules` |
-| Organisms | 38 | `/organisms` |
+| Atoms | ~20 | `/atoms` |
+| Molecules | ~30 | `/molecules` |
+| Organisms | ~50 | `/organisms` |
 | Hooks | 23 | `/hooks` |
 | Shadcn UI | 46 | `/ui` |
 | Types | 13 | `/types` |
 | Patterns | 4 | `/patterns` |
 | Charts | theme + 5 presets | `/charts` |
 
-**~168 components total = 100% coverage of OG `Design_system_vs_26 (og and final)/` Figma export.**
+**153 `data-component` attributes** added 2026-05-15 across all layers (QA discoverability · `document.querySelectorAll('[data-component]')` for DOM audit).
+
+**Tokens:** ~500 in `src/styles/base.css` unlayered `:root` · OG short names canonical · matches 2514 OG-token refs across codebase. Foundation lock complete 2026-05-15.
 
 ## Adapter pattern (Phase 3 organisms)
 
@@ -112,6 +116,8 @@ const filters = useReportFilters();
 - **`FigmaButtonComparison.tsx`** stays in `src/atoms/_consumer-coupled/` excluded from build · doc-only Figma comparison · safe to delete if obsolete.
 - **`playground/`** Vite SPA scaffolded but not actively maintained. Consumer apps are canonical live reference.
 - **`useReportFilters` hook** lives in consumers (not DS) — depends on consumer mock data. DS ships the `ReportFilters` type shape only.
+- **`StatCard` count-up opt-in** — currently default-on via `animate` prop · motion design call to default-off deferred to tech iteration.
+- **Organism eyebrow strings** — `MethodologySection` prop-lifted 2026-05-15 (eyebrow no longer hardcoded). Other organisms may still have hardcoded eyebrow strings — audit on next iteration, not blocking.
 
 ## A11y baseline
 
@@ -150,9 +156,17 @@ const filters = useReportFilters();
 - [ ] Pre-npm-publish: flip `package.json` exports map to `dist/` paths · bump version · `pnpm publish --access public` (currently `private: false` already)
 - [ ] Verify consumer `transpilePackages: ['@kenresearch/design-system']` is set in each app's `next.config.ts`
 
+## Canonical docs (MANDATORY READ before any DS work)
+
+| Doc | Path | Purpose |
+|---|---|---|
+| FOUNDATIONS.md | `design-system/core-v2/docs/FOUNDATIONS.md` | ~500 tokens · 30 sections · ALL token names |
+| RULES.md | `design-system/core-v2/docs/RULES.md` | 90 hard rules · 10 sections · WWWWH per rule |
+| COMPOSITION_GRAMMAR.md | `design-system/core-v2/docs/COMPOSITION_GRAMMAR.md` | Use-case grammar · MANDATORY before organism changes |
+
 ## Cross-references
 
-- Full state: `docs/CHANGELOG.md` 2026-05-13 entries (batches 1-8 + Phase 1-3)
+- Full state: `docs/CHANGELOG.md` 2026-05-15 entries (batches 1-8 + Phase 1-4)
 - Aura memory: `feedback_ds_port_workflow.md` (port methodology + adapter pattern + final state table)
 - Port playbook: `skills/aura-craft/reference/DS_PORT_WORKFLOW.md` (canonical · hook lift + adapter pattern sections)
 - Component reference: `design-system/COMPONENT_REFERENCE.md`

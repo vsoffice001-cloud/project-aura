@@ -45,6 +45,8 @@ interface SidebarPanelProps {
   variant?: SidebarVariant;
   /** Sticky top offset in px (card variant). Defaults to 72. */
   stickyTop?: number;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 export function SidebarPanel({
@@ -57,6 +59,7 @@ export function SidebarPanel({
   scrollRef,
   variant = 'inline',
   stickyTop = 72,
+  ...dataProps
 }: SidebarPanelProps) {
   if (!visible) return null;
 
@@ -64,6 +67,8 @@ export function SidebarPanel({
   if (variant === 'card') {
     return (
       <aside
+        data-component="SidebarPanel"
+        {...dataProps}
         className={`flex-shrink-0 hidden lg:block ${className}`}
         style={{ width }}
       >
@@ -121,6 +126,8 @@ export function SidebarPanel({
   // ── Inline variant — original border-right panel ──
   return (
     <aside
+      data-component="SidebarPanel"
+      {...dataProps}
       className={`flex-shrink-0 flex flex-col ${className}`}
       style={{
         width,

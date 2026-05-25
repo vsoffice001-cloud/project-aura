@@ -1,6 +1,38 @@
 /**
- * AnalystPickCardB — Molecule (Variant B)
- * Analyst-first card: header → blockquote → report mini-card → footer.
+ * AnalystPickCardB
+ *
+ * WHY · Analyst-first editorial card variant: leads with analyst identity + quote before the
+ *        report content, reversing the standard report-first composition of AnalystPickCard.
+ *        Exists to surface expert credibility as the primary trust signal.
+ * WHAT · Renders analyst avatar + name/role → blockquote → embedded report mini-card → like
+ *        counter + "Explore Resources" CTA. Props: id, image, title, industry, region, date,
+ *        quote, analystName, analystRole, analystInitials, saved, onToggleSave, onClick.
+ * WHEN · Use in "Analyst Picks" horizontal carousels and editorial spotlight sections where
+ *        the analyst's recommendation is the hook (not the report title).
+ * WHEN NOT · Don't use when the report title/thumbnail should lead — use ReportCard or
+ *             ReportGridCard instead. Don't use outside a HorizontalScroll container; it's
+ *             optimised for fixed-width carousel contexts.
+ * WHERE · report-store-legacy AnalystPicks.tsx · competition-benchmarking-listing-v02 AnalystPicks.tsx
+ * HOW ·
+ *   ```tsx
+ *   <AnalystPickCardB
+ *     id="rpt-001"
+ *     image="/covers/rpt-001.jpg"
+ *     title="Global EV Battery Market 2025"
+ *     industry="Automotive"
+ *     region="Asia Pacific"
+ *     date="May 2025"
+ *     quote="This report redefines how we model battery degradation curves at scale."
+ *     analystName="Priya Mehta"
+ *     analystInitials="PM"
+ *     onClick={(id) => router.push(`/reports/${id}`)}
+ *   />
+ *   ```
+ *
+ * @reusabilityScore 2     // used in AnalystPicks carousel · not cross-pillar
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
  */
 import { ThumbsUp, Award } from "lucide-react";
 import React from "react";
@@ -30,7 +62,7 @@ interface AnalystPickCardBProps {
 
 export function AnalystPickCardB({ id, image, title, industry, region, date, quote, analystName, analystRole = "Analyst", analystInitials, saved: _saved = false, onToggleSave: _onToggleSave, onClick, className }: AnalystPickCardBProps) {
   return (
-    <Card hover padding="md" className={`group cursor-pointer flex flex-col h-full ${className || ""}`} onClick={() => onClick?.(id)}>
+    <Card data-component="AnalystPickCardB" hover padding="md" className={`group cursor-pointer flex flex-col h-full ${className || ""}`} onClick={() => onClick?.(id)}>
       {/* Analyst header */}
       <div className="flex items-center gap-2.5 mb-4">
         <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--warm-300)", color: "rgba(0,0,0,0.45)", fontSize: "var(--text-card-micro)", fontWeight: 500 }}>
@@ -86,7 +118,7 @@ function LikeCounter() {
 
   return (
     <button
-      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all cursor-pointer ${liked ? "text-[var(--green-600)] bg-[var(--green-50)]" : "text-black/25 hover:text-black/50 hover:bg-black/[0.03]"}`}
+      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 ${liked ? "text-[var(--green-600)] bg-[var(--green-50)]" : "text-black/25 hover:text-black/50 hover:bg-black/[0.03]"}`}
       style={{ fontSize: "var(--text-xs)", border: liked ? "1px solid var(--green-500)" : "1px solid rgba(0,0,0,0)" }}
       onClick={(e) => { e.stopPropagation(); setLiked((prev) => { setCount((c) => (prev ? c - 1 : c + 1)); return !prev; }); }}
       title={liked ? "Remove like" : "Like this pick"}

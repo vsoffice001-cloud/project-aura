@@ -30,3 +30,12 @@ export { useCrossfade, type CrossfadeResult } from './useCrossfade';
 export { useMountTransition, type MountTransitionResult } from './useMountTransition';
 export { useProgressiveLoad, type ProgressiveLoadResult } from './useProgressiveLoad';
 export { useCounter, type UseCounterOptions } from './useCounter';
+
+// Promoted from Design_system_vs_26 OG (DS Port Phase 6, 2026-05-15 · parameterized on port)
+export { useReportFilters, type UseReportFiltersArgs } from './useReportFilters';
+
+// Promoted from V0.2-for-design-system (DS Port Batch 3.2b · 2026-05-19 · scroll-spy for TOC sidebar)
+export { useScrollSpy } from './useScrollSpy';
+
+// LCP perf: deferred render gate for heavy dynamic imports (2026-05-19 · P1 Highcharts fix)
+export { useDeferredRender, type UseDeferredRenderOptions } from './useDeferredRender';

@@ -1,14 +1,34 @@
 /**
- * QuestionPreview — Molecule (Surveys pillar)
+ * QuestionPreview
  *
- * Interactive preview card showing a single survey question with its type,
- * options (if applicable), and required indicator.
- * Used in survey detail pages and survey builder previews.
+ * WHY · Survey builder and survey detail pages need a live-interactive card that previews
+ *        exactly how a question will appear to respondents. Static mockups mislead — this
+ *        molecule renders real interactive controls (radio, checkbox, text, rating, number,
+ *        dropdown) so designers and admins see true respondent UX.
+ * WHAT · Card with question number + text + required indicator → question type badge →
+ *        type-specific interactive input (radio | checkbox | text | rating stars | number
+ *        | dropdown). All inputs are locally stateful. Props: number, question, type
+ *        (QuestionType), options (string[]), required, className.
+ * WHEN · In survey detail views, survey builder preview panels, and the DS component
+ *        sample page for the Surveys pillar. One QuestionPreview per question.
+ * WHEN NOT · Don't use in the actual survey submission form — this is a preview/admin UI.
+ *             Don't use when question type is unknown; it must be one of the 6 supported types.
+ * WHERE · Surveys pillar (no current project consumer · DS sample page only)
+ * HOW ·
+ *   ```tsx
+ *   <QuestionPreview
+ *     number={1}
+ *     question="Which region are you purchasing for?"
+ *     type="multiple-choice"
+ *     options={["Asia Pacific", "North America", "Europe", "Other"]}
+ *     required
+ *   />
+ *   ```
  *
- * All inputs are fully interactive: selectable radios, toggleable checkboxes,
- * typeable text, clickable rating stars, editable number, selectable dropdown.
- *
- * Uses DS composites: Card, Badge.
+ * @reusabilityScore 2     // Surveys pillar only
+ * @a11y_status pending-review  // star buttons have aria-label; radio/checkbox are buttons not inputs
+ * @lifecycle beta
+ * @promotedFrom core-v2 native
  */
 import { useState } from 'react';
 import { CircleDot, CheckSquare, AlignLeft, Star, Hash, ChevronDown, Check } from 'lucide-react';
@@ -61,7 +81,7 @@ export function QuestionPreview({ number, question, type, options, required, cla
   };
 
   return (
-    <Card padding="sm" className={`group ${className ?? ''}`}>
+    <Card data-component="QuestionPreview" padding="sm" className={`group ${className ?? ''}`}>
       {/* Header */}
       <div className="flex items-start gap-2.5 mb-2">
         {/* Question number */}
@@ -102,7 +122,7 @@ export function QuestionPreview({ number, question, type, options, required, cla
               <button
                 key={i}
                 type="button"
-                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02]"
+                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
                 style={{ fontSize: 'var(--text-xs)' }}
                 onClick={() => setSelectedRadio(i)}
               >
@@ -140,7 +160,7 @@ export function QuestionPreview({ number, question, type, options, required, cla
               <button
                 key={i}
                 type="button"
-                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02]"
+                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
                 style={{ fontSize: 'var(--text-xs)' }}
                 onClick={() => toggleCheckbox(i)}
               >
@@ -176,7 +196,7 @@ export function QuestionPreview({ number, question, type, options, required, cla
               <button
                 key={i}
                 type="button"
-                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02]"
+                className="flex items-center gap-2 w-full text-left cursor-pointer px-1.5 py-1 rounded transition-colors hover:bg-black/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
                 style={{ fontSize: 'var(--text-xs)' }}
                 onClick={() => setSelectedDropdown(isSelected ? null : i)}
               >
@@ -232,7 +252,7 @@ export function QuestionPreview({ number, question, type, options, required, cla
               <button
                 key={star}
                 type="button"
-                className="cursor-pointer p-0.5 transition-transform hover:scale-110"
+                className="cursor-pointer p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
                 style={{ background: 'rgba(0, 0, 0, 0)' }}
                 onClick={() => setRating(star === rating ? 0 : star)}
                 onMouseEnter={() => setHoverRating(star)}

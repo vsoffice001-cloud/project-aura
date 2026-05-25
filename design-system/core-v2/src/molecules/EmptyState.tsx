@@ -33,6 +33,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
+      data-component="EmptyState"
       className={`text-center py-20 ${className || ''}`}
       style={{
         borderWidth: '1px',

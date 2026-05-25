@@ -1,0 +1,34 @@
+{
+  "url": "http://localhost:3000/",
+  "viewport": {
+    "label": "desktop",
+    "width": 1440,
+    "height": 900
+  },
+  "transparentContainers": [
+    "transparent bg on <MAIN class=\"\">",
+    "transparent bg on <NAV class=\"\">",
+    "transparent bg on <NAV class=\"flex-1 min-w-0\">",
+    "transparent bg on <NAV class=\"\">",
+    "transparent bg on <SECTION class=\"\">",
+    "transparent bg on <SECTION class=\"\">",
+    "transparent bg on <SECTION class=\"\">",
+    "transparent bg on <SECTION class=\"\">",
+    "transparent bg on <ARTICLE class=\"h-full\">",
+    "transparent bg on <ARTICLE class=\"h-full\">",
+    "transparent bg on <ARTICLE class=\"h-full\">",
+    "transparent bg on <ARTICLE class=\"h-full\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"\">",
+    "transparent bg on <ARTICLE class=\"h-full\">",
+    "transparent bg on <ARTICLE class=\"h-full\">"
+  ],
+  "literalVarText": [],
+  "brokenImages": [],
+  "consoleErrors": [],
+  "networkFailures": []
+}

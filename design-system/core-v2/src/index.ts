@@ -12,3 +12,5 @@ export * from './patterns/index';
 export * from './hooks/index';
 export * from './charts/index';
 export * from './types/index';
+export * from './lib/index';
+export * from './templates/index';

@@ -1,3 +1,40 @@
+/**
+ * ClientContextSection
+ *
+ * WHY · Case-study pages need a structured "who is the client" opening — logo · industry · company overview ·
+ *       market context · capabilities list · strategic challenge. Inline assembly drifts per project.
+ * WHAT · Renders a 12-col split layout: left sticky sidebar (logo · company name · industry) + right editorial column
+ *        (lead paragraph · market narrative · capabilities stacked cards · strategic challenge highlight).
+ *        Props: `logo?` image URL · `contentBlocks[]` typed union (heading/paragraph/list) · `showLink?` CTA toggle.
+ * WHEN · First content section of every case-study page (after HeroSection).
+ * WHEN NOT · Product pages (use `ProductHero` + stats) · blog posts · listing pages.
+ * WHERE · Case-study template — section 1 (white bg · immediately after HeroSection).
+ * HOW ·
+ *   ```tsx
+ *   // Default (backward-compat · Yash hardcoded)
+ *   <ClientContextSection />
+ *
+ *   // Full propification (new case studies · 2026-05-15)
+ *   <ClientContextSection
+ *     logo="/logos/acme.svg"
+ *     companyName="Acme Corp"
+ *     industry="SaaS & Enterprise Software"
+ *     eyebrow="Client Context"
+ *     contentBlocks={[
+ *       { type: 'heading', text: 'A vertically integrated SaaS company...' },
+ *       { type: 'paragraph', text: 'B2B SaaS context...' },
+ *       { type: 'list', items: ['Cap 1', 'Cap 2'] }
+ *     ]}
+ *     ctaHref="/profile/acme"
+ *     ctaLabel="View Full Profile"
+ *   />
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
 import { AnimatedArrow } from '../atoms/AnimatedArrow';
 
 // Content block types
@@ -7,14 +44,36 @@ type ContentBlock =
   | { type: 'list'; items: string[] };
 
 interface ClientContextSectionProps {
-  /** Company logo image URL. Falls back to a styled text mark when not provided. */
+  /** Company logo image URL. Falls back to a styled letter-mark when not provided. */
   logo?: string;
+  /** Letter shown in fallback logo box when `logo` URL missing. Default = 'Y' (Yash compat). */
+  logoFallback?: string;
+  /** Alt text for logo image. Default = "Client logo". */
+  logoAlt?: string;
+  /** Company name shown in sidebar identity block. Default = "Yash Highvoltage Insulators" (backward-compat). */
+  companyName?: string;
+  /** Industry label shown in sidebar. Default = "Power Transmission & Electrical Equipment". */
+  industry?: string;
+  /** Section eyebrow label. Default = "Client Context". */
+  eyebrow?: string;
   contentBlocks?: ContentBlock[];
+  /** Show the bottom CTA link. Default true. */
   showLink?: boolean;
+  /** CTA href. Default "#". */
+  ctaHref?: string;
+  /** CTA label. Default "View Full Profile". */
+  ctaLabel?: string;
+  /** CTA description. Default = "Want to learn more?" intro. */
+  ctaDescription?: string;
 }
 
-export function ClientContextSection({ 
+export function ClientContextSection({
   logo,
+  logoFallback = 'Y',
+  logoAlt = 'Client logo',
+  companyName = 'Yash Highvoltage Insulators',
+  industry = 'Power Transmission & Electrical Equipment',
+  eyebrow = 'Client Context',
   contentBlocks = [
     {
       type: 'heading',
@@ -42,15 +101,18 @@ export function ClientContextSection({
       text: 'Despite strong product and technical maturity, the leadership faced strategic blind spots around market sizing, competitive positioning, supply chain risks, and investor narrative development.'
     }
   ],
-  showLink = true
+  showLink = true,
+  ctaHref = '#',
+  ctaLabel = 'View Full Profile',
+  ctaDescription = 'Explore the complete company profile and industry insights',
 }: ClientContextSectionProps) {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-white">
+    <section data-component="ClientContextSection" className="py-12 sm:py-16 md:py-20 bg-white">
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Section Label */}
         <div className="mb-8 md:mb-10">
           <span className="font-medium text-black/40 uppercase tracking-[3px]" style={{ fontSize: 'var(--text-nav)' }}>
-            Client Context
+            {eyebrow}
           </span>
         </div>
         
@@ -60,10 +122,10 @@ export function ClientContextSection({
           <div className="md:col-span-4">
             <div className="md:sticky md:top-8">
               {logo ? (
-                <img src={logo} alt="YASH Industries Logo" className="h-11 md:h-12 mb-6" style={{ borderRadius: 'var(--radius-inner)' }} />
+                <img src={logo} alt={logoAlt} className="h-11 md:h-12 mb-6" style={{ borderRadius: 'var(--radius-inner)' }} />
               ) : (
-                <div className="h-11 md:h-12 mb-6 bg-black/10 flex items-center justify-center text-black/40 font-medium" style={{ borderRadius: 'var(--radius-inner)' }}>
-                  Y
+                <div className="h-11 md:h-12 mb-6 bg-black/10 flex items-center justify-center text-black/40 font-medium" style={{ borderRadius: 'var(--radius-inner)' }} aria-hidden="true">
+                  {logoFallback}
                 </div>
               )}
               
@@ -98,7 +160,7 @@ export function ClientContextSection({
                     VERDICT: --text-sm is the standard body size, works for sidebar titles
                   */}
                   <h3 className="font-medium text-black leading-[1.3]" style={{ fontSize: 'var(--text-sm)' }}>
-                    Yash Highvoltage Insulators
+                    {companyName}
                   </h3>
                 </div>
                 
@@ -122,7 +184,7 @@ export function ClientContextSection({
                     VERDICT: --text-xs is the standard small text token
                   */}
                   <p className="text-black/70 leading-[1.5]" style={{ fontSize: 'var(--text-xs)' }}>
-                    Power Transmission & Electrical Equipment
+                    {industry}
                   </p>
                 </div>
               </div>
@@ -265,7 +327,7 @@ export function ClientContextSection({
                     </span>
                   </div>
                   
-                  <div className="relative bg-[#f5f2f1] text-black p-8 md:p-10 overflow-hidden" style={{ borderRadius: 'var(--radius-element)' }}>
+                  <div className="relative bg-[var(--bg-warm)] text-black p-8 md:p-10 overflow-hidden" style={{ borderRadius: 'var(--radius-element)' }}>
                     {/* Subtle pattern overlay */}
                     <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
                     
@@ -294,16 +356,16 @@ export function ClientContextSection({
                   Want to learn more?
                 </p>
                 <p className="text-black/70 leading-[1.6]" style={{ fontSize: 'var(--text-xs)' }}>
-                  Explore the complete company profile and industry insights
+                  {ctaDescription}
                 </p>
               </div>
-              
-              <a 
-                href="#" 
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-black text-white font-medium hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-all duration-300 whitespace-nowrap overflow-hidden"
+
+              <a
+                href={ctaHref}
+                className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-black text-white font-medium hover:bg-black/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-red)] focus-visible:ring-offset-2 transition-all duration-300 whitespace-nowrap overflow-hidden"
                 style={{ fontSize: 'var(--text-xs)', letterSpacing: '0.3px', borderRadius: 'var(--radius-element)' }}
               >
-                <span>View Full Profile</span>
+                <span>{ctaLabel}</span>
                 <AnimatedArrow size={16} color="white" />
               </a>
             </div>

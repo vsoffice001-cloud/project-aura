@@ -1,0 +1,160 @@
+@import '@kenresearch/design-system/styles/base.css';
+@import '@kenresearch/design-system/styles/utilities.css';
+@import '@kenresearch/design-system/styles/editorial-light.css';
+@import '@kenresearch/design-system/styles/cinematic-dark.css';
+/* Auto-generated safelist · regen w/ `node scripts/gen-ds-safelist.mjs` from workspace root */
+@import '@kenresearch/design-system/styles/_safelist.generated.css';
+
+/* ── v2-only Tailwind v4 @theme registration ─────────────────────────────
+   Reason: v2 builder pattern uses `className="font-display"` + `className="font-body"`
+   Tailwind utilities (272 occurrences across sections). Canonical consumers
+   (V0_lite_report · V0.2_report · report-store) DON'T use these utility classes —
+   they rely on DS atom internal font-family + body cascade. v2 needs explicit
+   @theme registration for those utility classes to compile.
+
+   Future fix: refactor v2 to canonical pattern (drop className font-* · use DS
+   atoms + body cascade) · then this block can be deleted. Logged as tech-debt.
+   ──────────────────────────────────────────────────────────────────────── */
+@theme {
+  --font-display: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+}
+
+/* ── @source DIRECT SCAN of DS source (ROOT FIX · 2026-05-14 R4) ─────────
+   PERMANENT FIX for Tailwind v4 + node_modules scan gap.
+   Instead of chasing individual safelist entries every time a DS atom adds
+   a new utility class (10+ separate fixes this sprint · all same root cause)
+   scan DS source TSX directly. All Tailwind classes in atoms/molecules/organisms
+   compile correctly · no per-atom safelist drift.
+   ──────────────────────────────────────────────────────────────────────── */
+@source "../../../../design-system/core-v2/src/**/*.{tsx,ts}";
+
+/* ── Legacy explicit safelist (kept as belt-and-braces · auto-generated tries first) ─
+   _safelist.generated.css imported above handles the bulk. Manual entries below
+   cover edge cases the regex extractor misses (template literals · dynamic class
+   construction · 3rd-party shadcn primitives).
+   ──────────────────────────────────────────────────────────────────────── */
+@source inline("text-white text-black");
+@source inline("font-display font-body font-mono");
+@source inline("focus-visible:ring-2 focus-visible:ring-offset-1 rounded-sm");
+
+/* SectionWrapper spacing utilities (Tailwind v4 won't emit w/o explicit safelist)
+   WHY: DS SectionWrapper atom emits py-8/py-10/py-12/py-16/py-20/py-24 + md: responsive
+   variants from node_modules. Tailwind v4 skips node_modules → those classes never compile
+   → ALL section vertical rhythm collapses to 0px (hero/intel/exec-summary etc).
+   Only py-8 + py-10 worked because PDP source files also used them directly (scanned).
+   py-12/py-16/py-20/py-24 are exclusively in DS SectionWrapper → invisible to scanner.
+   (Diagnosed 2026-05-13 QA visual-diff pass · ROOT CAUSE of user spacing complaint) */
+@source inline("py-8 py-10 py-12 py-16 py-20 py-24");
+@source inline("md:py-8 md:py-10 md:py-12 md:py-14 md:py-16 md:py-20 md:py-24");
+
+/* DS token-keyed arbitrary sizing utilities (Tailwind v4 won't emit w/o explicit safelist)
+   WHY: DS Button + TopNavigation atoms use h-[var(--button-height-md)] etc. classes.
+   Without this safelist Tailwind v4 sees the class strings in node_modules tsx but
+   never emits the CSS rules → buttons render at 24px tall · nav collapses to 33px.
+   (Diagnosed 2026-05-13 QA pass) */
+@source inline("h-[var(--button-height-sm)] h-[var(--button-height-md)] h-[var(--button-height-lg)]");
+@source inline("px-[var(--button-px-sm)] px-[var(--button-px-md)] px-[var(--button-px-lg)]");
+@source inline("h-[60px] h-[64px] h-[72px] h-[40px] h-[44px] h-[48px] h-[56px] h-[80px]");
+@source inline("min-h-[44px] min-h-[48px] min-h-[40px]");
+/* Button min-width tokens (node_modules not scanned · WHY: 2026-05-13 QA visual-diff)
+   Without these: min-w-[var(--button-min-width-md)] resolves to auto → buttons collapse to text-width */
+@source inline("min-w-[var(--button-min-width-sm)] min-w-[var(--button-min-width-md)] min-w-[var(--button-min-width-lg)] min-w-[var(--button-min-width-xl)]");
+
+/* Badge theme backgrounds (node_modules not scanned · WHY: 2026-05-13 QA visual-diff)
+   Without these: all DS Badge bg classes emit transparent → badge chips look like plain text.
+   Badge neutral = warm-100, warm = warm-50, muted = black-50, info = semantic-status-info-bg */
+@source inline("bg-[var(--color-ramp-warm-100)] bg-[var(--color-ramp-warm-50)] bg-[var(--color-ramp-black-50)]");
+@source inline("bg-[var(--semantic-status-info-bg)] bg-[var(--semantic-status-success-bg)] bg-[var(--semantic-status-warning-bg)] bg-[var(--semantic-status-error-bg)]");
+@source inline("bg-[var(--color-ramp-purple-50)] bg-[var(--color-ramp-purple-100)]");
+@source inline("border-[var(--color-ramp-black-200)] border-[var(--color-ramp-warm-500)] border-[var(--color-ramp-purple-200)]");
+@source inline("border-[var(--semantic-status-info-border)] border-[var(--semantic-status-success-border)] border-[var(--semantic-status-warning-border)] border-[var(--semantic-status-error-border)]");
+@source inline("text-[var(--color-ramp-black-700)] text-[var(--color-ramp-warm-900)] text-[var(--color-ramp-black-400)]");
+@source inline("text-[var(--semantic-status-info-text)] text-[var(--semantic-status-success-text)] text-[var(--semantic-status-warning-text)] text-[var(--semantic-status-error-text)]");
+@source inline("text-[var(--color-accent-purple)] text-[var(--color-accent-coral,#d27052)] text-[var(--color-accent-periwinkle,#8e8acd)]");
+/* Badge padding classes (xs/sm/md/lg × minimal/rounded/pill) */
+@source inline("px-2.5 py-0.5 px-3 py-1 px-4 py-1.5 px-5 py-2");
+/* Badge font-size + tracking (DS Badge sizeClasses use fractional rem values) */
+@source inline("text-[0.563rem] text-[0.688rem] text-[0.813rem] text-[0.938rem]");
+@source inline("tracking-[0.15em] tracking-[0.12em] tracking-[0.08em] tracking-[0.05em] tracking-[0.0875px]");
+
+/* DS Button brand-variant gradient backgrounds (node_modules not scanned · WHY: 2026-05-14 legacy-vs-new diff)
+   Without these: variant="brand" buttons render WHITE not red gradient → no CTA visual affordance.
+   Diagnosed when comparing legacy V0_lite_report (red gradient buttons) vs new PDP (white buttons). */
+@source inline("bg-[image:var(--composition-gradient-brand-red-shimmer)] bg-[image:var(--composition-gradient-brand-dark-shimmer)]");
+@source inline("hover:bg-[image:var(--composition-gradient-brand-red-shimmer-hover)] hover:bg-[image:var(--composition-gradient-brand-dark-shimmer-hover)]");
+
+/* Editorial typography scale — Major Third 1.25× ratio (matches Figma + legacy spec)
+   Legacy H1 = 3.052rem (48.8px) · H2 = 2.441rem (39px) · H3 = 1.953rem (31.3px) · H4 = 1.563rem (25px)
+   New PDP H1/H2 were undersized at text-2xl/text-3xl → flat hierarchy. Fixed 2026-05-14 legacy diff. */
+@source inline("text-[1.563rem] text-[1.953rem] text-[2.441rem] text-[3.052rem] text-[3.815rem]");
+@source inline("md:text-[1.563rem] md:text-[1.953rem] md:text-[2.441rem] md:text-[3.052rem] md:text-[3.815rem]");
+@source inline("sm:text-[1.563rem] sm:text-[1.953rem] sm:text-[2.441rem] sm:text-[3.052rem]");
+@source inline("tracking-[-0.02em] tracking-[-0.01em] tracking-[-0.015em]");
+@source inline("min-h-[50vh] min-h-[55vh] min-h-[60vh] sm:min-h-[55vh] sm:min-h-[60vh]");
+
+/* ScrollToTop FAB positioning/size (node_modules not scanned · WHY: right-4/sm:right-8/bottom-20 missing → computed right=1400px off-screen — R4 fix 2026-05-14) */
+@source inline("right-4 sm:right-8 bottom-20 sm:bottom-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full");
+@source inline("z-[var(--z-index-fab)] hover:scale-110 scale-100 scale-80 opacity-0 opacity-100");
+
+/* Card + DS atom classes (node_modules not scanned by Tailwind v4 · WHY: 2026-05-13 QA) */
+@source inline("bg-[var(--color-foundation-white)] bg-[var(--color-ramp-warm-300)]");
+@source inline("border-[var(--color-ramp-warm-500)] border-[var(--border-soft)] border-[var(--border-default)]");
+@source inline("p-[var(--spacing-4)] p-[var(--spacing-6)] p-[var(--spacing-8)]");
+@source inline("shadow-[var(--shadow-sm)] shadow-[var(--shadow-md)] shadow-[var(--shadow-lg)]");
+@source inline("hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 transition-all duration-300");
+@source inline("rounded-[var(--radius-card)] rounded-[var(--radius-sm)] rounded-[var(--radius-lg)]");
+/* SectionLabel + DS text/tracking atoms */
+@source inline("text-[var(--surface-text-muted)] text-[var(--surface-text-subtle)] text-[var(--surface-text)]");
+@source inline("tracking-[0.2em] tracking-[0.15em] tracking-[0.1em]");
+@source inline("font-[var(--typography-family-body)] font-[var(--typography-family-display)]");
+@source inline("text-[var(--color-brand-red)] text-[var(--color-foundation-black)] text-[var(--color-foundation-white)]");
+@source inline("bg-[var(--color-brand-red)] bg-[var(--color-foundation-black)]");
+@source inline("border-[var(--color-brand-red)]");
+/* DS Badge brand-theme hardcoded background (node_modules not scanned · WHY: 2026-05-13 QA)
+   Applies bg-color-brand-red + white text as direct CSS override so the compiled
+   Tailwind utility gap doesn't break Badge contrast on PDP. */
+.bg-\[var\(--color-brand-red\)\] {
+  background-color: var(--color-brand-red, #b01f24) !important;
+}
+.text-\[var\(--color-foundation-white\)\] {
+  color: var(--color-foundation-white, #ffffff) !important;
+}
+
+/* ── Semantic ink tokens (raw) ───────────────────────────────────────────
+   WHY: editorial-light.css imports semantic-ink-* via alias (--surface-text-muted
+   = var(--semantic-ink-muted, fallback)). Components that reference --semantic-ink-*
+   directly (e.g. SectionHeading eyebrow) need these defined globally.
+   Without this block those tokens resolve to `inherit` → near-white on dark
+   ancestors → contrast fails axe. (Fixed 2026-05-13 QA pass)
+   ──────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Foundation colors (defined in tokens.css · not re-exported by editorial-light.css) */
+  --color-foundation-black:     #000000;
+  --color-foundation-white:     #ffffff;
+  --color-brand-red:            #b01f24;
+  /* Alias to prevent future token-name typo gap (e.g. --color-brand without -red suffix) — 2026-05-14 R4 */
+  --color-brand:                var(--color-brand-red);
+  /* Semantic ink tokens (defined in tokens.css · editorial-light.css aliases them) */
+  --semantic-ink-strong:        rgba(0, 0, 0, 0.9);
+  --semantic-ink-body:          rgba(0, 0, 0, 0.8);
+  --semantic-ink-muted:         rgba(0, 0, 0, 0.80); /* was 0.60 — WCAG AA fix (4.5:1 on warm surfaces) */
+  --semantic-ink-subtle:        rgba(0, 0, 0, 0.45);
+  --semantic-ink-faint:         rgba(0, 0, 0, 0.35);
+  --semantic-ink-whisper:       rgba(0, 0, 0, 0.18);
+  --semantic-ink-on-dark-strong:  rgba(255, 255, 255, 0.92);
+  --semantic-ink-on-dark-body:    rgba(255, 255, 255, 0.75);
+  --semantic-ink-on-dark-muted:   rgba(255, 255, 255, 0.62);
+  --semantic-ink-on-dark-subtle:  rgba(255, 255, 255, 0.45);
+  --semantic-ink-on-dark-faint:   rgba(255, 255, 255, 0.30);
+  --semantic-ink-on-dark-whisper: rgba(255, 255, 255, 0.18);
+}
+
+/* Reduced-motion + animation-fallback safety net
+   WHY: Framer entrance animations leave 148 elements at opacity:0 if useInView
+   never fires (slow JS · prefers-reduced-motion · headless browsers). Spec a
+   global fallback so content is always reachable. */
+@media (prefers-reduced-motion: reduce) {
+  [data-framer-entrance] { opacity: 1 !important; transform: none !important; }
+}

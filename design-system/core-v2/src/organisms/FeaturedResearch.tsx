@@ -4,7 +4,7 @@
  * WHAT: Featured research reports carousel for the Report Store home page.
  * WHY:  Wraps FeaturedCarousel with RS-specific content and data.
  * WHEN: Section 2 of ReportStorePage (Home mode).
- * HOW:  Accepts `reports` via prop. Each item rendered via ReportCard layout="grid".
+ * HOW:  Accepts `reports` via prop. Each item rendered via ReportCard variant="grid".
  *
  * @promotedFrom Design_system_vs_26 OG (DS Port Phase 3, 2026-05-13)
  */
@@ -28,10 +28,10 @@ export function FeaturedResearch({
   ctaText = 'View all reports',
 }: FeaturedResearchProps) {
   return (
-    <FeaturedCarousel label={label} title={title} subtitle={subtitle} ctaText={ctaText}>
+    <FeaturedCarousel data-component="FeaturedResearch" label={label} title={title} subtitle={subtitle} ctaText={ctaText}>
       {reports.map((report) => (
         <div key={report.id} className="flex-shrink-0" style={{ width: '300px' }}>
-          <ReportCard {...report} layout="grid" />
+          <ReportCard {...report} variant="grid" />
         </div>
       ))}
     </FeaturedCarousel>

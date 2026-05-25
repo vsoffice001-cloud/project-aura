@@ -28,6 +28,7 @@ export function NavDropdownTrigger({
 }: NavDropdownTriggerProps) {
   return (
     <div
+      data-component="NavDropdownTrigger"
       className={`relative h-[60px] flex items-center group ${className}`}
       onMouseEnter={onMouseEnter}
     >

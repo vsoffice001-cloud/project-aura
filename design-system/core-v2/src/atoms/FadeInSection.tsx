@@ -74,7 +74,7 @@ export function FadeInSection({
   /* Skip animation entirely when prefers-reduced-motion is set */
   if (prefersReduced) {
     return (
-      <div ref={ref} className={className}>
+      <div data-component="FadeInSection" ref={ref} className={className}>
         {children}
       </div>
     );
@@ -97,6 +97,7 @@ export function FadeInSection({
 
   return (
     <motion.div
+      data-component="FadeInSection"
       ref={ref}
       className={className}
       variants={variants}

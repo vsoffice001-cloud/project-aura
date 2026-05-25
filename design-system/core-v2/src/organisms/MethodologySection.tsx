@@ -1,4 +1,29 @@
+/**
+ * MethodologySection
+ *
+ * WHY · Consulting methodology steps need a scroll-driven vertical timeline — a static list loses the
+ *       sense of sequential progression. IntersectionObserver-driven fill communicates "where we are."
+ * WHAT · Vertical timeline with animated fill line (IntersectionObserver · 50% threshold · `active/past/future` node states).
+ *        Each step: circular node (fill=active · outlined=future · warm=past) + content card.
+ *        Props: `steps[]` with number/title/description. Mobile: timeline hidden, cards stacked.
+ * WHEN · Case-study methodology section showing 3-6 consulting process steps.
+ * WHEN NOT · Objectives / value pillars (use `EngagementObjectivesSection`) · product feature steps (use `ValuePillarsSection`).
+ * WHERE · Case-study template — section 4 (warm bg · after EngagementObjectivesSection).
+ * HOW ·
+ *   ```tsx
+ *   <MethodologySection steps={[
+ *     { number: "01", title: "Discovery & Scoping", description: "Stakeholder interviews..." },
+ *     { number: "02", title: "Primary Research", description: "50+ expert interviews..." }
+ *   ]} />
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
 import { useRef, useEffect, useState } from 'react';
+import { SectionLabel } from '../atoms/SectionLabel';
 
 interface MethodologyStep {
   number: string;
@@ -6,11 +31,38 @@ interface MethodologyStep {
   description: string;
 }
 
+export type MethodologyBackground = 'warm' | 'white' | 'black';
+
 interface MethodologySectionProps {
   steps: MethodologyStep[];
+  /**
+   * Section background variant · per recipe intent.
+   * - `warm` (default · RS-canonical highlight section) · `var(--bg-warm)`
+   * - `white` (case-study alt · clean reading)
+   * - `black` (case-study §5 recipe · cinematic dark · text inverts via CSS layer)
+   */
+  background?: MethodologyBackground;
+  /** Section eyebrow · default "Research Process" */
+  eyebrow?: string;
+  /** Heading · default "Consulting Approach & Initiatives" */
+  heading?: string;
+  /** Description · default existing copy */
+  description?: string;
 }
 
-export function MethodologySection({ steps }: MethodologySectionProps) {
+const bgMap: Record<MethodologyBackground, string> = {
+  warm: 'var(--bg-warm)',
+  white: 'var(--white)',
+  black: 'var(--bg-pure-black)',
+};
+
+export function MethodologySection({
+  steps,
+  background = 'warm',
+  eyebrow = 'Research Process',
+  heading = 'Consulting Approach & Initiatives',
+  description = 'A systematic, research-driven approach designed to deliver actionable insights and sustainable outcomes'
+}: MethodologySectionProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [timelineFillHeight, setTimelineFillHeight] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -51,20 +103,18 @@ export function MethodologySection({ steps }: MethodologySectionProps) {
   }, [steps.length]);
 
   return (
-    <section className="py-12 sm:py-16 md:py-20" style={{ background: 'var(--bg-warm)' }}>
+    <section data-component="MethodologySection" className="py-12 sm:py-16 md:py-20" style={{ background: bgMap[background] }}>
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Section Header */}
         <div className="mb-12 sm:mb-16 md:mb-20">
-          <span className="font-medium text-black/40 uppercase tracking-[3px] mb-6 md:mb-8 block" style={{ fontSize: 'var(--text-nav)' }}>
-            Our Methodology
-          </span>
-          
+          <SectionLabel variant="accent">{eyebrow}</SectionLabel>
+
           <h2 className="leading-[1.15] font-light text-black tracking-tight mb-4 md:mb-6" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4.5vw, var(--text-2xl))' }}>
-            Consulting Approach & Initiatives
+            {heading}
           </h2>
 
           <p className="leading-[1.7] text-black/70 max-w-[var(--container-compact)]" style={{ fontSize: 'var(--text-sm)' }}>
-            A systematic, research-driven approach designed to deliver actionable insights and sustainable outcomes
+            {description}
           </p>
         </div>
 
@@ -111,7 +161,7 @@ export function MethodologySection({ steps }: MethodologySectionProps) {
                               : 'bg-white border-2'
                         }`}
                         style={{ 
-                          borderColor: isCurrent ? '#000' : 'var(--bg-warm-700)',
+                          borderColor: isCurrent ? 'var(--black)' : 'var(--bg-warm-700)',
                           backgroundColor: isPast ? 'var(--bg-warm)' : undefined,
                           animation: isCurrent ? 'pulse-subtle 2.5s ease-in-out infinite' : 'none'
                         }}

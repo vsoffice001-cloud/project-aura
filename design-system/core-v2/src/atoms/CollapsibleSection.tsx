@@ -45,12 +45,13 @@ export function CollapsibleSection({
 
   return (
     <div
+      data-component="CollapsibleSection"
       className={`border border-black/10 rounded-[10px] overflow-hidden bg-white ${className}`}
     >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-black/[0.02] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2"
         aria-expanded={isOpen}
       >
         <div className="text-left">

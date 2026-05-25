@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Divider } from '../../atoms/Divider';
 import { MenuItem } from '../../atoms/MenuItem';
 import {
@@ -33,6 +33,7 @@ export interface AuthPopoverProps {
  */
 export const AuthPopover = forwardRef<HTMLDivElement, AuthPopoverProps>(
   ({ isOpen, user, onClose, onNavigate, onSignOut }, ref) => {
+    const shouldReduceMotion = useReducedMotion();
     const isAuthenticated = !!user;
 
     return (
@@ -43,7 +44,7 @@ export const AuthPopover = forwardRef<HTMLDivElement, AuthPopoverProps>(
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.15 }}
               className="fixed inset-0 z-[98]"
               onClick={onClose}
               aria-hidden="true"
@@ -51,10 +52,10 @@ export const AuthPopover = forwardRef<HTMLDivElement, AuthPopoverProps>(
 
             <motion.div
               ref={ref}
-              initial={{ opacity: 0, scale: 0.9, y: -4 }}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -4 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -4 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: -4 }}
+              transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }}
               className="
                 absolute top-[calc(100%+8px)] right-0 z-[99]
                 w-[220px] bg-[var(--color-foundation-white)] rounded-[12px]

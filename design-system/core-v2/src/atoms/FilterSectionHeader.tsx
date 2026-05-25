@@ -59,8 +59,10 @@ export function FilterSectionHeader({
 
   return (
     <button
+      data-component="FilterSectionHeader"
       onClick={disabled ? undefined : onToggle}
-      className="w-full flex items-center gap-2.5 px-4 py-3 transition-all duration-150"
+      className="w-full flex items-center gap-2.5 px-4 py-3 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-inset"
+      aria-expanded={isOpen}
       style={{
         backgroundColor: isActive ? 'rgba(0,0,0,0.024)' : 'rgba(0,0,0,0.016)',
         opacity: disabled ? 0.55 : 1,

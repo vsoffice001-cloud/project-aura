@@ -1,4 +1,31 @@
 /**
+ * ImpactSection
+ *
+ * WHY · Impact metrics require adaptive rendering — large numbers need one layout, text-heavy outcomes need another.
+ *       A single rigid grid fails at both extremes. Auto-detection removes consumer burden.
+ * WHAT · 3 display variants: `metric-first` (large number + label only) · `text-first` (numbered card + title + description) ·
+ *        `metric-with-description` (large number + label + supporting text). Auto-detects from presence of descriptions.
+ *        Props: `metrics[]` (value/label/description?) · `variant?` override.
+ * WHEN · Case-study ImpactSection displaying 2-4 measurable outcomes/KPIs from consulting engagement.
+ * WHEN NOT · Feature marketing stats → `StatsRow` · qualitative outcomes → `ValuePillarsSection`.
+ * WHERE · Case-study template — section 5 (white bg · after MethodologySection).
+ * HOW ·
+ *   ```tsx
+ *   // Auto-detects metric-with-description when descriptions present
+ *   <ImpactSection metrics={[
+ *     { value: "110 Cr", label: "Total Addressable Market", description: "Sell-side positioning achieved..." },
+ *     { value: "3x", label: "Pipeline Growth" }
+ *   ]} />
+ *   // Force a specific variant
+ *   <ImpactSection metrics={simpleMetrics} variant="metric-first" />
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
+/**
  * ImpactSection Component - Displays metrics with 3 visual variants
  * 
  * VARIANTS:
@@ -46,7 +73,7 @@ export function ImpactSection({ metrics, variant }: ImpactSectionProps) {
   // Hierarchy: Large Metric → Label → Description
   if (displayVariant === 'metric-with-description') {
     return (
-      <section className="bg-white py-12 sm:py-16 md:py-20 transition-all duration-500">
+      <section data-component="ImpactSection" className="bg-white py-12 sm:py-16 md:py-20 transition-all duration-500">
         <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
           {/* Section Header */}
           <div className="mb-12 sm:mb-16 md:mb-20">
@@ -153,7 +180,7 @@ export function ImpactSection({ metrics, variant }: ImpactSectionProps) {
   // Variant 2: Text-based content layout - Horizontal cards (EXISTING)
   if (displayVariant === 'text-first') {
     return (
-      <section className="bg-white py-12 sm:py-16 md:py-20">
+      <section data-component="ImpactSection" className="bg-white py-12 sm:py-16 md:py-20">
         <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
           {/* Section Header */}
           <div className="mb-12 sm:mb-16 md:mb-20">
@@ -212,7 +239,7 @@ export function ImpactSection({ metrics, variant }: ImpactSectionProps) {
 
   // Original metrics layout - Numbers with labels
   return (
-    <section className="bg-white py-12 sm:py-16 md:py-20">
+    <section data-component="ImpactSection" className="bg-white py-12 sm:py-16 md:py-20">
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         {/* Section Header */}
         <div className="mb-12 sm:mb-16 md:mb-20">

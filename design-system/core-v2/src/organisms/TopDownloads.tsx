@@ -27,7 +27,7 @@ interface TopDownloadsProps {
 
 export function TopDownloads({ onReportClick }: TopDownloadsProps) {
   return (
-    <SectionWrapper background="warm" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="TopDownloads" background="warm" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label="Most Popular"
@@ -40,7 +40,7 @@ export function TopDownloads({ onReportClick }: TopDownloadsProps) {
             <button
               key={item.rank}
               onClick={() => onReportClick?.(item.title)}
-              className="w-full flex items-center gap-4 px-4 py-4 transition-all duration-150 cursor-pointer group"
+              className="w-full flex items-center gap-4 px-4 py-4 transition-all duration-150 cursor-pointer group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-inset"
               style={{
                 borderBottomWidth: '1px',
                 borderBottomStyle: 'solid',

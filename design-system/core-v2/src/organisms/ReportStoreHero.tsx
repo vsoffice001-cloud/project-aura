@@ -27,6 +27,7 @@ export function ReportStoreHero({
 }: ReportStoreHeroProps) {
   return (
     <ProductHero
+      data-component="ReportStoreHero"
       label={label}
       title={title}
       subtitle={subtitle}

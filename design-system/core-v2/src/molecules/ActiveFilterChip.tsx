@@ -18,7 +18,6 @@
  *   "Clear all" link   → var(--text-xs) 12.8px
  */
 import { X } from 'lucide-react';
-import { FilterChip } from '../atoms/FilterChip';
 
 interface ActiveFilter {
   label: string;
@@ -31,11 +30,54 @@ interface ActiveFilterChipBarProps {
   onClearAll?: () => void;
 }
 
+/**
+ * DismissChip — local-only inline component for ActiveFilterChipBar.
+ * NOT a standalone DS atom. FilterChip atom = toggle chip (active/inactive).
+ * Dismiss chip = display-only chip with X button. Different anatomy.
+ */
+function DismissChip({ label, category, onRemove }: ActiveFilter) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 px-2.5 py-1"
+      style={{
+        fontSize: 'var(--text-xs)',
+        borderRadius: 'var(--radius-element)',
+        backgroundColor: 'rgba(0,0,0,0.06)',
+        color: 'rgba(0,0,0,0.7)',
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: 'rgba(0,0,0,0.08)',
+      }}
+    >
+      {category && (
+        <span
+          className="uppercase tracking-[0.08em]"
+          style={{ fontSize: 'var(--text-card-micro)', color: 'rgba(0,0,0,0.35)' }}
+        >
+          {category}
+        </span>
+      )}
+      <span style={{ color: 'rgba(0,0,0,0.7)' }}>{label}</span>
+      <button
+        onClick={onRemove}
+        className="transition-colors cursor-pointer active:scale-[0.9] ml-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
+        style={{ color: 'rgba(0,0,0,0.3)' }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.5)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.3)'; }}
+        aria-label={`Remove ${label} filter`}
+      >
+        <X size={11} />
+      </button>
+    </span>
+  );
+}
+
 export function ActiveFilterChipBar({ filters, onClearAll }: ActiveFilterChipBarProps) {
   if (filters.length === 0) return null;
 
   return (
     <div
+      data-component="ActiveFilterChipBar"
       className="flex items-center gap-2 mt-3 pt-3 flex-wrap"
       style={{
         borderTopWidth: '1px',
@@ -53,12 +95,12 @@ export function ActiveFilterChipBar({ filters, onClearAll }: ActiveFilterChipBar
         {filters.length} {filters.length === 1 ? 'FILTER' : 'FILTERS'}
       </span>
       {filters.map((f) => (
-        <FilterChip key={`${f.category || ''}-${f.label}`} label={f.label} category={f.category} onRemove={f.onRemove} />
+        <DismissChip key={`${f.category || ''}-${f.label}`} label={f.label} category={f.category} onRemove={f.onRemove} />
       ))}
       {onClearAll && (
         <button
           onClick={onClearAll}
-          className="flex items-center gap-1 transition-colors ml-auto cursor-pointer active:scale-[0.95]"
+          className="flex items-center gap-1 transition-colors ml-auto cursor-pointer active:scale-[0.95] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
           style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.4)' }}
           onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.8)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.4)'; }}

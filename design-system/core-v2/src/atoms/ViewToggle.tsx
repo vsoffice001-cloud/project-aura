@@ -46,11 +46,11 @@ export function ViewToggle({
   className = '',
 }: ViewToggleProps) {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div data-component="ViewToggle" className={`flex items-center gap-3 ${className}`}>
       <div
         className="inline-flex items-center p-0.5"
         style={{
-          background: 'var(--color-ramp-warm-300, #f5f2f1)',
+          background: 'var(--color-ramp-warm-300)',
           borderRadius: 'var(--radius-element, 5px)',
           border: '1px solid var(--color-ramp-warm-500, rgba(0,0,0,0.08))',
         }}
@@ -58,7 +58,7 @@ export function ViewToggle({
         <Tooltip text="List view">
           <button
             type="button"
-            className={`inline-flex items-center justify-center w-9 h-9 sm:w-7 sm:h-7 transition-all ${
+            className={`inline-flex items-center justify-center w-9 h-9 sm:w-7 sm:h-7 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 ${
               viewMode === 'list'
                 ? 'bg-white text-black shadow-sm'
                 : 'text-black/35 hover:text-black/60'
@@ -74,7 +74,7 @@ export function ViewToggle({
         <Tooltip text="Grid view">
           <button
             type="button"
-            className={`inline-flex items-center justify-center w-9 h-9 sm:w-7 sm:h-7 transition-all ${
+            className={`inline-flex items-center justify-center w-9 h-9 sm:w-7 sm:h-7 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 ${
               viewMode === 'grid'
                 ? 'bg-white text-black shadow-sm'
                 : 'text-black/35 hover:text-black/60'

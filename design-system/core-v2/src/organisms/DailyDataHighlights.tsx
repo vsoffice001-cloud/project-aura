@@ -32,7 +32,7 @@ export function DailyDataHighlights({
   seeAllLabel = 'See all data',
 }: DailyDataHighlightsProps) {
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="wide" className="border-t border-black/6">
+    <SectionWrapper data-component="DailyDataHighlights" background="white" spacing="lg" maxWidth="wide" className="border-t border-black/6">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label={label}

@@ -1,14 +1,37 @@
 /**
- * LoadMoreSentinel — Molecule (DS v4.3)
+ * LoadMoreSentinel
  *
- * WHAT: Invisible trigger element for infinite scroll + loading indicator.
- * WHY:  Pairs with useProgressiveLoad hook to provide a visual "loading more"
- *       indicator at the bottom of progressively-loaded lists.
- * WHEN: Below the last visible card in any infinite-scroll list/grid.
- * HOW:  Renders a ref-target div (observed by IntersectionObserver) plus
- *       an optional loading spinner/skeleton row.
+ * WHY · Progressive-load listing pages need a single element that simultaneously acts
+ *        as the IntersectionObserver target AND displays loading/completion feedback.
+ *        Without this, the observer target and UI indicator are scattered across the
+ *        page and drift out of sync.
+ * WHAT · Renders an invisible sentinel `<div>` (the IO target) + an animated dots
+ *        loading indicator when more items are available. Shows "Showing all N results"
+ *        footer when loading is complete. Props: sentinelRef, hasMore, loading, visibleCount,
+ *        totalCount, className.
+ * WHEN · Placed after the last card row in any progressively-loaded list or grid. Pair
+ *        with the useProgressiveLoad hook which provides the sentinelRef.
+ * WHEN NOT · Don't use when pagination is explicit (numbered pages / prev-next buttons) —
+ *             the sentinel pattern conflicts with paginated URL state.
+ * WHERE · report-store-legacy App.tsx + ReportStorePage.tsx ·
+ *          competition-benchmarking-listing-v02 App.tsx + ReportStorePage.tsx
+ * HOW ·
+ *   ```tsx
+ *   const { sentinelRef, hasMore, loading, visibleCount } = useProgressiveLoad(items);
  *
- * COLOR SYSTEM: Pure monochromatic black/opacity.
+ *   <LoadMoreSentinel
+ *     sentinelRef={sentinelRef}
+ *     hasMore={hasMore}
+ *     loading={loading}
+ *     visibleCount={visibleCount}
+ *     totalCount={items.length}
+ *   />
+ *   ```
+ *
+ * @reusabilityScore 3     // all infinite-scroll listing pages
+ * @a11y_status reviewed-AA  // sentinel has aria-hidden="true"
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
  */
 
 interface LoadMoreSentinelProps {
@@ -37,7 +60,7 @@ export function LoadMoreSentinel({
     // All items loaded — optional footer
     if (visibleCount && totalCount && visibleCount >= totalCount) {
       return (
-        <div className={`text-center py-6 ${className}`}>
+        <div data-component="LoadMoreSentinel" className={`text-center py-6 ${className}`}>
           <p style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.3)' }}>
             Showing all {totalCount.toLocaleString()} results
           </p>
@@ -48,7 +71,7 @@ export function LoadMoreSentinel({
   }
 
   return (
-    <div className={className}>
+    <div data-component="LoadMoreSentinel" className={className}>
       {/* Invisible sentinel — IntersectionObserver target */}
       <div ref={sentinelRef} className="h-px w-full" aria-hidden="true" />
 

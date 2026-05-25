@@ -1,3 +1,27 @@
+/**
+ * EngagementObjectivesSection
+ *
+ * WHY · Case-study engagement objectives need a sticky-sidebar + stacked-cards layout — a flat list fails
+ *       to communicate sequential consulting value. Sticky header reinforces "these are co-equal pillars."
+ * WHAT · 2-column grid: sticky left (eyebrow + h2 + description + divider) · right scroll column of
+ *        objective cards (numbered pill + h3 + description). Props: `objectives[]` with number/title/description.
+ * WHEN · Case-study section displaying 2-5 strategic consulting objectives / engagement value pillars.
+ * WHEN NOT · Impact metrics (use `ImpactSection`) · methodology steps (use `MethodologySection`) ·
+ *            product features (use `ValuePillarsSection`).
+ * WHERE · Case-study template — section 3 (white bg · after ChallengesSection).
+ * HOW ·
+ *   ```tsx
+ *   <EngagementObjectivesSection objectives={[
+ *     { number: "01", title: "Market Sizing", description: "Quantify TAM/SAM..." },
+ *     { number: "02", title: "Competitive Analysis", description: "Map tier-1/2 rivals..." }
+ *   ]} />
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom casestudy-templates/template-v3
+ */
 interface Objective {
   number: string;
   title: string;
@@ -10,7 +34,7 @@ interface EngagementObjectivesSectionProps {
 
 export function EngagementObjectivesSection({ objectives }: EngagementObjectivesSectionProps) {
   return (
-    <section className="bg-white py-12 sm:py-16 md:py-20">
+    <section data-component="EngagementObjectivesSection" className="bg-white py-12 sm:py-16 md:py-20">
       <div className="max-w-[var(--container-content)] mx-auto px-4 sm:px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-10 md:gap-16">
           {/* Left Column - Section Header (Sticky on Desktop) */}

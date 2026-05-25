@@ -27,7 +27,7 @@ export function AnalystPicks({
   subtitle = 'Hand-selected reports from our senior research team',
 }: AnalystPicksProps) {
   return (
-    <SectionWrapper background="warm" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="AnalystPicks" background="warm" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading label={label} title={title} subtitle={subtitle} />
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">

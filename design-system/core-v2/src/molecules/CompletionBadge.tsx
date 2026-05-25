@@ -1,9 +1,26 @@
 /**
- * CompletionBadge — Molecule (Surveys pillar)
+ * CompletionBadge
  *
- * Visual indicator for survey completion/response status.
- * Four states: draft, active, completed, closed.
- * Uses DS color tokens and radius vars.
+ * WHY · Survey cards and detail pages need a compact, glanceable status indicator that
+ *        communicates lifecycle state (draft → active → completed → closed) without
+ *        cluttering the layout with verbose labels.
+ * WHAT · Inline-flex pill with a coloured dot + status label + optional response
+ *        progress fraction (e.g., "Active · 42/100 (42%)"). Props: status
+ *        ("draft"|"active"|"completed"|"closed"), responseCount, targetCount, className.
+ * WHEN · On SurveyCard molecules and survey detail/management pages within the Surveys
+ *        pillar. Anywhere a lifecycle status needs to be shown alongside other metadata.
+ * WHEN NOT · Don't use for report availability states — use Badge atom with the appropriate
+ *             theme instead. Don't use for binary on/off states — a plain Badge suffices.
+ * WHERE · Surveys pillar pages (no current project consumer · DS sample page only)
+ * HOW ·
+ *   ```tsx
+ *   <CompletionBadge status="active" responseCount={42} targetCount={100} />
+ *   ```
+ *
+ * @reusabilityScore 2     // Surveys pillar only · no cross-pillar usage yet
+ * @a11y_status pending-review
+ * @lifecycle beta
+ * @promotedFrom core-v2 native
  */
 
 interface CompletionBadgeProps {
@@ -23,14 +40,14 @@ const STATUS_CONFIG = {
   active: {
     label: 'Active',
     bg: 'rgba(22, 163, 74, 0.08)',
-    text: 'var(--green-700, #15803d)',
-    dot: '#22c55e',
+    text: 'var(--green-700)',
+    dot: 'var(--green-500)',
   },
   completed: {
     label: 'Completed',
     bg: 'rgba(128, 108, 224, 0.08)',
-    text: '#806ce0',
-    dot: '#806ce0',
+    text: 'var(--purple-600)',
+    dot: 'var(--purple-600)',
   },
   closed: {
     label: 'Closed',
@@ -47,6 +64,7 @@ export function CompletionBadge({ status, responseCount, targetCount, className 
 
   return (
     <div
+      data-component="CompletionBadge"
       className={`inline-flex items-center gap-1.5 ${className ?? ''}`}
       style={{
         padding: '3px 8px',

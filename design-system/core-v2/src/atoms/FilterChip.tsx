@@ -1,67 +1,115 @@
 /**
- * FilterChip — Atom (DS v4.3)
+ * FilterChip
  *
- * WHAT: Dismissible pill showing an active filter value with optional category prefix.
- * WHY:  Extracted from inline active-filter pills for reuse across listing pages.
- * WHEN: In the active-filter bar above the card grid.
- * HOW:  Monochromatic black/opacity tint bg with X button to remove.
+ * @what     Toggle pill for multi-select filter UI. Active/inactive states with optional count.
+ *           Pill-shaped, brand-red active state, Check icon when active, 44px touch target on mobile.
+ * @why      Filter UIs need a distinct "selected" visual signal without full button weight.
+ *           Inline toggle (active/inactive) is cleaner than add/remove pairs (fewer clicks).
+ *           Centralized atom prevents per-feature reimplementation of the active-state pattern.
+ * @when     Mobile filter sheets · tag clouds · category quick-select bars · any multi-select
+ *           context where user picks from a visible set of options.
+ * @whenNot  Active-filter "dismiss" chips showing current selections → those need an X button
+ *           and are closer to a Badge with close affordance. Never for single-select radio-style
+ *           controls (use FilterCheckbox). Never for navigation links.
+ * @where    FiltersPanel sidebar (desktop) · MobileFilterSheet (mobile) · ReportStoreHero tag cloud.
+ * @how      `label` is required. `active` controls visual state. `onToggle` fires on click/Enter/Space.
+ *           `count` shows available result count in muted micro-text. `disabled` grays + blocks interaction.
+ *           Focus-visible: 2px brand-red ring.
  *
- * INTERACTION STATES:
- *   Default     → bg rgba(0,0,0,0.06), color rgba(0,0,0,0.7)
- *   Hover (X)   → color rgba(0,0,0,0.5)
- *   Pressed (X) → scale(0.9) (active pseudo-class)
- *   Read-only   → onRemove omitted, no X button rendered
+ * @a11y     role="checkbox" aria-checked={active} — correct ARIA for toggle without native checkbox.
+ *           tabIndex={disabled ? -1 : 0} — keyboard accessible. Enter/Space triggers toggle.
+ *           Focus-visible ring: 2px --color-brand-red.
+ *           Touch target: min-h-[40px] on component + parent responsibility for 44px on mobile.
+ *           Color not sole indicator: Check icon + font-weight change accompany active state.
+ * @motion   transition-all duration-100 on bg/border/color. No transform. Reduced-motion: color swap
+ *           is not motion — no special handling needed.
  *
- * COLOR SYSTEM: All colors via inline style rgba(). No Tailwind color classes.
- * FONT TOKENS: Label → var(--text-xs) 12.8px | Category prefix → var(--text-card-micro) 10px
+ * @canonicalSource report-store-legacy/src/app/components/FilterChip.tsx
+ * @portedBy aura-builder (Batch 3.1a · 2026-05-19)
+ * @status   ready
  */
-import { X } from 'lucide-react';
+'use client';
 
-interface FilterChipProps {
+import { Check } from 'lucide-react';
+import { cn } from '../lib/cn';
+
+export interface FilterChipProps {
+  /** Display label of the filter option */
   label: string;
-  /** Optional uppercase category prefix (e.g. "SUB-INDUSTRY", "REGION", "YEAR") */
-  category?: string;
-  onRemove?: () => void;
+  /** Whether this chip is currently selected/active */
+  active: boolean;
+  /** Callback when chip is toggled (click or keyboard Enter/Space) */
+  onToggle: () => void;
+  /** Optional result count displayed in muted micro-text after label */
+  count?: number | string;
+  /** Disabled state: grays out chip, blocks interaction, removes from tab order */
+  disabled?: boolean;
+  /** Additional className forwarded to root button element */
+  className?: string;
 }
 
-export function FilterChip({ label, category, onRemove }: FilterChipProps) {
+export function FilterChip({
+  label,
+  active,
+  onToggle,
+  count,
+  disabled = false,
+  className,
+}: FilterChipProps) {
   return (
-    <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1"
+    <button
+      data-component="FilterChip"
+      type="button"
+      role="checkbox"
+      aria-checked={active}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
+      onClick={() => {
+        if (!disabled) onToggle();
+      }}
+      onKeyDown={(e) => {
+        if (disabled) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
+      className={cn(
+        'inline-flex items-center gap-1.5 px-3 py-2 transition-all duration-100',
+        'min-h-[40px] whitespace-nowrap select-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2',
+        active && 'shadow-sm',
+        disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer',
+        className,
+      )}
       style={{
         fontSize: 'var(--text-xs)',
         borderRadius: 'var(--radius-element)',
-        backgroundColor: 'rgba(0,0,0,0.06)',
-        color: 'rgba(0,0,0,0.7)',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: 'rgba(0,0,0,0.08)',
+        border: `1px solid ${active ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.08)'}`,
+        background: active ? 'rgba(0,0,0,0.06)' : 'white',
+        color: active ? 'var(--surface-text)' : 'rgba(0,0,0,0.55)',
+        fontWeight: active ? 'var(--font-weight-semibold)' : 'var(--font-weight-normal)',
       }}
     >
-      {category && (
+      {active && (
+        <Check
+          className="h-3 w-3 flex-shrink-0"
+          aria-hidden="true"
+        />
+      )}
+      <span className="truncate">{label}</span>
+      {count != null && (
         <span
-          className="uppercase tracking-[0.08em]"
+          className="tabular-nums flex-shrink-0"
+          aria-label={`${count} results`}
           style={{
-            fontSize: 'var(--text-card-micro)',
-            color: 'rgba(0,0,0,0.35)',
+            fontSize: 'var(--text-2xs)',
+            color: 'rgba(0,0,0,0.25)',
           }}
         >
-          {category}
+          {count}
         </span>
       )}
-      <span style={{ color: 'rgba(0,0,0,0.7)' }}>{label}</span>
-      {onRemove && (
-        <button
-          onClick={onRemove}
-          className="transition-colors cursor-pointer active:scale-[0.9] ml-0.5"
-          style={{ color: 'rgba(0,0,0,0.3)' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.5)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(0,0,0,0.3)'; }}
-          aria-label={`Remove ${label} filter`}
-        >
-          <X size={11} />
-        </button>
-      )}
-    </span>
+    </button>
   );
 }

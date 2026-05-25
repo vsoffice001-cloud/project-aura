@@ -26,7 +26,7 @@ export function NewsletterSignup() {
   };
 
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="NewsletterSignup" background="white" spacing="lg" maxWidth="wide">
       <div
         className="max-w-[600px] mx-auto px-4 sm:px-6 md:px-8 text-center"
       >
@@ -87,7 +87,7 @@ export function NewsletterSignup() {
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 bg-transparent border-none outline-none"
+              className="flex-1 bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1 rounded-sm"
               style={{
                 fontSize: 'var(--text-sm)',
                 color: 'rgba(0,0,0,0.8)',

@@ -56,6 +56,7 @@ export function CategoryListCard({
 
   return (
     <Card
+      data-component="CategoryListCard"
       className={className}
       shadow="sm"
       padding="none"
@@ -97,7 +98,7 @@ export function CategoryListCard({
       {hasMore && (
         <div className="px-4 py-2" style={{ borderTopWidth: '1px', borderTopStyle: 'solid', borderTopColor: 'rgba(0,0,0,0.04)' }}>
           <button
-            className="w-full text-center transition-colors cursor-pointer"
+            className="w-full text-center transition-colors cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-1"
             style={{ fontSize: 'var(--text-xs)', color: 'rgba(0,0,0,0.4)' }}
             onClick={() => onSelect?.('__view_all__')}
           >

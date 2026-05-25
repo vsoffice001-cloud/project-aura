@@ -34,7 +34,7 @@ export function RecentlyViewed({
   historyLabel = 'View history',
 }: RecentlyViewedProps) {
   return (
-    <SectionWrapper background="white" spacing="md" maxWidth="wide">
+    <SectionWrapper data-component="RecentlyViewed" background="white" spacing="md" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label={label}
@@ -46,7 +46,7 @@ export function RecentlyViewed({
           <HorizontalScroll>
             {reports.map((report) => (
               <div key={report.id} className="flex-shrink-0" style={{ width: '240px' }}>
-                <ReportCard {...report} layout="grid" />
+                <ReportCard {...report} variant="grid" />
               </div>
             ))}
           </HorizontalScroll>

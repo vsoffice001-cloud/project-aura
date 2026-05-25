@@ -250,3 +250,133 @@ Surfaced 2026-05-08 from `docs/aura-sprint-2026-05-07-port/B2-DS-patterns-backgr
 Add to this list whenever a new violation pattern is observed. Cull anything that's no longer relevant.
 
 **Owner:** Vishal + Aura · **Cadence:** every sprint exit · **Source of truth:** this file
+
+---
+
+## Phase 3 · 2026-05-19 update · v0.3 regression rules
+
+**Context:** v1-product-page v0.3 audit revealed AI invents flat substitutes when DS organisms missing. New rules locked here.
+
+### Invention-rationalization patterns (NEW)
+
+12. **Never write JSDoc that rationalizes a regression.** Phrases like `NO cards`, `lean PDP-specific fork`, `White bg only`, `tree-style list — NO graphs`, `flat dl substitute` codify the simplification as if intent. These are invention markers. If you wrote one, the canonical organism is missing — STOP, port from CANONICAL-SOURCE-MAP, then consume.
+
+13. **Never invent a substitute when DS organism is missing.** Read `GAPS.md` before any component task. If listed → port first. If not listed → ADD to `GAPS.md` + port. Inventing inline = regression that propagates.
+
+14. **Never re-implement an organism inline in a section file.** Section files are CONSUMERS · they import organisms · they do NOT re-implement card grids, accordion logic, scroll-spy, sticky behavior, D3 graphs, modals, dropdowns, search inputs. If the section file is >150 LOC of layout code, you are re-implementing — STOP, extract to organism.
+
+### Token-rename traps (NEW)
+
+15. **Never use legacy V0.2 size names without verification.** `--text-sm` (V0.2 13px) ≠ `--text-sm` (core-v2 16px). Read TOKEN-GAP-REPORT §4 port refactor rules. Apply per row.
+
+16. **Never use `--radius-md` for 10px.** core-v2 `--radius-md = 15px`. For 10px use `--radius-sm`. V0.2 had this swapped.
+
+17. **Never use `--radius-sm` for 2.5px.** core-v2 `--radius-sm = 10px`. For 2.5px use `--radius-2xs`.
+
+18. **Never use undefined Tailwind classes.** `bg-warm-200` is NOT a class — use `bg-[var(--warm-200)]`. Same for any `bg-<token>-<step>` not in tailwind.config.
+
+### Brand-red overuse (NEW)
+
+19. **Never paint brand-red on neutral UI states.** Active TOC dot · FAQ chevron · scope bullet · accordion expand icon · stat dividers — all NEUTRAL. Brand-red = CTA only. Per Quick_start_guide.md.
+
+19a. **R1.2 exception · brand-red gradient bg ALLOWED on dedicated CTA section organisms only.** Carve-out · added 2026-05-20 via ReportFinalCTASection. Conditions:
+- Organism is EXPLICITLY a final CTA / urgency CTA section (NOT decorative chapter section)
+- `background="red-gradient"` prop is OPT-IN · default is NOT red-gradient
+- Text on bg uses white + WCAG AA (4.5:1) verified
+- Form/buttons inverse-styled · use `<Button variant="ghost" background="dark">` not solid brand-red
+- Documented in component sidecar `.md` w/ exception rationale
+- Approved organism list: `ReportFinalCTASection` · future urgency CTAs require approval
+- Banned everywhere else · chapter section bg · card bg · header chrome · stat row bg etc.
+
+### Type / weight (NEW)
+
+20. **Never ship body text smaller than 16px (`--text-sm`).** `text-[0.9375rem]` (15px) seen in v0.3 = drift. 16px DEFAULT body. For dense card body use `--text-compact` (14px), not 15.
+
+21. **Never write `font-bold` 700 against the V0.2 atom assumption that "core-v2 ships 400+500 only".** core-v2 will ship `--font-weight-bold: 700` per TOKEN-GAP-REPORT §3. Use the token. DM Sans variable axis supports 700.
+
+### Spacing drift (NEW)
+
+22. **Never use `py-24 lg:py-32` for section padding.** That's V0.2 — too tall (96/128px). Cap at `--section-py-xl` (64/96px). Use `<SectionWrapper spacing="xl">` not inline.
+
+22a. **V0.2 `leading-tight` (1.25) port → use `leading-[1.25]` inline · NOT `--leading-snug`.** core-v2 `--leading-snug` is `1.3` (OG canonical · post-Batch 3.0 reconciliation). 0.05 line-height drift acceptable when used inline.
+
+23. **Never hardcode horizontal padding `px-[84.375px]`** (V0.2 anti-pattern). Use `px-4 sm:px-6 md:px-8` standard.
+
+24. **Never skip `--section-header-mb` (40-48px).** Section header block (eyebrow+h2+lede) → content needs this air. V0.2 used 64px (`mb-16`) — REJECTED. core-v2 canon = `mb-10 md:mb-12`.
+
+### Inline style leak (NEW)
+
+25. **Never inline `style={{...}}` for tokens.** `style={{ fontSize: 'var(--text-sm)' }}` reads but bypasses Tailwind class generation. Use `text-sm` Tailwind utility OR component prop. v0.3 SideTOC had 40+ inline `style={}` blocks — DRIFT VECTOR.
+
+### Motion + a11y (NEW)
+
+26. **Never write rAF animation without `useReducedMotion()` guard.** Framer Motion provides `useReducedMotion()` — call it · branch on it · skip rAF when `true`. V0.2 Hero orbs lacked this guard.
+
+27. **Never disable Highcharts a11y.** `accessibility.enabled: false` is V0.2 anti-pattern. Set `true` · add `point.description` per series.
+
+28. **Never make sortable `<th onClick>` non-keyboard-focusable.** Add `role="button"` · `tabIndex={0}` · Enter/Space handler. V0.2 MarketDataTable missing this.
+
+### Button / arrow drift (NEW)
+
+29. **Never use V0.2 buttons or V0_lite gradient buttons.** Both outdated per user direction. Canonical = report-store-legacy Button (4 variants × 5 sizes · token-driven). `xs` size (28px) = small button canon.
+
+30. **Never use bottom-rising FloatingCTA banner.** User explicit reject. Drop from DS · do not port from V0.2.
+
+31. **Never invent arrow components.** Canonical arrow system = report-store-legacy `AnimatedArrow.tsx` + `CTALink.tsx` + `InlineLink.tsx`. Port these · use them. Do not re-implement.
+
+### Composition (NEW)
+
+32. **Never strip card chrome that legacy has.** If canonical source uses bordered card (FAQ V0_lite) or container card (Scope V0.2), DO NOT skip the card. Strip = regression.
+
+33. **Never replace canonical section header (eyebrow + h2 + lede) with custom layout.** Use `<SectionHeader>` molecule (V0.2 canon · 4-prop packaging) or compose `<SectionLabel>` + `<SectionHeading>` + `<BodyText>` in canonical order with `--pair-*` spacing.
+
+34. **Never use `<Card variant="warm">` without verifying core-v2 accepts the string.** core-v2 may have renamed the prop. Read `Card.tsx` types before using.
+
+### Legacy ports specific (NEW)
+
+35. **Never port V0.2 `var(--content-max-width)` without alias.** Token broken in V0.2 source. core-v2 base.css will add alias `--content-max-width: var(--container-page)` per TOKEN-GAP-REPORT.
+
+36. **Never port V0.2 hardcoded hex (`#171717` / `#737373` / `#7f5fe3` etc.) literally.** Refactor to `var(--<token-name>)` during port. Hex shifts are OK · token names are canonical.
+
+37. **Never accept V0.2 `--purple-500 #7f5fe3` hex during port.** Use core-v2 `#9488ec`. Hex shifts visible to user · log in CHANGELOG.
+
+### Documentation discipline (NEW)
+
+38. **Every ported component MUST ship sidecar `.md` matching WWWWH template.** No port is "done" without WHAT / WHY / WHEN / WHEN NOT / WHERE / HOW + token usage + a11y + motion + responsive sections. Skip = regression vector for future AI sessions.
+
+38a. **Write sidecar `.md` BEFORE moving to next component, not at end of batch.** When agents batch-write multiple components and write sidecars at the end, Write tool may block .md writes ("findings as text not report files" pattern). Mitigation: write .tsx + sidecar .md as a pair per component, not all .tsx first then all .md last.
+
+38b. **Before adding NEW component to core-v2 · grep existing.** If `<Name>.tsx` already exists in atoms/molecules/organisms/ — STOP. Verify if it's the same component. Versions of same UI = duplication risk. If older version is canonical w/ established consumers, ENHANCE not duplicate. Discovered Batch 3.3d: ReportCardOrganism duplicated existing molecules/ReportCard (May 15) → deleted duplicate.
+
+39. **Every Stage 3 batch MUST update `GAPS.md` entries to ✅ PORTED `YYYY-MM-DD`.** Living doc · stale entries = blind spots.
+
+40. **Never bypass the 5-step picker in `AI-PICKER-GUIDE.md`.** Even for "small" component decisions. CLASSIFY → GAPS → EXPORT → CANON → ANTI-PATTERNS. Skipping = invention door.
+
+---
+
+## Quick-reference: 10 most common v0.3 violations to avoid
+
+```
+✗ <div className="border rounded-[10px] p-4">         → use <Card>
+✗ <button className="bg-[#b01f24] ...">              → use <Button variant="primary">
+✗ <h2 className="text-[2.441rem] font-light ...">    → use <SectionHeading level={2}>
+✗ <p style={{ fontSize: 'var(--text-sm)' }}>         → use <BodyText> · NO inline style
+✗ /** @what NO cards · stripped flat list */          → STOP · port organism
+✗ JSDoc · "lean PDP-specific fork"                    → STOP · use canonical
+✗ py-24 lg:py-32                                      → use SectionWrapper spacing="xl" (max py-16 md:py-24)
+✗ <Card variant="warm">  (unverified)                 → verify prop · use bg="warm-300"
+✗ text-[0.9375rem] body                              → use --text-sm (1rem)
+✗ brand-red on TOC active dot                         → use --black-900 neutral · brand-red = CTA only
+```
+
+---
+
+## How to use this doc (AI session start)
+
+1. Load CLAUDE.md (auto)
+2. Load ANTI-PATTERNS.md (this file)
+3. Load AI-PICKER-GUIDE.md
+4. Load GAPS.md
+5. Begin task → run 5-step picker → respect all 40 rules
+
+If any rule is unclear → escalate to user · do not improvise.

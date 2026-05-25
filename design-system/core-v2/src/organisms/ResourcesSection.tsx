@@ -1,4 +1,29 @@
 /**
+ * ResourcesSection
+ *
+ * WHY · Related resources / thought leadership need a responsive Masonry grid that works on both
+ *       dark cinematic and editorial light surfaces — a fixed grid breaks at uneven card heights.
+ * WHAT · Masonry grid (react-responsive-masonry · 1/2/3 cols) with dark/light mode bg layers.
+ *        11 `ResourceCard` variants per item. Optional variant switcher for design exploration.
+ *        Props: `mode` ('dark'|'light') · `cardStyle` · `customResources[]` · `sectionLabel` · `title` · `description` · `ctaLabel`.
+ * WHEN · Case-study ResourcesSection (always dark) · blog/resource-hub listing (light).
+ * WHEN NOT · Featured report carousel (use `FeaturedCarousel`) · primary product grid (use `BrowseGrid`).
+ * WHERE · Case-study template — penultimate section (dark cinematic bg per recipe).
+ *         Report-store as secondary resource feed.
+ * HOW ·
+ *   ```tsx
+ *   // Case-study dark mode
+ *   <ResourcesSection mode="dark" cardStyle="bordered" />
+ *   // Light editorial with custom data
+ *   <ResourcesSection mode="light" customResources={myResources} title="Latest Insights" />
+ *   ```
+ *
+ * @reusabilityScore 5
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom V0_lite_report
+ */
+/**
  * ═══════════════════════════════════════════════════════════════════════════
  * RESOURCES SECTION COMPONENT
  * ═══════════════════════════════════════════════════════════════════════════
@@ -217,7 +242,7 @@ function DarkBackground() {
       {/* Base Dark Gradient */}
       <div 
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%)' }}
+        style={{ background: 'var(--composition-gradient-cinematic-base)' }}
       />
       {/* Top Left - Periwinkle Blob */}
       <div 
@@ -402,10 +427,11 @@ export function ResourcesSection({
   const responsiveGutter = useResponsiveGutter();
   
   return (
-    <section 
+    <section
+      data-component="ResourcesSection"
       id={sectionId}
       className="relative overflow-hidden"
-      style={{ 
+      style={{
         paddingTop: 'var(--section-py-standard)', 
         paddingBottom: 'var(--section-py-standard)' 
       }}
@@ -462,6 +488,7 @@ export function ResourcesSection({
             size="md"
             animatedArrow
             onClick={onCtaClick}
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2"
           >
             {ctaLabel}
           </Button>

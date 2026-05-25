@@ -23,7 +23,7 @@ const UPCOMING = [
 
 export function UpcomingReports() {
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="UpcomingReports" background="white" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading
           label="Pipeline"

@@ -27,7 +27,7 @@ export function CompanyTrigger({
   dropdown,
 }: CompanyTriggerProps) {
   return (
-    <div className="relative" onMouseEnter={onMouseEnter}>
+    <div data-component="CompanyTrigger" className="relative" onMouseEnter={onMouseEnter}>
       <button
         type="button"
         className="

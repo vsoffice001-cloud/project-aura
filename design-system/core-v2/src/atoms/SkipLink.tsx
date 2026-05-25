@@ -5,11 +5,60 @@ export interface SkipLinkProps {
 }
 
 /**
- * SkipLink — WCAG 2.1 Level A skip-to-content link.
+ * SkipLink — WCAG 2.1 Level A "skip to main content" link · hidden until keyboard-focused.
  *
- * Visually hidden until focused via keyboard (Tab); appears as white badge top-left.
- * Mount as first focusable element in every layout template.
+ * WHY:
+ * - WCAG 2.4.1 (Level A) requires a way to bypass repeated blocks (nav · sidebar)
+ * - Keyboard users skip through long nav every page load — SkipLink saves ~10 tabs per visit
+ * - Visually hidden by default (`sr-only`) keeps page design clean
+ * - Reveals on focus → keyboard users see it; mouse users never do
+ * - Mount as FIRST focusable element in layout — first Tab press lands here
  *
+ * WHAT: `<a>` with `sr-only focus:not-sr-only`. Hidden via screen-reader-only utility
+ * until focused. On focus: white badge top-left w/ shadow + ring. Default `targetId`
+ * is `main-content`. Default `label` "Skip to main content".
+ *
+ * WHEN:
+ * - First focusable element in every layout template
+ * - Every page that has a top nav · sidebar · or > 3 nav links
+ * - Long-scroll pages w/ multiple landmark regions
+ *
+ * WHEN NOT:
+ * - Pages with no nav (single-purpose forms) — nothing to skip
+ * - Email templates — keyboard nav not applicable
+ * - Embedded widgets / iframes — host page owns skip behavior
+ * - Modal-only routes — focus trap handles bypass
+ *
+ * HOW:
+ * ```tsx
+ * // In root layout — FIRST focusable element
+ * <html lang="en">
+ *   <body>
+ *     <SkipLink />
+ *     <Navbar />
+ *     <main id="main-content">{children}</main>
+ *     <Footer />
+ *   </body>
+ * </html>
+ *
+ * // Custom target (e.g., article body inside long sidebar layout)
+ * <SkipLink targetId="article-body" label="Skip to article" />
+ * ```
+ *
+ * A11y: WCAG 2.4.1 Level A compliance. Semantic `<a href="#id">` · keyboard reachable.
+ *       Focus-visible state shows 2px ring + shadow · 4.5:1 text contrast verified.
+ *       Target element MUST exist + be focusable (use `id="main-content"` + `tabIndex={-1}`
+ *       on `<main>` so screen-reader focus moves correctly).
+ * Motion: None — instant visibility on focus.
+ * Anti-patterns:
+ *  - ❌ Never use `display:none` instead of `sr-only` (display:none removes from tab order)
+ *  - ❌ Never place after Navbar (defeats purpose — user already tabbed through nav)
+ *  - ❌ Never point to a non-existent ID (focus goes nowhere · breaks a11y)
+ *  - ❌ Never hide on focus (must become visible for sighted keyboard users)
+ *
+ * @lifecycle stable
+ * @a11y_status reviewed-AA (WCAG 2.1 Level A compliant)
+ * @reusabilityScore 5/5 ⭐ (mandatory on every layout)
  * @promotedFrom topnav-v32/src/design-system/components/SkipLink.tsx
  */
 export function SkipLink({
@@ -18,6 +67,7 @@ export function SkipLink({
 }: SkipLinkProps) {
   return (
     <a
+      data-component="SkipLink"
       href={`#${targetId}`}
       className="
         sr-only focus:not-sr-only

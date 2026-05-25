@@ -49,7 +49,7 @@ export function IndustrySpotlight({
   reportDescription = 'Complete TAM analysis of AI-optimized chips including GPUs, TPUs, and custom ASICs across cloud and edge deployments.',
 }: IndustrySpotlightProps) {
   return (
-    <SectionWrapper background="white" spacing="lg" maxWidth="wide">
+    <SectionWrapper data-component="IndustrySpotlight" background="white" spacing="lg" maxWidth="wide">
       <div className="max-w-[1000px] mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeading label={label} title={title} subtitle={subtitle} />
 
@@ -82,7 +82,7 @@ export function IndustrySpotlight({
           </div>
 
           <div>
-            <ReportCard {...report} layout="grid" description={reportDescription} />
+            <ReportCard {...report} variant="grid" description={reportDescription} />
           </div>
         </div>
       </div>

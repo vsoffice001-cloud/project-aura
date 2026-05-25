@@ -1,11 +1,29 @@
 /**
- * SurveySkeleton — Molecule (Surveys pillar)
+ * SurveySkeleton
  *
- * Shimmer loading placeholder that mirrors SurveyCard grid and list layouts.
- * Uses .skeleton-shimmer CSS class (same as SkeletonCard).
+ * WHY · Survey listing pages need a content-aware shimmer placeholder that mirrors the
+ *        exact structure of SurveyCard (grid and list variants) during data fetching.
+ *        Using SkeletonCard here would produce wrong structure (image area + no progress bar).
+ * WHAT · Shimmer-animated placeholder matching SurveyCard `grid` (badge row → icon+title →
+ *        description → meta → progress bar → footer) or `list` (accent bar → icon →
+ *        title+meta → progress → status+date → CTA) layout. Props: variant ("grid"|"list",
+ *        default "grid"), className.
+ * WHEN · Render N SurveySkeletons while survey listing data is loading. Match N to the
+ *        grid column count × 1-2 rows for layout continuity.
+ * WHEN NOT · Don't use for report data loading — use SkeletonCard. Don't show after data
+ *             has resolved — replace immediately with SurveyCard instances.
+ * WHERE · Surveys pillar pages (no current project consumer · DS sample page only)
+ * HOW ·
+ *   ```tsx
+ *   {loading && Array.from({ length: 4 }).map((_, i) => (
+ *     <SurveySkeleton key={i} variant="grid" />
+ *   ))}
+ *   ```
  *
- * Grid mirrors: badge row → icon+title → description → meta → progress bar → footer
- * List mirrors: accent bar → icon → title+meta → progress → status → CTA
+ * @reusabilityScore 2     // Surveys pillar only · mirrors SurveyCard usage
+ * @a11y_status reviewed-AA  // purely decorative shimmer · no interactive affordances
+ * @lifecycle beta
+ * @promotedFrom core-v2 native
  */
 
 interface SurveySkeletonProps {
@@ -17,6 +35,7 @@ export function SurveySkeleton({ variant = 'grid', className }: SurveySkeletonPr
   if (variant === 'list') {
     return (
       <div
+        data-component="SurveySkeleton"
         className={`flex bg-white overflow-hidden ${className ?? ''}`}
         style={{
           border: '1px solid rgba(0,0,0,0.06)',
@@ -66,6 +85,7 @@ export function SurveySkeleton({ variant = 'grid', className }: SurveySkeletonPr
   // ─── Grid Layout ─────────────────────────────
   return (
     <div
+      data-component="SurveySkeleton"
       className={`bg-white overflow-hidden flex flex-col ${className ?? ''}`}
       style={{
         border: '1px solid rgba(0,0,0,0.06)',

@@ -59,7 +59,7 @@ export function TextLink({
 
   if (href) {
     return (
-      <a href={href} className={baseCls}>
+      <a data-component="TextLink" href={href} className={baseCls}>
         {icon && <span className="flex-shrink-0">{icon}</span>}
         {children}
       </a>
@@ -67,7 +67,7 @@ export function TextLink({
   }
 
   return (
-    <button type="button" onClick={onClick} className={cn(baseCls, 'bg-transparent border-none cursor-pointer')}>
+    <button data-component="TextLink" type="button" onClick={onClick} className={cn(baseCls, 'bg-transparent border-none cursor-pointer')}>
       {icon && <span className="flex-shrink-0">{icon}</span>}
       {children}
     </button>

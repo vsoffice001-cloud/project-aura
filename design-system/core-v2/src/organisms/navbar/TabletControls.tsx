@@ -35,7 +35,7 @@ export function TabletControls({
   ctaButton,
 }: TabletControlsProps) {
   return (
-    <div className="hidden md:flex lg:hidden items-center gap-3">
+    <div data-component="TabletControls" className="hidden md:flex lg:hidden items-center gap-3">
       <SearchBar />
       {ctaButton && <div className="shrink-0">{ctaButton}</div>}
 

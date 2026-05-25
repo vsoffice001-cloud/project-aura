@@ -1,3 +1,31 @@
+/**
+ * Button
+ *
+ * WHY · Conversion CTAs need brand-locked shimmer + consistent affordance across every surface.
+ *       Inline `<button>` drifts — no shimmer, no ripple, no reduced-motion, no size tokens.
+ * WHAT · 4 variants (primary · brand · secondary · ghost) × 5 sizes (xs/sm/md/lg/xl) ·
+ *        always-on shimmer (700ms sweep) · optional AnimatedArrow · Material ripple ·
+ *        loading/disabled states · icon left/right/iconOnly. Token-driven via `--composition-gradient-brand-*-shimmer`.
+ * WHEN · Primary actions · form submit · hero CTAs · conversion moments. `brand` max 1-2/screen.
+ *        `md` default · `sm` for nav · `xs` card-footer only (Cat 5.2).
+ * WHEN NOT · Inline text links → `InlineLink` · exploratory nav → `CTALink` · decorative red = Cat 2.1.
+ * WHERE · Molecules: `ReportCard` · `SurveyCard` · `AnalystPickCardB` ·
+ *         Organisms: `ResourcesSection` · `NewsletterSignup` · `CardListing`.
+ * HOW ·
+ *   ```tsx
+ *   // Primary CTA with animated arrow
+ *   <Button variant="primary" size="md" animatedArrow>Get the Report</Button>
+ *   // Brand CTA (max 1-2 per screen)
+ *   <Button variant="brand" size="lg">Start Free Trial</Button>
+ *   // Ghost on dark background
+ *   <Button variant="ghost" background="dark" size="sm">Learn More</Button>
+ *   ```
+ *
+ * @reusabilityScore 5
+ * @a11y_status reviewed-AA
+ * @lifecycle stable
+ * @promotedFrom V0_lite_report (was 386-LOC w/ hardcoded hex; ported to token-only)
+ */
 'use client';
 
 import {
@@ -60,16 +88,51 @@ const sizeStyles = (size: ButtonSize, iconOnly: boolean): string => {
     if (iconOnly) return 'w-7 h-7 p-0';
     return 'px-2.5 h-7 min-w-[60px]';
   }
-  const base = `h-[var(--button-height-${size})]`;
-  if (iconOnly) return `w-[var(--button-height-${size})] ${base} p-0`;
-  return `px-[var(--button-px-${size})] ${base} min-w-[var(--button-min-width-${size})]`;
+  /* Explicit per-size classes (NOT template literals) — Tailwind v4 static
+     scanner can only resolve fully-spelled arbitrary utilities. Template
+     `h-[var(--button-height-${size})]` was never emitted → buttons rendered
+     at 24px. Fixed 2026-05-13. */
+  const heightMap: Record<Exclude<ButtonSize, 'xs'>, string> = {
+    sm: 'h-[var(--button-height-sm)]',
+    md: 'h-[var(--button-height-md)]',
+    lg: 'h-[var(--button-height-lg)]',
+    xl: 'h-[var(--button-height-xl)]',
+  };
+  const widthMap: Record<Exclude<ButtonSize, 'xs'>, string> = {
+    sm: 'w-[var(--button-height-sm)]',
+    md: 'w-[var(--button-height-md)]',
+    lg: 'w-[var(--button-height-lg)]',
+    xl: 'w-[var(--button-height-xl)]',
+  };
+  const pxMap: Record<Exclude<ButtonSize, 'xs'>, string> = {
+    sm: 'px-[var(--button-px-sm)]',
+    md: 'px-[var(--button-px-md)]',
+    lg: 'px-[var(--button-px-lg)]',
+    xl: 'px-[var(--button-px-xl)]',
+  };
+  const minWMap: Record<Exclude<ButtonSize, 'xs'>, string> = {
+    sm: 'min-w-[var(--button-min-width-sm)]',
+    md: 'min-w-[var(--button-min-width-md)]',
+    lg: 'min-w-[var(--button-min-width-lg)]',
+    xl: 'min-w-[var(--button-min-width-xl)]',
+  };
+  const s = size as Exclude<ButtonSize, 'xs'>;
+  if (iconOnly) return `${widthMap[s]} ${heightMap[s]} p-0`;
+  return `${pxMap[s]} ${heightMap[s]} ${minWMap[s]}`;
 };
 
 const fontStyle = (size: ButtonSize): { fontSize: string } => {
-  if (size === 'xs') return { fontSize: 'var(--typography-size-xs, 0.8rem)' };
-  if (size === 'sm') return { fontSize: 'var(--button-font-sm)' };
-  if (size === 'xl') return { fontSize: 'var(--button-font-lg)' };
-  return { fontSize: 'var(--button-font-md)' };
+  /* Token map per size · all from base.css button-font-* tokens + --text-xs for xs.
+     Bug fixed 2026-05-19 (Batch 3.1a): xs used --typography-size-xs (non-standard);
+     lg fell through to --button-font-md (same as md). Corrected per canonical source. */
+  const map: Record<ButtonSize, string> = {
+    xs: 'var(--text-xs)',           /* 12.8px · card footer CTAs only (Cat 5.2) */
+    sm: 'var(--button-font-sm)',    /* 0.875rem = 14px */
+    md: 'var(--button-font-md)',    /* 1rem = 16px */
+    lg: 'var(--button-font-lg)',    /* 1.125rem = 18px */
+    xl: 'var(--button-font-lg)',    /* same as lg · no --button-font-xl in base.css */
+  };
+  return { fontSize: map[size] };
 };
 
 /**
@@ -114,12 +177,20 @@ export function Button({
 
   const iconSize = iconSizeMap[size];
 
-  const arrowColor: 'white' | 'black' =
-    variant === 'primary' || variant === 'brand'
-      ? 'white'
-      : background === 'dark'
-        ? 'white'
-        : 'black';
+  /* Arrow color · per RS-legacy Button.tsx getArrowColor() L64-72 · canonical:
+     - primary/brand · always white (high contrast on dark gradient)
+     - secondary light · brand-red ON HOVER · black/70 rest (matches 2-state text color · color: var(--brand-red))
+     - secondary dark · always white
+     - ghost dark · always white · ghost light · always black */
+  const arrowColor: 'white' | 'black' | 'brand' = (() => {
+    if (variant === 'primary' || variant === 'brand') return 'white';
+    if (variant === 'secondary') {
+      if (background === 'dark') return 'white';
+      return isHovering ? 'brand' : 'black';
+    }
+    if (variant === 'ghost') return background === 'dark' ? 'white' : 'black';
+    return 'black';
+  })();
 
   const createRipple = (event: MouseEvent<HTMLButtonElement>) => {
     if (!ripple || disabled || loading) return;
@@ -145,17 +216,22 @@ export function Button({
     if (variant === 'primary' || variant === 'brand') {
       return 'text-[var(--color-foundation-white)] disabled:opacity-50';
     }
-    if (variant === 'secondary') {
-      if (background === 'dark') {
-        return 'bg-white/10 text-[var(--color-foundation-white)] border border-white/30 hover:border-white hover:bg-white/[0.15] active:bg-white/20 disabled:border-white/10 disabled:text-white/40';
-      }
-      return 'bg-[var(--color-foundation-white)] text-[var(--color-foundation-black)] border border-[var(--color-ramp-warm-500)] hover:border-[var(--color-foundation-black)] hover:bg-[var(--color-ramp-coral-50)] active:bg-[var(--color-ramp-coral-100)] disabled:border-[var(--color-ramp-warm-300)] disabled:text-black/40';
-    }
+    /* GHOST · transparent fill · outline only · subtle tint on hover.
+       SECONDARY · two-state per OG R4.1.1 (COMPONENTS.md L18 · "Two-state · neutral rest → brand-red hover").
+         · Light bg · rest = black/12 border · text 70% black · hover transitions to brand-red text+border (inline-style driven by isHovering).
+         · Dark bg · white outline · white tint hover (no brand-red on dark per OG L43). */
     if (variant === 'ghost') {
       if (background === 'dark') {
-        return 'bg-transparent text-[var(--color-foundation-white)] border border-white/20 hover:border-white/40 hover:bg-white/5 active:bg-white/10 disabled:border-white/10 disabled:text-white/40';
+        return 'bg-transparent text-[var(--color-foundation-white)] border-[1.5px] border-white/30 hover:border-white/60 hover:bg-white/[0.05] active:bg-white/10 disabled:border-white/10 disabled:text-white/40';
       }
-      return 'bg-transparent text-[var(--color-foundation-black)] border border-black/20 hover:border-black/40 hover:bg-black/5 active:bg-black/10 disabled:border-black/10 disabled:text-black/40';
+      return 'bg-transparent text-[var(--color-foundation-black)] border-[1.5px] border-black/30 hover:border-black/60 hover:bg-black/[0.03] active:bg-black/10 disabled:border-black/10 disabled:text-black/40';
+    }
+    if (variant === 'secondary') {
+      if (background === 'dark') {
+        return 'bg-white/[0.05] text-[var(--color-foundation-white)] border-[1.5px] border-white/40 hover:border-white hover:bg-white/[0.12] active:bg-white/[0.18] disabled:border-white/20 disabled:text-white/40';
+      }
+      /* Light-mode secondary 2-state · color+border via variantInlineStyle (isHovering→brand-red) */
+      return 'bg-white border-[1.5px] disabled:border-black/20 disabled:text-black/40 transition-colors duration-300';
     }
     return '';
   })();
@@ -178,6 +254,17 @@ export function Button({
           : '0 4px 16px rgba(176,31,36,0.15)',
       };
     }
+    /* Light-mode secondary · 2-state · brand-red hover (R4.1.1) · color + border + soft red shadow */
+    if (variant === 'secondary' && background !== 'dark') {
+      return {
+        ...fs,
+        color: isHovering ? 'var(--brand-red)' : 'rgba(0,0,0,0.70)',
+        borderColor: isHovering ? 'var(--brand-red)' : 'rgba(0,0,0,0.12)',
+        boxShadow: isHovering
+          ? '0 4px 16px rgba(176,31,36,0.12)'
+          : '0 2px 8px rgba(0,0,0,0.04)',
+      };
+    }
     return fs;
   })();
 
@@ -189,9 +276,10 @@ export function Button({
       return 'bg-[image:var(--composition-gradient-brand-dark-shimmer)]';
     }
     if (variant === 'ghost') {
+      /* Ghost shimmer · RS-canonical (Button.tsx L227-237) · subtle · 20% dark / 10% light */
       return background === 'dark'
         ? 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
-        : 'bg-gradient-to-r from-transparent via-black/20 to-transparent';
+        : 'bg-gradient-to-r from-transparent via-black/10 to-transparent';
     }
     return '';
   })();
@@ -220,6 +308,7 @@ export function Button({
 
   return (
     <button
+      data-component="Button"
       ref={buttonRef}
       type={type}
       onClick={handleClick}
@@ -232,6 +321,7 @@ export function Button({
         variantClass,
         fullWidth ? 'w-full' : iconOnly ? '' : 'w-full sm:w-auto',
         disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2',
         className,
       )}
       style={variantInlineStyle}
@@ -251,6 +341,9 @@ export function Button({
         />
       )}
 
+      {/* Secondary shimmer · RS-canonical (Button.tsx L211-223):
+          - Light bg · rest = white 80% glow · hover = brand-red 8% glow (subtle red emphasis on hover)
+          - Dark bg · rest = white 15% glow · hover = white 15% (same · no brand-red on dark per OG) */}
       {variant === 'secondary' && (
         <div
           className={cn(
@@ -260,9 +353,14 @@ export function Button({
           )}
           style={{
             transitionDuration: `${shimmerDuration}ms`,
-            backgroundImage: `linear-gradient(to right, transparent, ${
-              background === 'dark' ? 'rgba(255,255,255,0.15)' : 'var(--color-ramp-coral-50)'
-            }, transparent)`,
+            backgroundImage: (() => {
+              if (background === 'dark') {
+                return 'linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent)';
+              }
+              return isHovering
+                ? 'linear-gradient(to right, transparent, rgba(176,31,36,0.08), transparent)'
+                : 'linear-gradient(to right, transparent, rgba(255,255,255,0.80), transparent)';
+            })(),
           }}
         />
       )}

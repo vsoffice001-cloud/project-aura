@@ -40,6 +40,34 @@
      ANTI-PATTERN: Never apply to body text or labels — display/headline only.
      NOTE: uses --color-brand-red token, not hardcoded hex (Cat 1.1).
   ────────────────────────────────────────────────────────── */
+  /* ── Text size utilities (DS token aliases) ───────────────
+     INTENT: Expose --typography-size-* tokens as Tailwind-compatible
+     utility classes. text-2xs = 12px micro labels, source attribution,
+     figcaptions. NOT defined in Tailwind v4 core — must be explicit here.
+     ANTI-PATTERN: Never use text-2xs for body or UI labels (Cat 9.2).
+  ────────────────────────────────────────────────────────── */
+  .text-2xs {
+    font-size: var(--typography-size-2xs, 0.75rem); /* 12px */
+    line-height: 1.4;
+  }
+
+  /* Micro typography utilities — exposed as Tailwind classes so consumers don't need to
+     hand-write text-[var(--text-compact)] every time. Sprint 1 P0-6 restoration 2026-05-14. */
+  .text-compact {
+    font-size: var(--text-compact, 0.875rem);   /* 14px · dense grids */
+    line-height: 1.45;
+  }
+  .text-nav {
+    font-size: var(--text-nav, 0.875rem);       /* 14px · nav · ALSO --text-compact alias */
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+  .text-card-micro {
+    font-size: var(--text-card-micro, 0.625rem); /* 10px · meta · source attribution · figcaption ONLY */
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+  }
+
   .text-gradient-red {
     background: linear-gradient(135deg, var(--color-brand-red, #b01f24) 0%, #ff4d4d 100%);
     -webkit-background-clip: text;

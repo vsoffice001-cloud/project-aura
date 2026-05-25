@@ -31,6 +31,7 @@ export function CustomResearchCTA({
 }: CustomResearchCTAProps) {
   return (
     <CTABanner
+      data-component="CustomResearchCTA"
       label={label}
       title={title}
       subtitle={subtitle}

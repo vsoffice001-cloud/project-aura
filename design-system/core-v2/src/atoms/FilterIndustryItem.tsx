@@ -51,10 +51,11 @@ export function FilterIndustryItem({
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div>
+    <div data-component="FilterIndustryItem">
       {/* Industry row */}
-      <div
-        className="flex items-center gap-1.5 px-3 py-2 cursor-pointer transition-all duration-100"
+      <button
+        type="button"
+        className="w-full flex items-center gap-1.5 px-3 py-2 cursor-pointer transition-all duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-inset"
         style={{
           borderLeftWidth: '3px',
           borderLeftStyle: 'solid',
@@ -62,19 +63,19 @@ export function FilterIndustryItem({
           backgroundColor: selected ? 'rgba(0,0,0,0.04)' : hovered ? 'rgba(0,0,0,0.02)' : 'rgba(0,0,0,0)',
         }}
         onClick={onClick}
+        aria-pressed={selected}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <button
+        <span
           className="p-0.5 flex-shrink-0"
           style={{ borderRadius: 'var(--radius-inner)' }}
-          tabIndex={-1}
         >
           {selected
             ? <ChevronDown size={12} style={{ color: 'rgba(0,0,0,0.45)' }} />
             : <ChevronRight size={12} style={{ color: 'rgba(0,0,0,0.45)' }} />
           }
-        </button>
+        </span>
         <span
           className="flex-1 text-left truncate transition-colors"
           title={label}
@@ -94,7 +95,7 @@ export function FilterIndustryItem({
         >
           {count.toLocaleString()}
         </span>
-      </div>
+      </button>
 
       {/* Nested sub-industries (rendered when selected) */}
       {selected && children && (

@@ -115,8 +115,8 @@ Need a UI primitive (shadcn)?
 | Component | Use when | Key props | When NOT |
 |---|---|---|---|
 | `Button` | Primary CTAs · form submit · conversion actions | `variant: 'primary'\|'brand'\|'secondary'\|'ghost'` · `size: 'xs'\|'sm'\|'md'\|'lg'\|'xl'` · `animatedArrow?` · `loading?` | Inline links · exploratory nav · decorative red |
-| `CTALink` | Exploratory navigation w/ arrow | `href` · `variant: 'default'\|'brand'` · `showArrow?` | Paragraph cross-refs · primary CTAs |
-| `InlineLink` | Body-copy hyperlinks | `href` | Standalone CTAs · nav |
+| `CTALink` | Standalone "View All" · "Explore" · "See More" · text + animated arrow · **NO underline** · arrow is the affordance | `href?` (optional · falls back to button) · `variant: 'default'\|'brand'` · `onDark?` · `size: 'sm'\|'md'\|'lg'` | Paragraph cross-refs (use InlineLink) · primary CTAs (use Button) |
+| `InlineLink` | Body-copy hyperlinks · inside `<p>...</p>` · **ALWAYS underlined** · discoverable inside text | `href?` · `onDark?` · `onClick?` | Standalone CTAs (use CTALink) · nav links · headings |
 | `TextLink` | Nav/footer/breadcrumb links | `href` OR `onClick` · `size: 'sm'\|'md'` | Body-copy refs · primary CTAs |
 | `FilterChip` | Active/category filter chip | `label` · `onRemove?` | Generic chips (use Badge) |
 
@@ -423,10 +423,110 @@ Always check before shipping:
 
 ---
 
+## Decision tables (Sprint 1 P0-8 · 2026-05-14)
+
+### Badge theme selection
+
+Pick `theme` prop by content semantics · NOT by aesthetic.
+
+| Context | theme | Why |
+|---|---|---|
+| Section eyebrow (above SectionHeading) | `neutral` | warm-100 bg · subtle · doesn't compete w/ headline |
+| Category tag (Logistics · Cold Chain) | `neutral` or `warm` | neutral default · warm if multiple chips need differentiation |
+| Step indicator (Phase Alpha · Phase Beta) | `warm` + bordered | warm-50 bg w/ warm-500 border · process signal |
+| Status: Open / Active / Live | `success` | green tint · semantic |
+| Status: Pending / Waiting | `warning` | amber tint · semantic |
+| Status: Closed / Failed / Error | `error` | semantic-red (NOT brand-red) · WCAG-AA on white |
+| Status: Info / Note | `info` | blue tint · semantic |
+| Premium tier / VIP marker | `purple` | purple-50 bg · accent · sparingly |
+| Region tag (Australia · GCC) | `info` | blue-tinted geographic context |
+| Date / Quarter (Q1 2026) | `muted` | black-50 bg · low-emphasis meta |
+| Brand CTA-tier alert (max 1-2 per screen) | `brand` | red bg · CTA-only color · WCAG passes white text |
+| Coral accent (rare design moment) | `coral` | warm orange · use 1× per page max |
+| Periwinkle accent (rare design moment) | `periwinkle` | purple-blue · use 1× per page max |
+
+❌ NEVER: `theme="brand"` for >2 badges per screen (overloads CTA color) · `theme="error"` w/ brand-red (semantic-red is `#dc2626` not `#b01f24`) · `theme="purple"` for primary nav (purple = data signal not nav).
+
+### Button size selection
+
+Pick `size` by context AND touch-target requirement.
+
+| Context | size | Height | WHY |
+|---|---|---|---|
+| Card footer action (View · More) | `xs` | 28px | Compact context · external touch area available · WCAG 2.5.5 exempt for inline card actions |
+| Navbar CTA · compact density | `sm` | 40px | Nav vertical budget tight · meets WCAG 2.5.5 floor (44px ideal · 40 acceptable for nav) |
+| **DEFAULT** · most CTAs | `md` | 48px | Hero · inline · form submit · standout · meets WCAG comfortable target |
+| Hero standalone · pricing tier CTA | `lg` | 56px | Visual weight · earns the size by importance |
+| Landing hero · editorial display | `xl` | 64px | Maximum impact · use 1-2× per landing · NEVER inside dense layouts |
+
+❌ NEVER: `size="xs"` outside card footer · inline-tabular · table-row action contexts (touch-target violation) · `size="xl"` more than 1-2 per screen (decision fatigue).
+
+### Card density · padding rule
+
+Pick `padding` by content density · NOT by aesthetic preference.
+
+| Content density | padding | Why |
+|---|---|---|
+| 4+ cards per row · grid layouts | `sm` (16px) + `text-base` body | Visual breathing room from grid · don't double-pad |
+| 2-3 cards per row · feature grids | `md` (24px) + `text-lg` body | DEFAULT · most common · earns interior real estate |
+| Single feature card · spotlight | `lg` (32px) + `text-xl` body | Landing · pricing · standout · matches scale of element |
+| Nested in another card / tight cluster | `none` | Avoid double-padding · parent owns padding |
+
+❌ NEVER: `padding="lg"` for grid cards (looks bloated · breaks rhythm) · `padding="sm"` for spotlight cards (looks anemic).
+
+### Section bg alternation (page-level)
+
+Editorial-light variant default alternation pattern:
+
+| Section position | bg | Why |
+|---|---|---|
+| Hero | `bg-warm` (`#f5f2f1`) | Warm welcome · earns special treatment |
+| §1 (after hero) | `bg-white` | Clean break · content-first |
+| §2 | `bg-warm` | Visual rhythm |
+| §3 | `bg-white` | Continue alternation |
+| §4 | `bg-warm` | |
+| §5 | `bg-white` | |
+| ... | alternate strictly | NO exceptions in middle of page |
+| FinalCTA | `bg-black` cinematic | End-of-page reversal · earns cinematic |
+| Footer | `bg-grey-800` (#141016) | Footer always dark · 100% pages |
+
+❌ NEVER: 2 consecutive `bg-warm` or `bg-white` sections (breaks rhythm) · `bg-black` middle-of-page (only FinalCTA earns it) · custom bg colors mid-page.
+
+### When to compose vs when to add new atom
+
+| Need | Action |
+|---|---|
+| Existing atom + minor variant of existing prop | Use atom · pass prop |
+| Existing atom + new visual treatment | Compose atom + atom (e.g. Badge w/ icon prop) |
+| Existing atom + completely new behavior | Build NEW MOLECULE composing atoms · don't bloat atom |
+| 3+ consumer sections repeat same composition | Promote composition to MOLECULE in DS |
+| 5+ consumer pages repeat same section | Promote section to ORGANISM in DS |
+| 2+ pages use same recipe | Promote recipe to TEMPLATE doc (not code) |
+
+❌ NEVER: re-implement existing atom inline (`<button>` raw) · add 5th variant to atom when behavior differs (build new molecule) · skip molecule layer and put everything in organism.
+
+### When `prefers-reduced-motion` MUST be honored
+
+| Element | Action |
+|---|---|
+| Hover · click · focus ring | Always · animation must collapse to instant state change |
+| Entrance scroll-into-view | Always · use `useReducedMotion()` Framer hook · render at end state |
+| Card hover lift | Always · skip lift · keep static shadow |
+| Button shimmer | Always · disable shimmer · solid bg |
+| Modal open / drawer slide | Always · use fade-only (no transform) |
+| Background gradient animation | Always · use static gradient |
+| Auto-rotating carousel | Always · pause auto-rotate · require user input |
+
+❌ NEVER: ignore `prefers-reduced-motion` · assume motion is always desired · animate on first paint w/o user trigger.
+
+---
+
 ## Cross-references
 
 - Brand vocab + craft principles: [DESIGN.md](../../DESIGN.md)
 - Anti-patterns: [ANTI_PATTERNS.md](../../ANTI_PATTERNS.md)
+- **Pre-flight checklist: [CORE.md](./CORE.md)** ← read first
+- **Copy-paste playbook: [QUICK_START.md](./QUICK_START.md)** ← paste into any AI session
 - Adapter pattern memory: `~/.claude/.../memory/feedback_ds_port_workflow.md`
 - A11y patterns memory: `~/.claude/.../memory/feedback_a11y_patterns.md`
 - AURA master rules: `~/.claude/.../memory/feedback_aura_master_rules.md`

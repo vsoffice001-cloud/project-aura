@@ -60,6 +60,7 @@ export function IconBadge({
 
   return (
     <div
+      data-component="IconBadge"
       className={`flex items-center justify-center flex-shrink-0 ${className}`}
       style={{
         width: `${dims.container}px`,

@@ -37,6 +37,7 @@ export function RecommendedForYou({
 
   return (
     <BrowseGrid
+      data-component="RecommendedForYou"
       label={label}
       title={title}
       subtitle={subtitle}

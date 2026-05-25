@@ -1,11 +1,40 @@
-import type { ReactNode } from 'react';
+/**
+ * SectionWrapper
+ *
+ * WHY · Every page section needs consistent vertical rhythm + container + bg alternation.
+ *       Inline `<section className="py-N max-w-N bg-N">` causes drift (Cat 4.2 + 4.3 anti-patterns).
+ * WHAT · `<section>` with spacing (sm/md/lg/xl) · maxWidth (content/wide/full) ·
+ *        background (white/warm/black/periwinkle/coral/mesh) · optional `id` for anchor scroll.
+ *        Bg applied via inline style (not Tailwind arbitrary var) to avoid v4 JIT silently producing transparent.
+ * WHEN · Every top-level section in any page. Apply per recipe alternation sequence (white → warm → white → black).
+ * WHEN NOT · Never double-wrap — one SectionWrapper per organism (Cat 4.5 · double-padding bug).
+ *            Never pass inline `style={{ background }}` — use `background` prop.
+ * WHERE · All case-study organisms · report-store page sections · V0_lite_report HeroSection container.
+ * HOW ·
+ *   ```tsx
+ *   // Standard warm break section
+ *   <SectionWrapper background="warm" spacing="lg" id="challenges">
+ *     <ChallengesSection challenges={data} />
+ *   </SectionWrapper>
+ *   // Cinematic dark hero (mesh activates cinematic gradient via data-variant-section)
+ *   <SectionWrapper background="mesh" spacing="xl">
+ *     <HeroSection />
+ *   </SectionWrapper>
+ *   ```
+ *
+ * @reusabilityScore 5
+ * @a11y_status reviewed-AA
+ * @lifecycle stable
+ * @promotedFrom V0_lite_report
+ */
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
 export type SectionBackground = 'white' | 'warm' | 'black' | 'periwinkle' | 'coral' | 'mesh';
 export type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl';
 export type SectionMaxWidth = 'content' | 'wide' | 'full';
 
-export interface SectionWrapperProps {
+export interface SectionWrapperProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   children: ReactNode;
   background?: SectionBackground;
   spacing?: SectionSpacing;
@@ -72,12 +101,15 @@ export function SectionWrapper({
   borderTop = false,
   className,
   id,
+  ...rest
 }: SectionWrapperProps) {
   return (
     <section
+      data-component="SectionWrapper"
       id={id}
       data-section-bg={background}
       data-variant-section={background === 'mesh' ? 'cinematic' : undefined}
+      {...rest}
       style={bgStyle[background] ? { backgroundColor: bgStyle[background] } : undefined}
       className={cn(
         textClass[background],

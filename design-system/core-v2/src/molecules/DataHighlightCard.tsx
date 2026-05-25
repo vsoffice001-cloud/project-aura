@@ -1,6 +1,32 @@
 /**
- * DataHighlightCard — Molecule
- * DS-compliant card for Daily Data Highlights section.
+ * DataHighlightCard
+ *
+ * WHY · The "Daily Data Highlights" section needs a compact card that leads with a
+ *        large serif numeric value (the data point) rather than a title or image.
+ *        Standard ReportCard is image-first; this molecule inverts the hierarchy.
+ * WHAT · Card with timestamp header → large serif value → title → growth badge →
+ *        source + AnimatedArrow footer. Props: value, title, source, growth, time,
+ *        icon (optional ReactNode), className, onClick.
+ * WHEN · In the DailyDataHighlights section of the report store home. Also usable
+ *        in any section that spotlights a single numeric stat with context.
+ * WHEN NOT · Don't use when displaying a full report — use ReportCard. Don't use
+ *             when the stat has no growth/source context — use StatCard instead.
+ * WHERE · report-store-legacy DailyDataHighlights.tsx
+ * HOW ·
+ *   ```tsx
+ *   <DataHighlightCard
+ *     value="$4.2T"
+ *     title="Global semiconductor market projected by 2030"
+ *     growth="+8.6% CAGR"
+ *     source="Ken Research · 2025"
+ *     time="Updated 2h ago"
+ *   />
+ *   ```
+ *
+ * @reusabilityScore 2     // DailyDataHighlights section only
+ * @a11y_status pending-review
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
  */
 import { TrendingUp, Zap } from "lucide-react";
 import { iconColors } from '../atoms/iconColors';
@@ -25,12 +51,13 @@ export function DataHighlightCard({ value, title, source, growth, time, icon, cl
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div
+      data-component="DataHighlightCard"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
     <Card
       hover
-      className={`cursor-pointer group flex flex-col ${className || ""}`}
+      className={`cursor-pointer group flex flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 ${className || ""}`}
       style={{ padding: '14px' }}
       onClick={onClick}
     >
@@ -46,7 +73,7 @@ export function DataHighlightCard({ value, title, source, growth, time, icon, cl
       </p>
       <div className="flex items-center gap-2 mb-3" style={{ fontSize: "var(--text-xs)" }}>
         <Tooltip text="Growth rate">
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5" style={{ color: "var(--green-700, #15803d)", background: "rgba(22, 163, 74, 0.08)", borderRadius: "var(--radius-element, 5px)", fontSize: "var(--text-xs)" }}>
+          <span className="inline-flex items-center gap-1 px-1.5 py-0.5" style={{ color: "var(--green-700)", background: "rgba(22, 163, 74, 0.08)", borderRadius: "var(--radius-element, 5px)", fontSize: "var(--text-xs)" }}>
             <TrendingUp className="h-3 w-3" />
             {growth}
           </span>

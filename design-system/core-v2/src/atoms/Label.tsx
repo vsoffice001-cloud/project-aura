@@ -62,7 +62,7 @@ export function Label({
   const isRequired = required || variant === 'required';
 
   return (
-    <div className={`mb-2 ${className}`}>
+    <div data-component="Label" className={`mb-2 ${className}`}>
       <label
         htmlFor={htmlFor}
         className={`block mb-1.5 select-none ${variantClass}`}
@@ -72,7 +72,7 @@ export function Label({
         {isRequired && (
           <span
             className="ml-1"
-            style={{ color: 'var(--color-brand-red, #b01f24)' }}
+            style={{ color: 'var(--brand-red)' }}
             aria-label="required"
           >
             *

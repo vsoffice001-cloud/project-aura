@@ -1,6 +1,25 @@
 /**
- * BackToTop — Molecule
- * Floating button after 600px scroll. Mobile: bottom-16 (clears MobileFilterBar).
+ * BackToTop
+ *
+ * WHY · Long listing and report pages require a quick escape back to the top; native browser
+ *        "back to top" UX is absent on most platforms. This molecule provides a persistent,
+ *        scroll-triggered floating button without cluttering the initial viewport.
+ * WHAT · Fixed-position circular button that appears after `threshold` px of scroll (default
+ *        600px). Props: threshold (number), className (string). Animates in/out with
+ *        scale + opacity; hidden from pointer events when invisible.
+ * WHEN · Place once per page on any long-scroll surface: report store listing, case study,
+ *        report PDP. Mobile positioning (bottom-16) clears the MobileFilterBar.
+ * WHEN NOT · Don't use on short pages (<2× viewport height). Don't use more than once per page.
+ * WHERE · report-store-legacy App.tsx · competition-benchmarking-listing-v02 App.tsx
+ * HOW ·
+ *   ```tsx
+ *   <BackToTop threshold={600} />
+ *   ```
+ *
+ * @reusabilityScore 4     // every long-scroll page in the workspace
+ * @a11y_status reviewed-AA  // aria-label + tabIndex managed by visibility state
+ * @lifecycle stable
+ * @promotedFrom core-v2 native
  */
 import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
@@ -21,9 +40,10 @@ export function BackToTop({ threshold = 600, className }: BackToTopProps) {
 
   return (
     <button
+      data-component="BackToTop"
       aria-label="Back to top"
       title="Scroll to top"
-      className={`fixed bottom-16 right-4 lg:bottom-6 lg:right-6 z-50 w-10 h-10 flex items-center justify-center bg-white text-black/70 backdrop-blur-sm cursor-pointer shadow-md border border-black/[0.06] ${className || ""}`}
+      className={`fixed bottom-16 right-4 lg:bottom-6 lg:right-6 z-50 w-11 h-11 flex items-center justify-center bg-white text-black/70 backdrop-blur-sm cursor-pointer shadow-md border border-black/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2 ${className || ""}`}
       style={{
         borderRadius: "var(--radius-full)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.2), 0 1px 4px rgba(0,0,0,0.1)",

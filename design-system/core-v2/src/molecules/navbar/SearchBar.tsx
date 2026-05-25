@@ -18,7 +18,7 @@ export interface SearchBarProps {
  */
 export function SearchBar({ placeholder = 'Search', onSearch, className = '' }: SearchBarProps) {
   return (
-    <div className={`relative h-[35px] w-[120px] ${className}`}>
+    <div data-component="SearchBar" className={`relative h-[35px] w-[120px] ${className}`}>
       <div className="bg-[var(--color-ramp-periwinkle-100)] overflow-clip relative rounded-[99px] shadow-[6.98px_-1.02px_14px_-4px_rgba(128,108,224,0.3)] size-full">
         {/* Purple beam orbit animation */}
         <div

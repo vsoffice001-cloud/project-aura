@@ -80,6 +80,7 @@ export function SubtleVariantSwitcher({
 
   return (
     <div
+      data-component="SubtleVariantSwitcher"
       className={`absolute z-20 ${positionClasses[position]}`}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
@@ -132,6 +133,7 @@ export function SubtleVariantSwitcher({
                 onClick={() => onVariantChange(variant.id)}
                 className={`
                   w-full px-3 py-2.5 text-left text-sm transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-inset
                   ${
                     isActive
                       ? isDark
@@ -148,7 +150,7 @@ export function SubtleVariantSwitcher({
                     className={`w-2 h-2 rounded-full flex-shrink-0`}
                     style={{
                       backgroundColor: isActive
-                        ? 'var(--color-brand-red, #b01f24)'
+                        ? 'var(--color-brand-red)'
                         : isDark
                         ? 'rgba(255,255,255,0.2)'
                         : 'rgba(0,0,0,0.15)',

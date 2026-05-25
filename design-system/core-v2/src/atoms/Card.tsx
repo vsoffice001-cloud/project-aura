@@ -1,3 +1,28 @@
+/**
+ * Card
+ *
+ * WHY · Content blocks need consistent surface/border/shadow/radius. Raw `<div>` = drift on every variant.
+ *       Provides 3 fill variants with token-locked radius and optional interactive semantics.
+ * WHAT · Renders `div|article|section` with variant (white · warm · outlined) · padding (none/sm/md/lg) ·
+ *        shadow (none/sm/md/lg) · hover lift · optional `onClick` (auto adds role=button + keyboard) · `aria-label`.
+ * WHEN · Report cards · stat panels · highlight blocks · feature surfaces · any bordered content container.
+ * WHEN NOT · Page section wrapping → `SectionWrapper` · full molecule card layouts → `ReportCard` / `SurveyCard`.
+ * WHERE · Used as base surface in report-store and case-study templates. Wrapped by `ReportCard` molecules.
+ * HOW ·
+ *   ```tsx
+ *   // Static content card
+ *   <Card variant="white" padding="md" shadow="sm">Content here</Card>
+ *   // Interactive clickable card (auto gets role=button + keyboard)
+ *   <Card variant="outlined" onClick={handleClick} aria-label="View report detail">...</Card>
+ *   // Warm break card with no padding (nested layout)
+ *   <Card variant="warm" padding="none">...</Card>
+ *   ```
+ *
+ * @reusabilityScore 4
+ * @a11y_status reviewed-AA
+ * @lifecycle stable
+ * @promotedFrom V0_lite_report
+ */
 'use client';
 
 import type { CSSProperties, ReactNode, MouseEvent } from 'react';
@@ -24,6 +49,8 @@ export interface CardProps {
   onClick?: (e: MouseEvent) => void;
   /** ARIA label (use when card is clickable / interactive) */
   'aria-label'?: string;
+  /** Pass-through data-* attributes (e.g. data-component from parent organism) */
+  [key: `data-${string}`]: string | undefined;
 }
 
 const variantClass: Record<CardVariant, string> = {
@@ -71,11 +98,14 @@ export function Card({
   style,
   onClick,
   'aria-label': ariaLabel,
+  ...dataProps
 }: CardProps) {
   const isInteractive = typeof onClick === 'function';
 
   return (
     <Component
+      data-component="Card"
+      {...dataProps}
       id={id}
       className={cn(
         'rounded-[var(--radius-card)]',
@@ -83,7 +113,7 @@ export function Card({
         paddingClass[padding],
         shadowClass[shadow],
         hover && 'transition-all duration-300 hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5',
-        isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-accent-purple,#806ce0)]',
+        isInteractive && 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-brand-red)]',
         className,
       )}
       style={style}

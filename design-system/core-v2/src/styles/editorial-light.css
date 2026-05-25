@@ -24,8 +24,8 @@
     /* ── Page surface ──────────────────────────────────────── */
     --surface-bg:               var(--color-foundation-white, #ffffff);
     --surface-text:             var(--color-foundation-black, #000000);
-    --surface-text-muted:       var(--semantic-ink-muted, rgba(0, 0, 0, 0.60));
-    --surface-text-subtle:      var(--semantic-ink-subtle, rgba(0, 0, 0, 0.45));
+    --surface-text-muted:       rgba(0, 0, 0, 0.80); /* was 0.60 — bumped for WCAG AA on warm surfaces (4.5:1 min · fixed 2026-05-13 QA) */
+    --surface-text-subtle:      rgba(0, 0, 0, 0.60); /* was 0.45 — bumped to pass 3:1 on warm bg for large UI text */
 
     /* ── Section bg system (recipe alternation HARD GATE) ──── */
     --section-bg-primary:       var(--semantic-section-bg-primary, #ffffff);
@@ -119,8 +119,10 @@
     --text-nav:                 0.875rem;   /* 14px · nav · ALSO --text-compact alias */
     --text-compact:             0.875rem;   /* 14px · dense grids */
     --text-card-micro:          0.625rem;   /* 10px · meta only */
-    --font-sans:                'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-serif:               'Noto Serif', Georgia, 'Times New Roman', serif;
+    /* --font-sans / --font-serif deliberately NOT redeclared here · base.css :root
+       binding to Next/font CSS vars (--font-dm-sans / --font-noto-serif) is authoritative.
+       Redeclaring as string literal kills the Next/font var resolution → Georgia fallback.
+       Fixed 2026-05-14 P1-A. */
     --font-weight-light:        300;
 
     /* Brand color aliases */
