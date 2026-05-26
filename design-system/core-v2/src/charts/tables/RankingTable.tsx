@@ -50,8 +50,9 @@
  */
 
 import type { ReactNode } from 'react';
-import { TableShell, useTableDensity, type TableDensity } from '../primitives/TableShell';
-import { KEN_CHART_SERIES, KEN_INK } from '../theme/tokens';
+import { TableShell, useTableDensity, type TableDensity, type TableVariant, type TableHeaderStyle } from '../primitives/TableShell';
+import { TruncatedText } from '../primitives/TruncatedText';
+import { KEN_CHART_SERIES } from '../theme/tokens';
 
 // ─── Score bar ────────────────────────────────────────────────────────────────
 
@@ -113,7 +114,7 @@ export interface RankingRow {
   score2: number;
   /** Chip label · e.g. "14mo" */
   chipLabel: string;
-  /** Chip urgency · fast=periwinkle · medium=blue · slow=neutral */
+  /** Chip urgency · fast=dark-neutral · medium=mid-neutral · slow=light-neutral */
   chipUrgency?: 'fast' | 'medium' | 'slow';
   /** Weighted/composite score · right-aligned */
   weightedScore: number;
@@ -134,7 +135,7 @@ export interface RankingTableProps {
   /** Column header labels */
   columns: RankingTableColumns;
   /**
-   * Number of top rows highlighted with a subtle periwinkle bg tint.
+   * Number of top rows highlighted with a subtle neutral bg tint.
    * Typically 3 (top-3 signal). Set 0 to disable.
    * @default 3
    */
@@ -161,14 +162,30 @@ export interface RankingTableProps {
   ariaLabel?: string;
   /** Optional className passthrough */
   className?: string;
+  /**
+   * Card: bordered rounded card (Ref 1). Open: flush editorial (Ref 2).
+   * @default 'card'
+   */
+  variant?: TableVariant;
+  /**
+   * Header background style passthrough to TableShell.
+   * wash: periwinkle wash · transparent: border-bottom only · inverted: neutral dark + white text.
+   * @default 'wash'
+   */
+  headerStyle?: TableHeaderStyle;
+  /**
+   * Max height when stickyHeader=true. Creates v-scroll context inside wrapper.
+   * @default '400px'
+   */
+  maxHeight?: string | number;
 }
 
 // ─── Chip component ───────────────────────────────────────────────────────────
 
 const CHIP_STYLES = {
-  fast:   { bg: `${KEN_CHART_SERIES.primary}1f`,    text: 'var(--semantic-ink-body)' },
-  medium: { bg: `${KEN_CHART_SERIES.tertiary}26`,   text: 'var(--semantic-ink-body)' },
-  slow:   { bg: 'rgba(0,0,0,0.04)',                  text: 'var(--semantic-ink-muted)' },
+  fast:   { bg: 'rgba(0,0,0,0.08)',  text: 'var(--semantic-ink-strong)' },  // strongest neutral · fast urgency
+  medium: { bg: 'rgba(0,0,0,0.05)',  text: 'var(--semantic-ink-body)' },    // mid
+  slow:   { bg: 'rgba(0,0,0,0.03)',  text: 'var(--semantic-ink-muted)' },   // lightest
 } as const;
 
 function Chip({ label, urgency = 'slow' }: { label: string; urgency?: 'fast' | 'medium' | 'slow' }) {
@@ -192,7 +209,7 @@ function RankingRowInner({ row, isTop }: { row: RankingRow; isTop: boolean }) {
       className="group border-b border-[rgba(0,0,0,0.08)] last:border-0 transition-colors"
       style={{
         height: `${rowHeightPx}px`,
-        background: isTop ? `${KEN_CHART_SERIES.primary}0a` : undefined,
+        background: isTop ? 'rgba(0,0,0,0.02)' : undefined,
       }}
     >
       {/* Rank */}
@@ -201,28 +218,30 @@ function RankingRowInner({ row, isTop }: { row: RankingRow; isTop: boolean }) {
           className="inline-flex items-center justify-center w-6 h-6 rounded-full font-body font-semibold"
           style={{
             fontSize: '11px',
-            background: isTop ? `${KEN_CHART_SERIES.primary}2e` : 'rgba(0,0,0,0.04)',
-            color: isTop ? KEN_CHART_SERIES.quaternary : 'var(--semantic-ink-muted)',
+            background: isTop ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+            color: isTop ? 'var(--semantic-ink-strong)' : 'var(--semantic-ink-muted)',
           }}
         >
           {row.rank}
         </span>
       </td>
 
-      {/* Name + detail */}
-      <td className="py-2.5 pr-5 align-middle min-w-[160px]">
-        <p
+      {/* Name + detail · TruncatedText for long opportunity names */}
+      <td className="py-2.5 pr-5 align-middle min-w-[160px] max-w-[240px]">
+        <TruncatedText
           className="font-body font-medium text-[var(--semantic-ink-strong)] leading-snug mb-0.5"
           style={{ fontSize: '13px' }}
+          tooltipMeta={`${row.primaryMetricPrefix ?? ''}${row.primaryMetric.toLocaleString('en-US')}${row.primaryMetricUnit ? ` ${row.primaryMetricUnit}` : ''} · Score: ${row.weightedScore.toFixed(1)}`}
         >
           {row.name}
-        </p>
-        <p
+        </TruncatedText>
+        <TruncatedText
           className="font-body text-[var(--semantic-ink-muted)] leading-snug"
           style={{ fontSize: '11px' }}
+          tooltipMeta={`Rank #${row.rank}`}
         >
           {row.detail}
-        </p>
+        </TruncatedText>
       </td>
 
       {/* Primary metric */}
@@ -258,7 +277,7 @@ function RankingRowInner({ row, isTop }: { row: RankingRow; isTop: boolean }) {
           className="font-body font-medium tabular-nums"
           style={{
             fontSize: '13px',
-            color: isTop ? KEN_CHART_SERIES.quaternary : 'var(--semantic-ink-body)',
+            color: isTop ? 'var(--semantic-ink-strong)' : 'var(--semantic-ink-body)',
             fontVariantNumeric: 'tabular-nums',
           }}
         >
@@ -272,13 +291,14 @@ function RankingRowInner({ row, isTop }: { row: RankingRow; isTop: boolean }) {
 // ─── Header row inner ─────────────────────────────────────────────────────────
 
 function HeaderRow({ columns }: { columns: RankingTableColumns }) {
-  // FIX (Bug 5 · 2026-05-25): header opacity raised from 0.45 → 0.60
-  // (KEN_INK.muted = rgba(0,0,0,0.60)) for WCAG AA contrast at 10px/600 text
-  const headerStyle = { fontSize: '10px', fontWeight: 600, color: KEN_INK.muted };
+  // 2026-05-26 Sprint D.1 · removed inline `color` · let TableShell injected <style>
+  // own header text color (dark on wash/transparent · WHITE on inverted).
+  // Inline color was winning over TableShell scoped style · broke inverted variant.
+  const headerStyle = { fontSize: '10px', fontWeight: 600 };
 
   return (
     <thead>
-      <tr className="border-b border-[rgba(0,0,0,0.12)]">
+      <tr className="border-b border-[rgba(0,0,0,0.08)]">
         <th
           scope="col"
           className="pb-3 pr-4 text-left font-body uppercase tracking-[0.1em]"
@@ -345,13 +365,18 @@ export function RankingTable({
   footnote,
   ariaLabel,
   className,
+  variant = 'card',
+  headerStyle = 'wash',
+  maxHeight,
 }: RankingTableProps) {
   return (
     <div className={['w-full', className ?? ''].join(' ')}>
       <TableShell
+        variant={variant}
         density={density}
         stickyHeader={stickyHeader}
-        headerWash={true}
+        maxHeight={maxHeight}
+        headerStyle={headerStyle}
         ariaLabel={ariaLabel ?? 'Ranked table'}
         caption="Ranked opportunity table"
       >

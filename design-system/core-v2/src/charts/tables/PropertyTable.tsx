@@ -48,7 +48,8 @@
  */
 
 import { Lock } from 'lucide-react';
-import { TableShell, useTableDensity, type TableDensity } from '../primitives/TableShell';
+import { TableShell, useTableDensity, type TableDensity, type TableVariant, type TableHeaderStyle } from '../primitives/TableShell';
+import { TruncatedText } from '../primitives/TruncatedText';
 
 export interface PlayerProperty {
   /** Row label · property name */
@@ -91,6 +92,22 @@ export interface PropertyTableProps {
    * @default false
    */
   stickyHeader?: boolean;
+  /**
+   * Max height when stickyHeader=true. Creates v-scroll context inside wrapper.
+   * @default '400px'
+   */
+  maxHeight?: string | number;
+  /**
+   * Card: bordered rounded card (Ref 1). Open: flush editorial (Ref 2).
+   * @default 'card'
+   */
+  variant?: TableVariant;
+  /**
+   * Header background style passthrough to TableShell.
+   * wash: periwinkle wash · transparent: border-bottom only · inverted: neutral dark + white text.
+   * @default 'wash'
+   */
+  headerStyle?: TableHeaderStyle;
   /** Optional className passthrough on the outer wrapper */
   className?: string;
 }
@@ -230,12 +247,13 @@ function PropertyTableInner({
                     isLast ? '' : 'border-b border-[var(--black-100,rgba(0,0,0,0.08))]',
                   ].join(' ')}
                 >
-                  <p
+                  <TruncatedText
                     className="font-body text-[var(--semantic-ink-body)]"
                     style={{ fontSize: '12.5px', lineHeight: 1.55 }}
+                    tooltipMeta={`${prop.property} · ${player.name}`}
                   >
                     {player.values[rowIdx] ?? '—'}
-                  </p>
+                  </TruncatedText>
                 </td>
               ))}
 
@@ -284,6 +302,9 @@ export function PropertyTable({
   gatedFrom = 3,
   density = 'comfortable',
   stickyHeader = false,
+  maxHeight,
+  variant = 'card',
+  headerStyle = 'wash',
   className,
 }: PropertyTableProps) {
   const hasGated = players.length > gatedFrom;
@@ -291,9 +312,11 @@ export function PropertyTable({
   return (
     <div className={className}>
       <TableShell
+        variant={variant}
         density={density}
         stickyHeader={stickyHeader}
-        headerWash={true}
+        maxHeight={maxHeight}
+        headerStyle={headerStyle}
         ariaLabel="Competitor property comparison matrix"
         caption="Competitor property comparison · shows property rows vs player columns"
       >

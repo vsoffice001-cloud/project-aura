@@ -3,6 +3,12 @@
 /**
  * KenScenarioFanChart · 3-scenario area-spline fan chart · Ken DS chart wrapper.
  *
+ * Mobile strategy (Sprint G.3) · SIMPLIFY at <640px:
+ *   Drop x-axis "FORECAST" plot-line label (overlaps at narrow).
+ *   Reduce x-axis label font size to 10px.
+ *   Keep Bear/Base/Bull lines — they ARE the signal.
+ *   Via Highcharts responsive.rules — ONE place.
+ *
  * WHY  · §16 Future Outlook requires scenario visualization showing divergence
  *        of Bear/Base/Bull outcomes. Areaspline fan chart is the standard
  *        format for scenario-range presentations (McKinsey Scenarios · Oxford
@@ -61,7 +67,8 @@ if (typeof window !== 'undefined' && typeof HighchartsMore === 'function') {
   (HighchartsMore as any)(Highcharts);
 }
 
-import { buildKenChartBase } from '../theme/highcharts-base';
+import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 
@@ -94,7 +101,7 @@ export interface KenScenarioFanChartProps {
   /** Y axis unit label · default "AUD Mn" */
   unit?: string;
   /** Surface context (light=default · dark=cinematic section) */
-  surface?: 'light' | 'dark';
+  surface?: ChartSurface;
   /** Loading state · renders ChartSkeleton instead of chart */
   loading?: boolean;
   /** Empty state · renders EmptyState instead of chart */
@@ -141,7 +148,7 @@ export function KenScenarioFanChart({
   bullData,
   height = 380,
   unit = 'AUD Mn',
-  surface: _surface = 'light',
+  surface = 'light' as ChartSurface,
   loading,
   empty,
   errorMessage,
@@ -150,6 +157,7 @@ export function KenScenarioFanChart({
   disableReveal = false,
 }: KenScenarioFanChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
@@ -157,7 +165,8 @@ export function KenScenarioFanChart({
     // Build arearange data pairs for fan fill between bear and bull
     const fanData = bearData.map((bear, i) => [bear, bullData[i] ?? bear]);
 
-    return deepMerge(base, {
+    const surfOpts = surfaceOverrides(surface);
+    return deepMerge(deepMerge(base, surfOpts), {
       chart: {
         type: 'areaspline',
         height,
@@ -274,6 +283,8 @@ export function KenScenarioFanChart({
           },
           states: {
             hover: { lineWidthPlus: 1 },
+            // Hover dim-others: non-hovered lines dim to 0.3 opacity (Highcharts built-in)
+            inactive: { opacity: 0.3 },
           },
         },
         arearange: {
@@ -292,6 +303,38 @@ export function KenScenarioFanChart({
       // Bug 1+2 fix (2026-05-25): double-legend collision + label collision.
       // Was: legend enabled at verticalAlign:'bottom' → labels touched each other.
       legend: { enabled: false },
+
+      // Mobile strategy: SIMPLIFY · drop forecast plot-line label + reduce font sizes at <640px
+      responsive: {
+        rules: [
+          {
+            condition: { maxWidth: 640 },
+            chartOptions: {
+              xAxis: {
+                // Keep plot lines but hide the "FORECAST" text label at narrow
+                plotLines: labels.length >= 2
+                  ? [
+                      {
+                        color: 'rgba(0,0,0,0.12)',
+                        dashStyle: 'Dot',
+                        width: 1,
+                        value: labels.length - 2 - 0.5,
+                        // No label at narrow — text would overlap bar labels
+                      },
+                    ]
+                  : [],
+                labels: {
+                  rotation: -45,
+                  style: { fontSize: '10px' },
+                },
+              },
+              yAxis: {
+                labels: { style: { fontSize: '10px' } },
+              },
+            },
+          },
+        ],
+      },
 
       series: [
         // Fan fill first (renders behind lines)
@@ -365,12 +408,22 @@ export function KenScenarioFanChart({
         },
       ],
     } as Partial<Highcharts.Options>);
-  }, [labels, bearData, baseData, bullData, height, unit]);
+  }, [labels, bearData, baseData, bullData, height, unit, surface]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks
@@ -381,6 +434,7 @@ export function KenScenarioFanChart({
   return (
     <ChartReveal disabled={disableReveal}>
       <div
+        ref={(el) => { containerRef.current = el; }}
         className={['w-full', className ?? ''].join(' ')}
         role="img"
         aria-label={ariaLabel ?? 'Scenario fan chart · Bear / Base / Bull projections'}

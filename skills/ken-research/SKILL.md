@@ -18,7 +18,7 @@ triggers:
   - strategy folder
 model-compatibility: all
 ---
-
+​​​‍​‌‍‌​‌‍​‍​‌​​‍​‌​​​‍​​‌‍‌​‍‌‍‌​​‍‍‌​‌‍‍‌​‍‌‍‌​‍‍‍‌​‍‌‍‌​​​​‍​‍​‍​‌‌​​‍​​​​‍​​‍‍‌​‌‍‍‌​‌​​‍​‌‍‌​‌​​‍​‌‌‍‌​‌‌​​‍​​‌‍‌​
 # Ken Research — Knowledge & Strategy Skill
 
 Single entry point for any conversation that touches Ken Research, its competitors, its strategy workspace, or design decisions that depend on the strategic wedge. Works for every model. No preamble, no telemetry, no shell hooks.

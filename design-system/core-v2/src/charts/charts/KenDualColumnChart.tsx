@@ -3,6 +3,11 @@
 /**
  * KenDualColumnChart · grouped 2-series column chart · Ken DS chart wrapper.
  *
+ * Mobile strategy (Sprint G.3) · SCROLL:
+ *   2-series side-by-side must stay readable — squeezing loses bar distinctness.
+ *   At <640px: outer wrapper overflow-x:auto · inner chart minWidth=600px.
+ *   User horizontally scrolls instead of getting squashed bars.
+ *
  * WHY  · §13 Demand-Supply Gap needs paired-bar visualization (demand vs supply
  *        per year). Plain KenColumnChart is single-series. This wrapper preserves
  *        full theme consistency · no library quirks.
@@ -35,7 +40,8 @@
 import { useMemo, useRef, useEffect } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
-import { buildKenChartBase } from '../theme/highcharts-base';
+import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES_ARRAY, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
@@ -54,7 +60,7 @@ export interface KenDualColumnChartProps {
   height?: number;
   unit?: string;
   /** Surface context (light=default · dark=cinematic section) */
-  surface?: 'light' | 'dark';
+  surface?: ChartSurface;
   /** Loading state · renders ChartSkeleton instead of chart */
   loading?: boolean;
   /** Empty state · renders EmptyState instead of chart */
@@ -98,7 +104,7 @@ export function KenDualColumnChart({
   series2,
   height = 360,
   unit = '',
-  surface: _surface = 'light',
+  surface = 'light' as ChartSurface,
   loading,
   empty,
   errorMessage,
@@ -107,10 +113,12 @@ export function KenDualColumnChart({
   disableReveal = false,
 }: KenDualColumnChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
-    return deepMerge(base, {
+    const surfOpts = surfaceOverrides(surface);
+    return deepMerge(deepMerge(base, surfOpts), {
       chart: { type: 'column', height },
       xAxis: { categories: [...labels] },
       tooltip: {
@@ -144,6 +152,10 @@ export function KenDualColumnChart({
           groupPadding: 0.12,
           pointPadding: 0.05,
           maxPointWidth: 42,
+          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          states: {
+            inactive: { opacity: 0.3 },
+          },
         },
       },
       // Internal Highcharts legend disabled · ChartFigure owns legend slot exclusively.
@@ -154,12 +166,22 @@ export function KenDualColumnChart({
         { type: 'column', name: series2.name, data: [...series2.data], color: KEN_CHART_SERIES_ARRAY[1] },
       ],
     } as Partial<Highcharts.Options>);
-  }, [labels, series1, series2, height, unit]);
+  }, [labels, series1, series2, height, unit, surface]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks
@@ -169,8 +191,23 @@ export function KenDualColumnChart({
 
   return (
     <ChartReveal disabled={disableReveal}>
-      <div className={['w-full', className ?? ''].join(' ')} role="img" aria-label={ariaLabel ?? 'Dual-series column chart'}>
-        <HighchartsReact ref={chartRef} highcharts={Highcharts} options={options} containerProps={{ style: { width: '100%' } }} />
+      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper maintains 2-series legibility */}
+      <div
+        style={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch' as unknown as undefined,
+          overscrollBehaviorX: 'contain' as unknown as undefined,
+        } as React.CSSProperties}
+      >
+        <div
+          ref={(el) => { containerRef.current = el; }}
+          className={[className ?? ''].join(' ')}
+          role="img"
+          aria-label={ariaLabel ?? 'Dual-series column chart'}
+          style={{ minWidth: 600 }}
+        >
+          <HighchartsReact ref={chartRef} highcharts={Highcharts} options={options} containerProps={{ style: { width: '100%', minWidth: 600 } }} />
+        </div>
       </div>
     </ChartReveal>
   );

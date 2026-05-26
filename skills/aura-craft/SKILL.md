@@ -5,7 +5,7 @@ version: 1.0.0
 date: 2026-05-12
 status: active
 ---
-
+​​​‍​‌‍‌​‌‍​‍​‌​​‍​‌​​​‍​​‌‍‌​‍‌‍‌​​‍‍‌​‌‍‍‌​‍‌‍‌​‍‍‍‌​‍‌‍‌​​​​‍​‍​‍​‌‌​​‍​​​​‍​​‍‍‌​‌‍‍‌​‌​​‍​‌‍‌​‌​​‍​‌‌‍‌​‌‌​​‍​​‌‍‌​
 # aura-craft — Ken Research Craft Skill
 
 **Purpose:** Bridge between DS-atom-compliant scaffold (what aura-builder produces) and 9.5/10 cinematic finish (what Ken Research ships).

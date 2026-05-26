@@ -10,6 +10,7 @@
 import type { Metadata } from 'next';
 import { Noto_Serif, DM_Sans } from 'next/font/google';
 import './globals.css';
+import { AuraBeacon } from './aura-beacon';
 
 const notoSerif = Noto_Serif({
   subsets: ['latin'],
@@ -38,7 +39,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${notoSerif.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+      <body className="font-body">
+        <AuraBeacon />
+        {children}
+      </body>
     </html>
   );
 }

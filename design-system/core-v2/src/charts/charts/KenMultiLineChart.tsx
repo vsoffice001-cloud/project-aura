@@ -3,6 +3,11 @@
 /**
  * KenMultiLineChart · multi-series spline line chart · Ken DS chart wrapper.
  *
+ * Mobile strategy (Sprint G.3) · SCROLL:
+ *   6 series × 12 data points cannot be squeezed — line overlap + legend overflow.
+ *   At <640px: outer wrapper overflow-x:auto · inner chart minWidth=700px.
+ *   User horizontally scrolls instead of getting squashed overlay.
+ *
  * WHY  · Macro indicator panels (Oxford Economics · RBA · McKinsey) overlay 3-5
  *        economic time series on one chart to show correlation visually.
  *        dashDot projection styling signals historical vs forecast boundary
@@ -39,7 +44,8 @@
 import { useMemo, useRef, useEffect } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
-import { buildKenChartBase } from '../theme/highcharts-base';
+import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
@@ -71,7 +77,7 @@ export interface KenMultiLineChartProps {
   /** Index of first projected point · lines become dashDot from here onward */
   projectionStartIndex?: number;
   /** Surface context (light=default · dark=cinematic section) */
-  surface?: 'light' | 'dark';
+  surface?: ChartSurface;
   /** Loading state · renders ChartSkeleton instead of chart */
   loading?: boolean;
   /** Empty state · renders EmptyState instead of chart */
@@ -125,7 +131,7 @@ export function KenMultiLineChart({
   height = 340,
   unit = '%',
   projectionStartIndex,
-  surface: _surface = 'light',
+  surface = 'light' as ChartSurface,
   loading,
   empty,
   errorMessage,
@@ -134,6 +140,7 @@ export function KenMultiLineChart({
   disableReveal = false,
 }: KenMultiLineChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
@@ -199,7 +206,8 @@ export function KenMultiLineChart({
       } as Highcharts.SeriesSplineOptions;
     });
 
-    return deepMerge(base, {
+    const surfOpts = surfaceOverrides(surface);
+    return deepMerge(deepMerge(base, surfOpts), {
       chart: {
         type: 'spline',
         height,
@@ -293,14 +301,32 @@ export function KenMultiLineChart({
         },
       },
 
+      plotOptions: {
+        spline: {
+          // Hover dim-others: non-hovered lines dim to 0.3 opacity (Highcharts built-in)
+          states: {
+            inactive: { opacity: 0.3 },
+          },
+        },
+      },
       series: hcSeries,
     } as Partial<Highcharts.Options>);
-  }, [labels, series, height, unit, projectionStartIndex]);
+  }, [labels, series, height, unit, projectionStartIndex, surface]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks
@@ -310,17 +336,28 @@ export function KenMultiLineChart({
 
   return (
     <ChartReveal disabled={disableReveal}>
+      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper · 6-series needs width to breathe */}
       <div
-        className={['w-full', className ?? ''].join(' ')}
-        role="img"
-        aria-label={ariaLabel ?? 'Multi-series line chart'}
+        style={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch' as unknown as undefined,
+          overscrollBehaviorX: 'contain' as unknown as undefined,
+        } as React.CSSProperties}
       >
-        <HighchartsReact
-          ref={chartRef}
-          highcharts={Highcharts}
-          options={options}
-          containerProps={{ style: { width: '100%' } }}
-        />
+        <div
+          ref={(el) => { containerRef.current = el; }}
+          className={[className ?? ''].join(' ')}
+          role="img"
+          aria-label={ariaLabel ?? 'Multi-series line chart'}
+          style={{ minWidth: 700 }}
+        >
+          <HighchartsReact
+            ref={chartRef}
+            highcharts={Highcharts}
+            options={options}
+            containerProps={{ style: { width: '100%', minWidth: 700 } }}
+          />
+        </div>
       </div>
     </ChartReveal>
   );

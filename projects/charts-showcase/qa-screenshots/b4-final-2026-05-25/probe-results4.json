@@ -1,0 +1,73 @@
+{
+  "bug6_ranking_sticky": {
+    "found": true,
+    "thCount": 7,
+    "stickyThCount": 7,
+    "firstThClass": "pb-3 pr-4 text-left font-body uppercase tracking-[0.1em]",
+    "firstThPosition": "sticky",
+    "scrollParentCount": 1,
+    "scrollParents": [
+      {
+        "tag": "DIV",
+        "class": "tableshell",
+        "overflowY": "auto",
+        "height": "650.453px",
+        "maxHeight": "none"
+      }
+    ]
+  },
+  "bug4_bubble_dark": {
+    "found": true,
+    "cinematicSectionFound": false,
+    "variantSectionCount": 0,
+    "variantSections": [],
+    "surfaceBtnTexts": [
+      "light",
+      "dark"
+    ],
+    "activeSurface": "light",
+    "sectionPaddingTop": "0px",
+    "chartTop": 351
+  },
+  "bug4_bubble_dark_after_click": {
+    "cinematicCount": 1,
+    "cinematics": [
+      {
+        "paddingTop": "40px",
+        "paddingBottom": "40px",
+        "bg": "rgb(10, 10, 12)",
+        "classes": ""
+      }
+    ]
+  },
+  "feature12_token_detail": {
+    "rightPanelFound": false,
+    "fallback": true
+  },
+  "right_panel_dom": [
+    {
+      "tag": "ASIDE",
+      "class": "lg:block",
+      "id": "",
+      "left": 1149,
+      "width": 291,
+      "innerHTML_snippet": "<div style=\"\"><div style=\"padding: 14px 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); background: rgba(148, 136, 236, 0.05);\"><p class=\"font-body uppercase tracking-[0.1em] text-[var(--semantic-"
+    }
+  ],
+  "feature1_sidebar_active": {
+    "found": true,
+    "totalLinks": 17,
+    "activeCount": 0,
+    "activeTexts": [],
+    "bubbleLinkFound": true,
+    "bubbleLinkAriaCurrent": "location",
+    "bubbleLinkClass": "block font-body"
+  },
+  "feature6_motion_btn": "FOUND - title='Motion: system' aria='Toggle reduced motion'",
+  "feature8_overlay_probe": {
+    "overlayCount": 0,
+    "ariaLabelCount": 0,
+    "focusOrderCount": 0,
+    "overlayClasses": []
+  }
+}

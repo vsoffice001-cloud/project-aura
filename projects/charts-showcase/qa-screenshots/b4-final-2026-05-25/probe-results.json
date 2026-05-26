@@ -1,0 +1,258 @@
+{
+  "body_bg": "rgb(245, 242, 241)",
+  "topbar_position": {
+    "position": "sticky",
+    "top": "0px",
+    "zIndex": "50",
+    "tag": "HEADER",
+    "classes": ""
+  },
+  "sidebar_position": {
+    "position": "sticky",
+    "top": "56px",
+    "tag": "ASIDE",
+    "classes": "md:block",
+    "hasActiveHighlight": true
+  },
+  "section_bgs": [
+    {
+      "index": 0,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "index": 1,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "index": 2,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "index": 3,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "index": 4,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "index": 5,
+      "bg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    }
+  ],
+  "nested_tables": {
+    "count": 0,
+    "found": false
+  },
+  "highcharts_legend": {
+    "total": 0,
+    "visible": 0,
+    "samples": []
+  },
+  "donut_centering": {
+    "found": true,
+    "donutLeft": 819.140625,
+    "donutRight": 1109.078125,
+    "donutWidth": 289.9375,
+    "parentLeft": 819.140625,
+    "parentRight": 1109.078125,
+    "parentWidth": 289.9375,
+    "centered": true
+  },
+  "button_check": {
+    "totalButtons": 88,
+    "inlineStyled": 88,
+    "inlineStyleSamples": [
+      {
+        "text": "",
+        "style": "background: none; border-width: medium; border-style: none; border-color: curren"
+      },
+      {
+        "text": "1440",
+        "style": "background: rgba(148, 136, 236, 0.15); border: 1px solid rgba(91, 79, 207, 0.3);"
+      },
+      {
+        "text": "1024",
+        "style": "background: none; border: 1px solid transparent; border-radius: 5px; cursor: poi"
+      }
+    ],
+    "dsButtonCount": 0
+  },
+  "sticky_table": {
+    "totalThs": 24,
+    "stickyThs": 7,
+    "sample": [
+      {
+        "position": "sticky",
+        "top": "0px",
+        "borderBottom": "0px solid rgba(0, 0, 0, 0.6)"
+      },
+      {
+        "position": "sticky",
+        "top": "0px",
+        "borderBottom": "0px solid rgba(0, 0, 0, 0.6)"
+      }
+    ]
+  },
+  "mobile_sidebar": {
+    "found": true,
+    "display": "none",
+    "position": "sticky",
+    "transform": "none",
+    "width": "auto",
+    "left": "auto"
+  },
+  "sidebar_links": [
+    {
+      "text": "ChartFigure",
+      "href": "#primitive-chartfigure",
+      "dataId": null
+    },
+    {
+      "text": "ChartReveal",
+      "href": "#primitive-chartreveal",
+      "dataId": null
+    },
+    {
+      "text": "TableShell",
+      "href": "#primitive-tableshell",
+      "dataId": null
+    },
+    {
+      "text": "KenColumnChart",
+      "href": "#chart-column",
+      "dataId": null
+    },
+    {
+      "text": "KenBarChart",
+      "href": "#chart-bar",
+      "dataId": null
+    },
+    {
+      "text": "KenDualColumnChart",
+      "href": "#chart-dual-column",
+      "dataId": null
+    },
+    {
+      "text": "KenBubbleChart",
+      "href": "#chart-bubble",
+      "dataId": null
+    },
+    {
+      "text": "KenDonutChart",
+      "href": "#chart-donut",
+      "dataId": null
+    },
+    {
+      "text": "KenMultiLineChart",
+      "href": "#chart-multiline",
+      "dataId": null
+    },
+    {
+      "text": "KenScenarioFanChart",
+      "href": "#chart-scenario",
+      "dataId": null
+    },
+    {
+      "text": "PropertyTable",
+      "href": "#table-property",
+      "dataId": null
+    },
+    {
+      "text": "RankingTable",
+      "href": "#table-ranking",
+      "dataId": null
+    },
+    {
+      "text": "ChartSkeleton",
+      "href": "#state-chartskeleton",
+      "dataId": null
+    },
+    {
+      "text": "TableSkeleton",
+      "href": "#state-tableskeleton",
+      "dataId": null
+    },
+    {
+      "text": "ChartEmptyState",
+      "href": "#state-emptystate",
+      "dataId": null
+    },
+    {
+      "text": "ErrorState",
+      "href": "#state-errorstate",
+      "dataId": null
+    },
+    {
+      "text": "AsyncFetchDemo",
+      "href": "#state-async-fetch",
+      "dataId": null
+    }
+  ],
+  "a11y_toggle_found": true,
+  "reduced_motion_toggle": false,
+  "search_found": true,
+  "code_snippet_found": true,
+  "props_table_found": true,
+  "token_panel_found": true,
+  "async_demo_found": true,
+  "variant_toggles": {
+    "count": 0,
+    "texts": []
+  },
+  "bubble_spacing": {
+    "found": true,
+    "paddingTop": "24px"
+  },
+  "unit_positions": [],
+  "property_table_demo": true,
+  "sidebar_chart_count": 0,
+  "headings": [
+    {
+      "tag": "H1",
+      "text": "Chart Library Showcase"
+    },
+    {
+      "tag": "H2",
+      "text": "Primitives"
+    },
+    {
+      "tag": "H2",
+      "text": "Charts"
+    },
+    {
+      "tag": "H2",
+      "text": "Tables"
+    },
+    {
+      "tag": "H2",
+      "text": "States"
+    }
+  ],
+  "v04_console_errors": [],
+  "v04_error_count": 0,
+  "console_errors": [
+    "Error: <rect> attribute height: A negative value is not valid. (\"-1\")",
+    "Error: <rect> attribute height: A negative value is not valid. (\"-1\")",
+    "Error: <rect> attribute height: A negative value is not valid. (\"-1\")",
+    "Error: <rect> attribute height: A negative value is not valid. (\"-1\")",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Gated \u00b7 re",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Score 6.2 ",
+    "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted \u2014 the behavior is unsupported and could change in a future version. a11y-labeled-Score 7.4 "
+  ],
+  "console_error_count": 13,
+  "console_all_count": 21,
+  "console_warnings": []
+}

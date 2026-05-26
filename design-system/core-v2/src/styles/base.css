@@ -22,6 +22,9 @@
 /* Canonical token source — W3C DTCG, built by Style Dictionary v4 */
 @import "@kenresearch/tokens/build/tokens.css";
 
+/* Build attribution · auto-generated · do not edit */
+@import "./build-attribution.css";
+
 /* ── Reset ─────────────────────────────────────────────────── */
 @layer reset {
   *,
@@ -740,4 +743,84 @@
 
   /* Border-soft · base layer fallback */
   --border-soft: rgba(0, 0, 0, 0.08);
+
+  /* ============================================================
+     TABLE TOKENS · Sprint E 2026-05-26 · DS gap closeout
+     Mirror of KEN_TABLE + KEN_TABLE_DENSITY TS constants (tokens.ts).
+     CSS vars are for DOM consumers. TS constants are for Highcharts
+     (pre-CSS resolution). Update BOTH if values change.
+     ============================================================ */
+  --table-card-border:            rgb(208, 203, 232);
+  --table-header-wash:            rgb(248, 247, 254);
+  --table-header-inverted:        rgba(0, 0, 0, 0.85); /* neutral dark · color-discipline 2026-05-22 */
+  --table-row-divider:            rgba(0, 0, 0, 0.08);
+  --table-row-divider-strong:     rgba(0, 0, 0, 0.12);
+  --table-alt-row-wash:           rgb(252, 251, 255);
+  --table-open-last-row-border:   rgb(228, 226, 240);
+  --table-density-compact:        28px;
+  --table-density-standard:       40px;
+  --table-density-comfortable:    45px;
+  --table-density-spacious:       56px;
+
+  /* ============================================================
+     SEMANTIC INK ON DARK · Sprint E 2026-05-26
+     Use on cinematic-dark surfaces (hero · FinalCTABanner · Slideshow).
+     DO NOT use --semantic-ink-* (those are light-surface tokens).
+     ============================================================ */
+  --semantic-ink-on-dark-strong:  rgba(255, 255, 255, 0.92);
+  --semantic-ink-on-dark-body:    rgba(255, 255, 255, 0.75);
+  --semantic-ink-on-dark-muted:   rgba(255, 255, 255, 0.62);
+  --semantic-ink-on-dark-faint:   rgba(255, 255, 255, 0.30);
+
+  /* ============================================================
+     BORDER ON DARK (additions) · Sprint E 2026-05-26
+     --border-on-dark-hairline · card · section already existed (L600-604).
+     Adding default + strong to complete the set.
+     ============================================================ */
+  --border-on-dark-default:       rgba(255, 255, 255, 0.10);
+  --border-on-dark-strong:        rgba(255, 255, 255, 0.20);
+
+  /* ============================================================
+     CINEMATIC SURFACE TOKENS · Sprint E 2026-05-26
+     Near-black gradient stops for FinalCTABanner + Slideshow + hero.
+     var(--color-foundation-black) = #000 which is too flat.
+     ============================================================ */
+  --color-surface-cinematic-start:   #0a0a0c;
+  --color-surface-cinematic-mid:     #12101a;
+  --color-surface-cinematic-end:     #1a0d0f;
+  --color-surface-cinematic-accent:  rgba(176, 31, 36, 0.18);
+}
+
+/* ============================================================
+   FORCED-COLORS (Windows High Contrast Mode) — Sprint G.2 2026-05-26
+   Forced-colors mode strips CSS background/color values and replaces
+   with OS system colors. We preserve structural visibility via borders.
+   System color keywords: Canvas (bg) · CanvasText (fg) · Highlight (focus).
+   ============================================================ */
+@media (forced-colors: active) {
+  /* Table: restore row divider borders (stripped bg means rows merge visually) */
+  [data-component="TableShell"] {
+    border: 1px solid CanvasText;
+  }
+  [data-component="TableShell"] tbody tr {
+    border-bottom: 1px solid CanvasText;
+  }
+
+  /* Heatmap cells: border makes cells visible when bg is stripped */
+  [data-component="ken-heatmap-cell"] {
+    border: 1px solid CanvasText;
+  }
+
+  /* Tooltip: ensure readable on any forced bg */
+  [role="tooltip"] {
+    border: 1px solid CanvasText !important;
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+
+  /* Focus indicators: use system Highlight color */
+  *:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }

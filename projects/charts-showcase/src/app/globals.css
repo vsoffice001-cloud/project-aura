@@ -1,5 +1,5 @@
 /**
- * charts-showcase · Global styles
+ * charts-showcase · Global styles · Sprint B.2
  *
  * WHY  · Imports DS base tokens + utilities so all chart components resolve
  *        CSS custom properties at runtime (Highcharts reads computed styles).
@@ -14,10 +14,101 @@
 @import '@kenresearch/design-system/styles/editorial-light.css';
 @import '@kenresearch/design-system/styles/cinematic-dark.css';
 
-/* Scan DS source for Tailwind class names — prevents purge of DS utility classes */
-@source "../../../design-system/core-v2/src/**/*.{tsx,ts}";
+/* Scan DS source for Tailwind class names — prevents purge of DS utility classes.
+ * 4 dir levels up from src/app/globals.css → reaches Anti-folder01/design-system/core-v2/src
+ * CRITICAL FIX 2026-05-26: was 3 levels (`../../../`) · resolved to non-existent path
+ * → Tailwind didn't scan DS source · DS atom classes (w-6 · text-[var(--*)] · border-[rgba(...)])
+ * failed compile · fell back to browser defaults · cascade of UI breaks
+ * (pure black borders · invisible rank circles · black button text on dark bg).
+ * One-char fix · resolves 4+ visible bugs simultaneously.
+ */
+@source "../../../../design-system/core-v2/src/**/*.{tsx,ts}";
 
 @theme {
   --font-display: 'Noto Serif', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ─── Bug 7 fix: body BG editorial warm ─────────────────────────────────────── */
+html, body {
+  background: var(--semantic-bg-page, #f5f2f1);
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* ─── Custom scrollbar (subtle) ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+
+/* ─── Showcase 3-pane grid layout ───────────────────────────────────────────── */
+/* Mobile first: single column (sidebar hidden, right panel hidden) */
+.showcase-grid {
+  grid-template-columns: 1fr;
+  grid-template-rows: 56px 1fr;
+}
+.showcase-grid > aside { display: none; }
+
+.showcase-main {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/* ≥768px (md): show sidebar */
+@media (min-width: 768px) {
+  .showcase-grid {
+    grid-template-columns: 240px 1fr;
+  }
+  .showcase-main {
+    grid-column: 2;
+  }
+  .showcase-grid > aside#showcase-sidebar-desktop {
+    display: block;
+  }
+}
+
+/* ≥1024px (lg): show right panel */
+@media (min-width: 1024px) {
+  .showcase-grid {
+    grid-template-columns: 240px 1fr 320px;
+  }
+  .showcase-grid > aside[aria-label="Component inspector"] {
+    display: block;
+  }
+}
+
+/* Top bar always spans all columns */
+.showcase-grid > header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+/* ─── details/summary toggle arrow ─────────────────────────────────────────── */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary span[aria-hidden]:last-child {
+  display: inline-block;
+  transition: transform 0.2s ease-out;
+}
+details[open] > summary span[aria-hidden]:last-child { transform: rotate(180deg); }
+
+/* ─── Sprint G.3 · Touch scroll enhancements ───────────────────────────────── */
+/* TableShell horizontal scroll containers */
+[data-component="TableShell"],
+.tableshell {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* Chart scroll wrappers · heatmap · gantt · dual-column · multi-line */
+[data-component="KenHeatmap"],
+[data-component="KenGanttTimeline"] {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent iOS bounce on main chart containers */
+.showcase-main {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }

@@ -3,6 +3,12 @@
 /**
  * KenBubbleChart · scatter w/ sized bubbles · Highcharts bubble type.
  *
+ * Mobile strategy (Sprint G.3) · SIMPLIFY at <640px:
+ *   Only top-3 bubbles by Z-value show dataLabels — prevents label collision.
+ *   Bubble minSize reduced 8% → 4% at narrow.
+ *   Tooltip becomes primary disclosure (already wired via Highcharts built-in).
+ *   Via Highcharts responsive.rules — ONE place.
+ *
  * WHY  · `@ken-research/charts` v0.1.5 has NO bubble chart (KEN-CHARTS-PLAN.md
  *        gap). Builds via Highcharts bubble series directly. Refs canonical
  *        pattern (rainbow-pothos ADR×Occupancy positioning chart · McKinsey
@@ -61,6 +67,8 @@ if (typeof window !== 'undefined' && typeof HighchartsMore === 'function') {
 }
 
 import { buildKenChartBase } from '../theme/highcharts-base';
+export type { ChartSurface } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
@@ -78,9 +86,6 @@ export interface BubblePoint {
   /** Optional override color · default uses palette */
   color?: string;
 }
-
-/** Chart surface context — affects axis label colors + tooltip text on dark backgrounds */
-export type ChartSurface = 'light' | 'dark';
 
 export interface KenBubbleChartProps {
   data: readonly BubblePoint[];
@@ -154,10 +159,18 @@ export function KenBubbleChart({
   disableReveal = false,
 }: KenBubbleChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   // Dark surface: axis labels invert · tooltip text also inverts (bg stays white — ref canonical)
   const isDark = surface === 'dark';
   const axisLabelColor = isDark ? 'rgba(255,255,255,0.6)' : KEN_INK.muted;
+
+  // Mobile simplify: top-3 by z-value get labels · others suppressed at <640px
+  // Computed once per data change — stable across re-renders
+  const top3ZIds = useMemo(() => {
+    const sorted = [...data].sort((a, b) => b.z - a.z);
+    return new Set(sorted.slice(0, 3).map((d) => d.name));
+  }, [data]);
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
@@ -271,9 +284,12 @@ export function KenBubbleChart({
           },
           states: {
             hover: {
-              halo: { size: 6, opacity: 0.25 },
-              brightness: -0.1,
+              halo: { size: 8, opacity: 0.3 },
+              brightness: 0.05,
             },
+            // Hover dim-others: non-hovered bubbles dim to 0.25 opacity
+            // Highcharts auto-handles inactive state when any bubble is hovered
+            inactive: { opacity: 0.25 },
           },
         },
       },
@@ -281,18 +297,79 @@ export function KenBubbleChart({
         {
           type: 'bubble',
           name: 'Items',
-          data: data.map((d) => ({ name: d.name, x: d.x, y: d.y, z: d.z, color: d.color })),
+          // Per-point dataLabels: mobile simplify — only top-3 by z get labels at narrow
+          // At wide viewport: all show labels (if showLabels=true) — plotOptions.bubble.dataLabels applies
+          // At narrow (<640px): responsive rules disable plotOptions labels; top-3 points re-enable via point-level override
+          data: data.map((d) => ({
+            name: d.name,
+            x: d.x,
+            y: d.y,
+            z: d.z,
+            color: d.color,
+            // Point-level dataLabels enabled only for top-3 at mobile (responsive rule sets plotOptions to disabled)
+            dataLabels: {
+              enabled: showLabels && top3ZIds.has(d.name),
+              format: '{point.name}',
+              align: 'center' as const,
+              verticalAlign: 'top' as const,
+              inside: false,
+              y: -8,
+              allowOverlap: true,
+              crop: false,
+              overflow: 'allow' as const,
+              style: {
+                color: KEN_INK.strong,
+                fontFamily: KEN_CHART_FONT.sans,
+                fontSize: '11px',
+                fontWeight: '500',
+              },
+            },
+          })),
           showInLegend: false,
         },
       ],
+      // Mobile strategy: SIMPLIFY · reduce bubble sizes + suppress non-top-3 labels at <640px
+      responsive: {
+        rules: [
+          {
+            condition: { maxWidth: 640 },
+            chartOptions: {
+              plotOptions: {
+                bubble: {
+                  minSize: '4%',
+                  maxSize: '16%',
+                  // Disable global dataLabels — point-level top3ZIds override re-enables for top-3
+                  dataLabels: { enabled: false },
+                },
+              },
+              xAxis: {
+                labels: { style: { fontSize: '10px' } },
+              },
+              yAxis: {
+                labels: { style: { fontSize: '10px' } },
+              },
+            },
+          },
+        ],
+      },
     } as Partial<Highcharts.Options>);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, height, xAxisTitle, yAxisTitle, xCategories, showLabels, bubbleOpacity, isDark, axisLabelColor]);
+  }, [data, height, xAxisTitle, yAxisTitle, xCategories, showLabels, bubbleOpacity, isDark, axisLabelColor, top3ZIds]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks
@@ -303,6 +380,7 @@ export function KenBubbleChart({
   return (
     <ChartReveal disabled={disableReveal}>
       <div
+        ref={(el) => { containerRef.current = el; }}
         className={['w-full', className ?? ''].join(' ')}
         role="img"
         aria-label={ariaLabel ?? 'Bubble chart · 3-dimensional positioning'}

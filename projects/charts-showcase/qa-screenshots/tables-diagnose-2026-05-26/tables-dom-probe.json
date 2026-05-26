@@ -1,0 +1,244 @@
+{
+  "tables": [
+    {
+      "sectionId": "table-property",
+      "h3": "PropertyTable",
+      "hasThead": true,
+      "hasTable": true,
+      "tableBbox": {
+        "x": 306,
+        "y": -2604,
+        "w": 748,
+        "h": 418
+      },
+      "wrapperClass": "tableshell",
+      "wrapperTag": "DIV",
+      "wrapperBorder": "1px solid rgb(208, 203, 232)",
+      "wrapperBorderRadius": "10px",
+      "wrapperOverflowX": "auto",
+      "wrapperBoxShadow": "none",
+      "wrapperBackground": "rgba(0, 0, 0, 0)",
+      "wrapperPadding": "0px",
+      "firstThBg": "rgba(0, 0, 0, 0)",
+      "firstThColor": "rgb(0, 0, 0)",
+      "firstThPosition": "static",
+      "firstThBorderBottom": "0px solid rgb(0, 0, 0)",
+      "firstThPadding": "0px",
+      "firstThFontSize": "16px",
+      "firstThHeight": 34,
+      "thBorderRadius": "0px",
+      "rowHeight": 48,
+      "firstTdBorderBottom": "0px solid rgb(0, 0, 0)",
+      "firstTdPadding": "0px",
+      "firstTdFontSize": "16px",
+      "tdBorderRadius": "0px",
+      "lastTdBorderBottom": "0px solid rgb(0, 0, 0)",
+      "lastTdBorderRadius": "0px",
+      "colCount": 5,
+      "rowCount": 8,
+      "thSampleTexts": [
+        {
+          "text": "Property",
+          "bbox": {
+            "w": 98,
+            "h": 34
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Alpha 3PLPrivate \u00b7 Tier 1",
+          "bbox": {
+            "w": 130,
+            "h": 34
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Beta ColdASX listed",
+          "bbox": {
+            "w": 130,
+            "h": 34
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Gamma ReeferNYSE:GAM",
+          "bbox": {
+            "w": 130,
+            "h": 34
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Delta PharmaEpsilon DTC2 ",
+          "bbox": {
+            "w": 260,
+            "h": 34
+          },
+          "textWraps": true
+        }
+      ]
+    },
+    {
+      "sectionId": "table-ranking",
+      "h3": "RankingTable",
+      "hasThead": true,
+      "hasTable": true,
+      "tableBbox": {
+        "x": 306,
+        "y": -1446,
+        "w": 748,
+        "h": 297
+      },
+      "wrapperClass": "tableshell",
+      "wrapperTag": "DIV",
+      "wrapperBorder": "1px solid rgb(208, 203, 232)",
+      "wrapperBorderRadius": "10px",
+      "wrapperOverflowX": "auto",
+      "wrapperBoxShadow": "none",
+      "wrapperBackground": "rgba(0, 0, 0, 0)",
+      "wrapperPadding": "0px",
+      "firstThBg": "rgba(0, 0, 0, 0)",
+      "firstThColor": "rgba(0, 0, 0, 0.6)",
+      "firstThPosition": "sticky",
+      "firstThBorderBottom": "0px solid rgba(0, 0, 0, 0.6)",
+      "firstThPadding": "0px",
+      "firstThFontSize": "10px",
+      "firstThHeight": 16,
+      "thBorderRadius": "0px",
+      "rowHeight": 40,
+      "firstTdBorderBottom": "0px solid rgb(0, 0, 0)",
+      "firstTdPadding": "0px",
+      "firstTdFontSize": "16px",
+      "tdBorderRadius": "0px",
+      "lastTdBorderBottom": "0px solid rgb(0, 0, 0)",
+      "lastTdBorderRadius": "0px",
+      "colCount": 7,
+      "rowCount": 7,
+      "thSampleTexts": [
+        {
+          "text": "#",
+          "bbox": {
+            "w": 12,
+            "h": 16
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Opportunity",
+          "bbox": {
+            "w": 224,
+            "h": 16
+          },
+          "textWraps": false
+        },
+        {
+          "text": "TAM (AUD Mn)",
+          "bbox": {
+            "w": 100,
+            "h": 16
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Impact (1\u201310)",
+          "bbox": {
+            "w": 98,
+            "h": 16
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Feasibility (1\u201310)",
+          "bbox": {
+            "w": 129,
+            "h": 16
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Time-to-monetize",
+          "bbox": {
+            "w": 138,
+            "h": 16
+          },
+          "textWraps": false
+        }
+      ]
+    },
+    {
+      "sectionId": "primitive-tableshell",
+      "h3": "TableShell",
+      "hasThead": true,
+      "hasTable": true,
+      "tableBbox": {
+        "x": 305,
+        "y": -13973,
+        "w": 750,
+        "h": 198
+      },
+      "wrapperClass": "tableshell",
+      "wrapperTag": "DIV",
+      "wrapperBorder": "0px none rgb(0, 0, 0)",
+      "wrapperBorderRadius": "0px",
+      "wrapperOverflowX": "visible",
+      "wrapperBoxShadow": "none",
+      "wrapperBackground": "rgba(0, 0, 0, 0)",
+      "wrapperPadding": "0px",
+      "firstThBg": "rgba(0, 0, 0, 0)",
+      "firstThColor": "rgb(0, 0, 0)",
+      "firstThPosition": "static",
+      "firstThBorderBottom": "0px solid rgb(0, 0, 0)",
+      "firstThPadding": "10px 14px",
+      "firstThFontSize": "11px",
+      "firstThHeight": 38,
+      "thBorderRadius": "0px",
+      "rowHeight": 40,
+      "firstTdBorderBottom": "0px solid rgb(64, 64, 64)",
+      "firstTdPadding": "10px 14px",
+      "firstTdFontSize": "12px",
+      "tdBorderRadius": "0px",
+      "lastTdBorderBottom": "0px solid rgb(64, 64, 64)",
+      "lastTdBorderRadius": "0px",
+      "colCount": 4,
+      "rowCount": 4,
+      "thSampleTexts": [
+        {
+          "text": "Column A",
+          "bbox": {
+            "w": 186,
+            "h": 38
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Column B",
+          "bbox": {
+            "w": 185,
+            "h": 38
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Column C",
+          "bbox": {
+            "w": 193,
+            "h": 38
+          },
+          "textWraps": false
+        },
+        {
+          "text": "Column D",
+          "bbox": {
+            "w": 186,
+            "h": 38
+          },
+          "textWraps": false
+        }
+      ]
+    }
+  ],
+  "timestamp": 1779778774077,
+  "consoleErrors": [],
+  "captureNote": "Probe run after cycling all sections. 1440px viewport."
+}

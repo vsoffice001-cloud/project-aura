@@ -12,12 +12,20 @@
  * WHAT · Renders a `<div>` wrapper containing a `<table>`. Children MUST be
  *        `<thead>` + `<tbody>` ONLY — no outer `<table>` wrapper from consumer.
  *        TableShell owns the <table> element. Header bg, sticky, density all
- *        applied internally via CSS custom properties + Tailwind child combinators.
+ *        applied internally via scoped <style> tag injection (NOT Tailwind
+ *        arbitrary classes — those require v4 scan to compile reliably).
  *
  * BREAKING CHANGE (Sprint B.1 2026-05-25):
  *   BEFORE: <TableShell><table>...</table></TableShell>   → invalid HTML (nested <table>)
  *   AFTER:  <TableShell><thead>...</thead><tbody>...</tbody></TableShell>  → valid HTML
  *   PropertyTable + RankingTable updated to match.
+ *
+ * Sprint D.1 2026-05-26 — Bug fixes applied:
+ *   Bug 1 · Cell padding 0px → density-mapped CSS vars + injected <style> tag
+ *   Bug 2 · Sticky broken → maxHeight + overflowY:auto on wrapper creates v-scroll context
+ *   Bug 3 · Inverted header not applying → <style> tag bypasses Tailwind v4 scan
+ *   Bug 4 · Header wash bg missing → <style> tag bypasses Tailwind v4 scan
+ *   Bug 5 · 16px font leak → density-mapped font-size CSS var
  *
  * WHEN · Wrap ALL Ken data tables.
  *        PropertyTable: variant="card" headerStyle="wash"        density="comfortable"
@@ -34,8 +42,9 @@
  *        </TableShell>
  *        ```
  *
- * Sticky mechanics (pure CSS):
- *   stickyHeader=true → thead th get position:sticky; top:0; z-index:1.
+ * Sticky mechanics (CSS + controlled overflow):
+ *   stickyHeader=true → wrapper gets maxHeight + overflowY:auto (scroll context).
+ *   thead th get position:sticky; top:0 via injected <style>.
  *   Background is pre-filled (NOT toggled on engage — ref-canonical).
  *   Signal: 2px border-bottom on sticky (vs 1px non-sticky). No shadow.
  *
@@ -46,7 +55,7 @@
  * @promotedFrom projects/v1-project/v1-product-page-ver0.4 (new)
  */
 
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useId, useMemo } from 'react';
 import type { ReactNode, CSSProperties } from 'react';
 import { cn } from '../../lib/cn';
 import { KEN_TABLE, KEN_TABLE_DENSITY } from '../theme/tokens';
@@ -59,7 +68,7 @@ export type TableDensity = 'compact' | 'standard' | 'comfortable' | 'spacious';
 /** Card: Ref 1 bordered rounded card. Open: Ref 2 flush editorial. */
 export type TableVariant = 'card' | 'open';
 
-/** wash: periwinkle tint. transparent: border-bottom only. inverted: solid brand periwinkle. */
+/** wash: periwinkle tint. transparent: border-bottom only. inverted: neutral dark (rgba(0,0,0,0.85)) + white text. */
 export type TableHeaderStyle = 'wash' | 'transparent' | 'inverted';
 
 /**
@@ -72,6 +81,51 @@ export const TableDensityContext = createContext<number>(KEN_TABLE_DENSITY.stand
 export function useTableDensity(): number {
   return useContext(TableDensityContext);
 }
+
+// ─── Density maps ─────────────────────────────────────────────────────────────
+
+/**
+ * Cell horizontal padding by density.
+ * Ref 1 canonical: th=14px, td=14px. Compact scales down, spacious scales up.
+ */
+const CELL_PADDING_X: Record<TableDensity, string> = {
+  compact:     '8px',
+  standard:    '12px',
+  comfortable: '14px',
+  spacious:    '18px',
+};
+
+/**
+ * Cell vertical padding by density.
+ * Ref 1 canonical: th=11px, td=10px. TableShell uses th=pad+1, td=pad.
+ */
+const CELL_PADDING_Y: Record<TableDensity, string> = {
+  compact:     '4px',
+  standard:    '8px',
+  comfortable: '10px',
+  spacious:    '14px',
+};
+
+/**
+ * Header cell (th) vertical padding — 1px more than td per ref measurement.
+ */
+const TH_PADDING_Y: Record<TableDensity, string> = {
+  compact:     '5px',
+  standard:    '9px',
+  comfortable: '11px',
+  spacious:    '15px',
+};
+
+/**
+ * Table body font-size by density.
+ * Ref 1 canonical: 13px standard, 12px compact variant.
+ */
+const CELL_FONT_SIZE: Record<TableDensity, string> = {
+  compact:     '11px',
+  standard:    '12px',
+  comfortable: '13px',
+  spacious:    '14px',
+};
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -90,22 +144,28 @@ export interface TableShellProps {
   /**
    * wash: rgb(248,247,254) periwinkle wash (standard data tables).
    * transparent: no fill + 1px border-bottom only (editorial/qualitative).
-   * inverted: rgb(91,79,207) solid brand periwinkle + white text (emphasis/featured).
+   * inverted: rgba(0,0,0,0.85) neutral dark + white text (emphasis/featured · color-discipline 2026-05-22).
    * @default 'wash'
    */
   headerStyle?: TableHeaderStyle;
   /**
-   * Row density. compact=28px · standard=40px · comfortable=45px · spacious=48px
+   * Row density. compact=28px · standard=40px · comfortable=45px · spacious=56px
    * @default 'standard'
    */
   density?: TableDensity;
   /**
-   * Sticky thead. Pure CSS position:sticky. 2px border-bottom = sticky signal.
-   * Pre-filled background (not toggled on engage) per ref-canonical pattern.
-   * Card variant auto-provides scroll parent via overflow:auto.
+   * Sticky thead. Pure CSS position:sticky.
+   * Requires stickyHeader=true to create the v-scroll context (maxHeight + overflowY:auto).
+   * 2px border-bottom = sticky signal. Pre-filled background (not toggled on engage).
    * @default false
    */
   stickyHeader?: boolean;
+  /**
+   * Max height when stickyHeader=true — creates v-scroll context inside wrapper.
+   * Sticky only works when the WRAPPER scrolls vertically (not the page).
+   * @default '400px'
+   */
+  maxHeight?: string | number;
   /**
    * Alternate even-row background wash.
    * @default false
@@ -147,6 +207,7 @@ export function TableShell({
   headerStyle,
   density = 'standard',
   stickyHeader = false,
+  maxHeight,
   alternateRows = false,
   scrollX,
   className,
@@ -162,6 +223,57 @@ export function TableShell({
   const rowHeightPx = KEN_TABLE_DENSITY[density];
   const headerBg = resolveHeaderBg(resolvedHeaderStyle);
 
+  // Unique instance id for scoped <style> — avoids collision across multiple TableShells
+  const instanceId = useId().replace(/:/g, '-');
+
+  const padX = CELL_PADDING_X[density];
+  const padY = CELL_PADDING_Y[density];
+  const thPadY = TH_PADDING_Y[density];
+  const fontSize = CELL_FONT_SIZE[density];
+
+  // ─── Scoped style tag ─────────────────────────────────────────────────────
+  // Bypasses Tailwind v4 arbitrary-class scan dependency.
+  // useId is stable across SSR+client — no hydration mismatch.
+
+  const scopedStyles = useMemo(() => {
+    const sel = `[data-tableshell-id="${instanceId}"]`;
+    const isInverted = resolvedHeaderStyle === 'inverted';
+    const isTransparent = resolvedHeaderStyle === 'transparent';
+
+    return `
+      ${sel} td {
+        padding: ${padY} ${padX};
+        font-size: ${fontSize};
+      }
+      ${sel} th {
+        padding: ${thPadY} ${padX};
+        font-size: calc(${fontSize} - 1px);
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        text-align: left;
+      }
+      ${sel} thead th {
+        background: ${isTransparent ? 'transparent' : headerBg};
+        ${isInverted ? 'color: #ffffff;' : ''}
+        ${isTransparent ? `border-bottom: 1px solid var(--table-open-last-row-border, ${KEN_TABLE.openLastRowBorder});` : ''}
+        ${!isTransparent ? `border-bottom: 1px solid var(--table-row-divider, rgba(0,0,0,0.10));` : ''}
+      }
+      ${stickyHeader ? `
+        ${sel} thead th {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          border-bottom: 2px solid var(--table-row-divider-strong, rgba(0,0,0,0.12));
+        }
+      ` : ''}
+      ${alternateRows ? `
+        ${sel} tbody tr:nth-child(even) {
+          background: var(--table-alt-row-wash, ${KEN_TABLE.altRowWash});
+        }
+      ` : ''}
+    `;
+  }, [instanceId, resolvedHeaderStyle, headerBg, padX, padY, thPadY, fontSize, stickyHeader, alternateRows]);
+
   // ─── Outer wrapper style ──────────────────────────────────────────────────
 
   const wrapperStyle = useMemo<CSSProperties>(() => {
@@ -170,26 +282,63 @@ export function TableShell({
       margin: '28px 0',
       ['--row-height' as string]: `${rowHeightPx}px`,
     };
+
+    // Touch scroll enhancements (Sprint G.3): applied whenever horizontal scroll is active
+    // overscroll-behavior-x:contain prevents page navigation swipe from triggering during table scroll
+    // -webkit-overflow-scrolling:touch enables momentum scrolling on iOS (legacy but harmless on modern)
+    const touchScrollProps: CSSProperties = effectiveScrollX
+      ? {
+          overscrollBehaviorX: 'contain' as CSSProperties['overscrollBehaviorX'],
+          WebkitOverflowScrolling: 'touch' as unknown as undefined,
+        }
+      : {};
+
+    if (stickyHeader) {
+      const mh = typeof maxHeight === 'number' ? `${maxHeight}px` : (maxHeight ?? '400px');
+      if (variant === 'card') {
+        return {
+          ...base,
+          ...touchScrollProps,
+          border: `1px solid ${KEN_TABLE.cardBorder}`,
+          borderRadius: '10px',
+          maxHeight: mh,
+          overflowY: 'auto',
+          overflowX: effectiveScrollX ? 'auto' : 'hidden',
+        };
+      }
+      return {
+        ...base,
+        ...touchScrollProps,
+        border: 'none',
+        borderRadius: 0,
+        maxHeight: mh,
+        overflowY: 'auto',
+        overflowX: effectiveScrollX ? 'auto' : 'visible',
+      };
+    }
+
     if (variant === 'card') {
       return {
         ...base,
+        ...touchScrollProps,
         // Ref 1 canonical: rgb(208,203,232) periwinkle-tinted border · 10px radius
         border: `1px solid ${KEN_TABLE.cardBorder}`,
         borderRadius: '10px',
-        overflow: effectiveScrollX ? 'auto' : 'hidden',
+        overflowX: effectiveScrollX ? 'auto' : 'hidden',
       };
     }
     return {
       ...base,
+      ...touchScrollProps,
       border: 'none',
       borderRadius: 0,
       overflow: effectiveScrollX ? 'auto' : 'visible',
     };
-  }, [variant, effectiveScrollX, rowHeightPx]);
+  }, [variant, effectiveScrollX, rowHeightPx, stickyHeader, maxHeight]);
 
   // ─── Table-level Tailwind classes ─────────────────────────────────────────
-  // Dynamic headerBg must go via inline style on thead (not Tailwind arbitrary).
-  // Static structural classes use Tailwind child combinator selectors.
+  // Static structural classes (border-collapse, row dividers, etc.) still via Tailwind.
+  // Dynamic color/padding/font now via scoped <style> tag above.
 
   const tableClasses = cn(
     // Cell corner rule (UNIVERSAL): radius=0 on cells · wrapper clips corners
@@ -198,7 +347,7 @@ export function TableShell({
     '[&_td]:border-r-0 [&_td]:border-l-0',
     '[&_th]:border-r-0 [&_th]:border-l-0',
     // Horizontal row dividers in tbody (1px hairline)
-    '[&_tbody_tr]:border-b [&_tbody_tr]:border-[rgba(0,0,0,0.08)]',
+    '[&_tbody_tr]:border-b [&_tbody_tr]:border-[var(--table-row-divider,rgba(0,0,0,0.08))]',
     // Card: last tbody row → no border-bottom (wrapper border closes it)
     variant === 'card' && [
       '[&_tbody_tr:last-child_td]:border-b-0',
@@ -207,33 +356,16 @@ export function TableShell({
     // Open: last tbody row → explicit 1px bottom border (Ref 2 canonical)
     variant === 'open' && [
       '[&_tbody_tr:last-child_td]:border-b',
-      '[&_tbody_tr:last-child_td]:border-[rgb(228,226,240)]',
+      '[&_tbody_tr:last-child_td]:border-[var(--table-open-last-row-border,rgb(228,226,240))]',
     ],
-    // Transparent header: only border-bottom separates header from body
-    resolvedHeaderStyle === 'transparent' && [
-      '[&_thead_th]:border-b [&_thead_th]:border-[rgb(228,226,240)]',
-    ],
-    // Inverted header: white text (bg applied via inline style on thead)
-    resolvedHeaderStyle === 'inverted' && '[&_thead_th]:text-white',
-    // Sticky header: position:sticky + z-index + 2px border-bottom signal
-    stickyHeader && [
-      '[&_thead_th]:sticky [&_thead_th]:top-0 [&_thead_th]:z-[1]',
-      '[&_thead_th]:border-b-2 [&_thead_th]:border-[rgba(0,0,0,0.12)]',
-    ],
-    // Alternating row wash
-    alternateRows && '[&_tbody_tr:nth-child(even)]:bg-[rgb(252,251,255)]',
   );
-
-  // Header bg applied via CSS custom property --ts-th-bg on <table> element.
-  // Tailwind v4 arbitrary class `bg-[var(--ts-th-bg,transparent)]` reads it on thead th.
-  // This ensures sticky header background is pre-filled (not transparent when sticking).
-  const theadThBgClass = headerBg !== 'transparent'
-    ? '[&_thead_th]:bg-[var(--ts-th-bg,transparent)]'
-    : '';
 
   return (
     <TableDensityContext.Provider value={rowHeightPx}>
+      {/* Scoped instance styles — bypasses Tailwind v4 arbitrary-class scan */}
+      <style dangerouslySetInnerHTML={{ __html: scopedStyles }} />
       <div
+        data-tableshell-id={instanceId}
         className={cn('tableshell', className)}
         style={wrapperStyle}
       >
@@ -243,10 +375,8 @@ export function TableShell({
             borderCollapse: 'collapse',
             width: '100%',
             ['--row-height' as string]: `${rowHeightPx}px`,
-            // Inject --ts-th-bg at table level so thead th can inherit via var()
-            ...(headerBg !== 'transparent' ? { ['--ts-th-bg' as string]: headerBg } : {}),
           }}
-          className={cn(tableClasses, theadThBgClass)}
+          className={tableClasses}
         >
           {caption && <caption className="sr-only">{caption}</caption>}
           {children}
@@ -256,13 +386,11 @@ export function TableShell({
   );
 }
 
-// ─── Note on sticky + header bg ───────────────────────────────────────────────
-// stickyHeader=true requires parent overflow:auto (provided by card variant).
-// For stickyHeader on open variant: wrap consumer in a fixed-height div w/ overflow:auto.
-// The 2px border-bottom on sticky th is THE ref-canonical signal (no shadow, no transition).
-// Background is set via --ts-th-bg CSS custom property on <table> element,
-// read by thead th via bg-[var(--ts-th-bg)] Tailwind v4 arbitrary class.
-// This ensures sticky th background is pre-filled (not transparent when sticking).
+// ─── Note on sticky ────────────────────────────────────────────────────────────
+// stickyHeader=true sets maxHeight + overflowY:auto on wrapper — this creates the
+// vertical scroll context that position:sticky requires. Without overflowY:auto,
+// sticky binds to the page scroll which never v-scrolls the wrapper.
+// maxHeight default: '400px'. Override via maxHeight prop for taller tables.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Re-export token values for convenience

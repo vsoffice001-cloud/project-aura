@@ -1,0 +1,62 @@
+{
+  "sectionId": "table-ranking",
+  "groupCount": 1,
+  "groups": [
+    {
+      "groupIdx": 0,
+      "role": "tablist",
+      "ariaLabel": null,
+      "parentId": "table-ranking",
+      "buttons": [
+        {
+          "text": "Normal",
+          "bg": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "linear-gradient(90deg, rgb(20, 16, 22) 0%, rgb(101, 101, 101) 50%, rgb(20, 16, 22) 100%)",
+          "color": "rgb(0, 0, 0)",
+          "isRedText": false,
+          "border": "0px solid rgb(0, 0, 0)",
+          "ariaPressed": null,
+          "ariaSelected": "true",
+          "classList": "group relative items-center justify-center font-medium tracking-[0.0875px] transition-all duration-300 rounded-[var(--ra"
+        },
+        {
+          "text": "Loading",
+          "bg": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "color": "rgba(0, 0, 0, 0.7)",
+          "isRedText": false,
+          "border": "0px solid rgba(0, 0, 0, 0.12)",
+          "ariaPressed": null,
+          "ariaSelected": "false",
+          "classList": "group relative items-center justify-center font-medium tracking-[0.0875px] rounded-[var(--radius-button)] overflow-hidde"
+        },
+        {
+          "text": "Empty",
+          "bg": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "color": "rgba(0, 0, 0, 0.7)",
+          "isRedText": false,
+          "border": "0px solid rgba(0, 0, 0, 0.12)",
+          "ariaPressed": null,
+          "ariaSelected": "false",
+          "classList": "group relative items-center justify-center font-medium tracking-[0.0875px] rounded-[var(--radius-button)] overflow-hidde"
+        },
+        {
+          "text": "Error",
+          "bg": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "color": "rgba(0, 0, 0, 0.7)",
+          "isRedText": false,
+          "border": "0px solid rgba(0, 0, 0, 0.12)",
+          "ariaPressed": null,
+          "ariaSelected": "false",
+          "classList": "group relative items-center justify-center font-medium tracking-[0.0875px] rounded-[var(--radius-button)] overflow-hidde"
+        }
+      ]
+    }
+  ],
+  "redTextButtonsCount": 0,
+  "redTextButtonSamples": [],
+  "primitiveTrBorder": "1px solid rgb(0, 0, 0)",
+  "primitiveTableClass": "[&_td]:rounded-none [&_th]:rounded-none [&_td]:border-r-0 [&_td]:border-l-0 [&_th]:border-r-0 [&_th]:border-l-0 [&_tbody"
+}

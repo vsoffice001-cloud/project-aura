@@ -1,0 +1,408 @@
+{
+  "sectionFound": true,
+  "tableFound": true,
+  "rankCircleInFirstTd": {
+    "bg": "rgba(0, 0, 0, 0.08)",
+    "color": "rgb(23, 23, 23)",
+    "computedWidth": "3.4375px",
+    "computedHeight": "17.5938px",
+    "display": "inline-flex",
+    "classList": "inline-flex items-center justify-center w-6 h-6 rounded-full font-body font-semibold",
+    "bbox": {
+      "x": 343,
+      "y": 592,
+      "w": 3,
+      "h": 18
+    }
+  },
+  "roleImgInsideTable": 14,
+  "nonFigureRoleImgCount": 14,
+  "nonFigureRoleImgSample": {
+    "tag": "DIV",
+    "ariaLabel": "Score 9.2 of 10",
+    "classList": "relative flex-1 h-[6px] rounded-full overflow-hidden",
+    "styleAttr": "background: rgba(148, 136, 236, 0.15);",
+    "bg": "rgba(148, 136, 236, 0.15)",
+    "width": "33.1719px",
+    "height": "6px",
+    "childCount": 1,
+    "firstChildStyle": "width: 92%; background: linear-gradient(90deg, rgb(195, 198, 249) 0%, rgb(148, 136, 236) 60%, rgb(112, 117, 200) 100%);",
+    "firstChildBg": "rgba(0, 0, 0, 0)",
+    "firstChildBgFull": "rgba(0, 0, 0, 0) linear-gradient(90deg, rgb(195, 198, 249) 0%, rgb(148, 136, 236) 60%, rgb(112, 117, 200) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+    "firstChildWidth": "30.5156px",
+    "firstChildHeight": "6px",
+    "outerHTML": "<div class=\"relative flex-1 h-[6px] rounded-full overflow-hidden\" role=\"img\" aria-label=\"Score 9.2 of 10\" style=\"background: rgba(148, 136, 236, 0.15);\"><div class=\"absolute inset-y-0 left-0 rounded-full\" style=\"width: 92%; background: linear-gradient(90deg, rgb(195, 198, 249) 0%, rgb(148, 136, 236) 60%, rgb(112, 117, 200) 100%);\"></div></div>"
+  },
+  "densityButtons": [
+    {
+      "text": "Compact (5 nodes)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Compact (12 keywords)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Compact rows (36px)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Spacious rows (60px)",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Comfortable",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "ariaPressed": "true"
+    },
+    {
+      "text": "Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Compact",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Spacious",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "ariaPressed": "true"
+    },
+    {
+      "text": "Compact",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Comfortable",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Spacious",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "ariaPressed": "true"
+    },
+    {
+      "text": "Card · Compact",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Open · Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    }
+  ],
+  "headerButtons": [
+    {
+      "text": "Card · Wash header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "ariaPressed": "true"
+    },
+    {
+      "text": "Card · Inverted header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Open · Transparent header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Wash header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Transparent header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Inverted header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Open · Transparent",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Sticky header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Wash header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Transparent header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Inverted header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Open · Transparent",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Sticky header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Card · Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgb(0, 0, 0)",
+      "ariaPressed": "true"
+    },
+    {
+      "text": "Card · Compact",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    },
+    {
+      "text": "Open · Standard",
+      "bg": "rgba(0, 0, 0, 0)",
+      "color": "rgba(0, 0, 0, 0.7)",
+      "ariaPressed": "false"
+    }
+  ],
+  "allButtonTexts": [
+    "1440",
+    "1024",
+    "390",
+    "A11y",
+    "System",
+    "Card · Wash header",
+    "Card · Inverted header",
+    "Open · Transparent header",
+    "Normal",
+    "Loading",
+    "Mid · 12 months",
+    "Low · 12 months",
+    "High · 12 months",
+    "Decade · with projection",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Default (10 nodes)",
+    "Compact (5 nodes)",
+    "Dark surface",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Default (no stars)",
+    "With star ratings",
+    "Large cells (100px)",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Default (25 keywords)",
+    "Compact (12 keywords)",
+    "Tight font range",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Default (7 entities)",
+    "Compact rows (36px)",
+    "Spacious rows (60px)",
+    "light",
+    "dark",
+    "Compare ↔",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Comfortable",
+    "Standard",
+    "Compact",
+    "Spacious",
+    "Card · Wash header",
+    "Card · Transparent header",
+    "Card · Inverted header",
+    "Open · Transparent",
+    "Card · Sticky header",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Standard",
+    "Compact",
+    "Comfortable",
+    "Spacious",
+    "Top 5 highlight",
+    "Card · Wash header",
+    "Card · Transparent header",
+    "Card · Inverted header",
+    "Open · Transparent",
+    "Card · Sticky header",
+    "Normal",
+    "Loading",
+    "Empty",
+    "Error",
+    "Bar type",
+    "Line type",
+    "Pie type",
+    "Bubble type",
+    "Generic",
+    "Card · Standard",
+    "Card · Compact",
+    "Open · Standard",
+    "No CTA",
+    "With CTA",
+    "No icon",
+    "With retry",
+    "No retry",
+    "Minimal",
+    "Try again",
+    "Refetch",
+    "Simulate error",
+    "Copy",
+    "Copy"
+  ],
+  "blackBorderInfo": [
+    {
+      "trClass": "",
+      "tdCount": 4,
+      "parentId": "primitive-tableshell",
+      "border": "1px solid rgb(0, 0, 0)",
+      "firstTdText": "Alpha 1"
+    },
+    {
+      "trClass": "",
+      "tdCount": 4,
+      "parentId": "primitive-tableshell",
+      "border": "1px solid rgb(0, 0, 0)",
+      "firstTdText": "Alpha 2"
+    },
+    {
+      "trClass": "",
+      "tdCount": 4,
+      "parentId": "primitive-tableshell",
+      "border": "1px solid rgb(0, 0, 0)",
+      "firstTdText": "Alpha 3"
+    },
+    {
+      "trClass": "",
+      "tdCount": 4,
+      "parentId": "primitive-tableshell",
+      "border": "1px solid rgb(0, 0, 0)",
+      "firstTdText": "Alpha 4"
+    },
+    {
+      "trClass": "group hover:bg-[var(--black-50,rgba(0,0,0,0.03))] transition-colors",
+      "tdCount": 5,
+      "parentId": "table-property",
+      "border": "1px solid rgb(0, 0, 0)",
+      "firstTdText": "Melbourne, VIC"
+    }
+  ]
+}

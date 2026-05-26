@@ -52,6 +52,13 @@ export interface ButtonProps {
   size?: ButtonSize;
   background?: ButtonBackground;
   fullWidth?: boolean;
+  /**
+   * Pill mode · content-width inline-flex · NOT full-width on mobile.
+   * Use for toggle groups · filter chips · variant switchers.
+   * Replaces `className="!w-auto flex-shrink-0"` workaround.
+   * @default false
+   */
+  pill?: boolean;
   icon?: ReactNode;
   iconPosition?: ButtonIconPosition;
   iconOnly?: boolean;
@@ -60,10 +67,44 @@ export interface ButtonProps {
   ripple?: boolean;
   shimmerDuration?: number;
   animatedArrow?: boolean;
+  /**
+   * Render as anchor `<a>` element instead of `<button>`.
+   * Keeps all classes, shimmer, ripple, animations identical.
+   * Use for external links. For Next.js internal links, wrap w/ `<Link>`.
+   * @default undefined
+   */
+  href?: string;
+  target?: string;
+  rel?: string;
   onClick?: (e?: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
   ariaLabel?: string;
+  /**
+   * Indicates the button's pressed/toggled state · for toggle/tab patterns.
+   * Used by VariantToggle · StateDemo · viewport switchers.
+   * Maps to native `aria-pressed` attribute.
+   */
+  'aria-pressed'?: boolean | 'true' | 'false' | 'mixed';
+  /**
+   * WAI-ARIA role override · for tab/option patterns.
+   * E.g. `role="tab"` when inside a tablist.
+   */
+  role?: string;
+  /**
+   * Indicates the selected state · used with role="tab" or role="option".
+   */
+  'aria-selected'?: boolean | 'true' | 'false';
+  /**
+   * ID of the element this button controls · used with role="tab".
+   */
+  'aria-controls'?: string;
+  /** Tab order override · typically -1 for non-active tabs in a tablist. */
+  tabIndex?: number;
+  /** DOM id attribute · forwarded to underlying element. */
+  id?: string;
+  /** Keyboard event handler · forwarded to underlying element. */
+  onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 }
 
 interface RippleType {
@@ -158,6 +199,7 @@ export function Button({
   size = 'md',
   background = 'light',
   fullWidth = false,
+  pill = false,
   icon,
   iconPosition = 'right',
   iconOnly = false,
@@ -166,10 +208,20 @@ export function Button({
   ripple = true,
   shimmerDuration = 700,
   animatedArrow = false,
+  href,
+  target,
+  rel,
   onClick,
   className,
   type = 'button',
   ariaLabel,
+  'aria-pressed': ariaPressed,
+  role,
+  'aria-selected': ariaSelected,
+  'aria-controls': ariaControls,
+  tabIndex,
+  id,
+  onKeyDown,
 }: ButtonProps) {
   const [ripples, setRipples] = useState<RippleType[]>([]);
   const [isHovering, setIsHovering] = useState(false);
@@ -306,29 +358,36 @@ export function Button({
       <IconWrapper>{icon}</IconWrapper>
     );
 
-  return (
-    <button
-      data-component="Button"
-      ref={buttonRef}
-      type={type}
-      onClick={handleClick}
-      disabled={disabled || loading}
-      className={cn(
-        'group relative inline-flex items-center justify-center font-medium tracking-[0.0875px]',
-        'transition-all duration-300 rounded-[var(--radius-button)] overflow-hidden whitespace-nowrap',
-        gapMap[size],
-        sizeStyles(size, iconOnly),
-        variantClass,
-        fullWidth ? 'w-full' : iconOnly ? '' : 'w-full sm:w-auto',
-        disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2',
-        className,
-      )}
-      style={variantInlineStyle}
-      aria-label={ariaLabel || (iconOnly ? 'Button' : undefined)}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
+  const sharedClassName = cn(
+    'group relative inline-flex items-center justify-center font-medium tracking-[0.0875px]',
+    'transition-all duration-300 rounded-[var(--radius-button)] overflow-hidden whitespace-nowrap',
+    gapMap[size],
+    sizeStyles(size, iconOnly),
+    variantClass,
+    fullWidth ? 'w-full' : pill ? 'inline-flex w-auto flex-shrink-0' : iconOnly ? '' : 'w-full sm:w-auto',
+    disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-red)] focus-visible:ring-offset-2',
+    className,
+  );
+
+  const sharedProps = {
+    'data-component': 'Button',
+    id,
+    className: sharedClassName,
+    style: variantInlineStyle,
+    'aria-label': ariaLabel || (iconOnly ? 'Button' : undefined),
+    'aria-pressed': ariaPressed,
+    'aria-selected': ariaSelected,
+    'aria-controls': ariaControls,
+    role,
+    tabIndex,
+    onKeyDown,
+    onMouseEnter: () => setIsHovering(true),
+    onMouseLeave: () => setIsHovering(false),
+  };
+
+  const innerContent = (
+    <>
       {shimmerLayer && (
         <div
           className={cn(
@@ -407,6 +466,43 @@ export function Button({
       {loading && iconPosition === 'right' && !iconOnly && (
         <span className="relative z-10"><Spinner /></span>
       )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        {...sharedProps}
+        href={href}
+        target={target}
+        rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)}
+      >
+        {innerContent}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      data-component="Button"
+      ref={buttonRef}
+      id={id}
+      type={type}
+      onClick={handleClick}
+      disabled={disabled || loading}
+      className={sharedClassName}
+      style={variantInlineStyle}
+      aria-label={ariaLabel || (iconOnly ? 'Button' : undefined)}
+      aria-pressed={ariaPressed}
+      aria-selected={ariaSelected}
+      aria-controls={ariaControls}
+      role={role}
+      tabIndex={tabIndex}
+      onKeyDown={onKeyDown}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {innerContent}
     </button>
   );
 }

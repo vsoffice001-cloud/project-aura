@@ -1,0 +1,106 @@
+{
+  "column_xaxis_rotation_390": {
+    "found": true,
+    "count": 28,
+    "transforms": [
+      {
+        "transform": "translate(0,0) rotate(-45 61.94035593728816 270)",
+        "text": "Jan"
+      },
+      {
+        "transform": "translate(0,0) rotate(-45 108.27368927062516 270)",
+        "text": "Mar"
+      },
+      {
+        "transform": "translate(0,0) rotate(-45 154.60702260395516 270)",
+        "text": "May"
+      }
+    ]
+  },
+  "column_rotation_verified": true,
+  "donut_labels_390": {
+    "total": 9,
+    "visible": 9,
+    "hiddenByAttr": 0,
+    "sample": null
+  },
+  "heatmap_scroll_390": {
+    "found": true,
+    "wrappers": [
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "className": "w-full overflow-x-auto "
+      },
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "className": "w-full overflow-x-auto "
+      }
+    ]
+  },
+  "gantt_scroll_390": {
+    "found": true,
+    "wrappers": [
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "hasRoleTable": true,
+        "minWidth": "320px"
+      },
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "hasRoleTable": true,
+        "minWidth": "480px"
+      }
+    ]
+  },
+  "tableshell_390": {
+    "found": true,
+    "count": 4,
+    "samples": [
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "id": "_R_2v2sine"
+      },
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "id": "_r_1e_"
+      },
+      {
+        "overflowX": "auto",
+        "overscrollBehaviorX": "contain",
+        "id": "_r_1f_"
+      }
+    ]
+  },
+  "dual_column_scroll_390": {
+    "found": true,
+    "minWidth": "600px",
+    "wrapperOverflowX": "auto",
+    "wrapperOverscroll": "contain"
+  },
+  "multiline_scroll_390": {
+    "found": true,
+    "minWidth": "700px",
+    "wrapperOverflowX": "auto"
+  },
+  "bubble_390": {
+    "bubbles": 0,
+    "totalLabels": 3,
+    "visibleLabels": 3
+  },
+  "scenario_fan_390": {
+    "xLabelCount": 28,
+    "rotatedCount": 12,
+    "plotLineLabels": 0,
+    "firstPlotLabelVisible": "none"
+  },
+  "cell_tooltip_390": {
+    "count": 51,
+    "sampleStyle": "display: contents;"
+  }
+}

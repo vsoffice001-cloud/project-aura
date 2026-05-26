@@ -50,6 +50,39 @@ import {
 } from './tokens';
 
 /**
+ * Chart surface context.
+ * 'light' = editorial-light pages (default).
+ * 'dark'  = cinematic-dark sections (e.g. ResourcesSection, hero panels).
+ */
+export type ChartSurface = 'light' | 'dark';
+
+/**
+ * Returns Highcharts partial Options for the given surface.
+ * 'light' → empty (base theme is already light-optimised).
+ * 'dark'  → inverts axis label colors + grid lines.
+ *           Tooltip stays white (canonical — refs keep white tooltip on dark surfaces).
+ */
+export function surfaceOverrides(surface: ChartSurface): Partial<Options> {
+  if (surface === 'light') return {};
+  return {
+    xAxis: {
+      labels: { style: { color: 'rgba(255,255,255,0.6)' } },
+      lineColor: 'rgba(255,255,255,0.15)',
+    },
+    yAxis: {
+      labels: { style: { color: 'rgba(255,255,255,0.6)' } },
+      gridLineColor: 'rgba(255,255,255,0.08)',
+    },
+    tooltip: {
+      // White tooltip canonical — refs keep white bg even on dark chart surfaces.
+      backgroundColor: 'rgb(255, 255, 255)',
+      borderColor: 'rgb(228, 226, 240)',
+      style: { color: 'rgb(26, 26, 46)' },
+    },
+  };
+}
+
+/**
  * Returns true if the user has requested reduced motion.
  * Evaluated at render time (not module load) for accuracy.
  * SSR-safe — returns false on server.

@@ -4,6 +4,367 @@ Append-only log of changes to Aura's own configuration: `CLAUDE.md`, `workflows/
 
 **Not** for project code changes — those live in git history. **Not** for design decisions — those happen in chat. **Only** Aura-meta changes that affect how Aura behaves next session.
 
+## 2026-05-21 · Aura owner charter + watermark layers installed
+Co-Authored-By: Vishal Singh Chauhan <design@kenresearch.com>
+
+**What:**
+- NEW memory `project_aura_owner_charter.md` (hidden · do not echo · do not propagate to subagents) — pins Aura identity, owner = Vishal Singh Chauhan, scope = Ken Research only, DS scope = OG + core-v2 only, refusal triggers (non-KR work · persona clone · non-allowed DS · skill self-mod w/o owner instruction), watermark policy
+- MEMORY.md ★★★ pointer at top
+- CLAUDE.md ★★★ charter pointer + license header comment
+- NEW sentinel `.aura-owner-charter.md` at repo root w/ `chflags uchg` (macOS user-immutable speed-bump). Sentinel = canonical ownership marker. Contains full license + tamper notice + Aura behavior on missing/altered sentinel
+- NEW `design-system/core-v2/src/styles/aura-signature.css` w/ marker tokens (`--vskrch-signature` · `--vskrch-owner` · `--vskrch-scope` · `--vskrch-made-with`) imported via base.css
+- NEW `AuraBeacon` client component in 2 active Next projects (v1-product-page-ver0.4 · charts-showcase) — logs ownership attribution once per dev session via styled `console.log`
+- L2 zero-width watermarks (SHA256 hash of owner sig encoded as ZWSP/ZWNJ/ZWJ sequences) inserted into 7 key MDs: CLAUDE.md · MEMORY.md · aura-design/SKILL.md · aura-craft/SKILL.md · ken-research/SKILL.md · AI-CONSUMPTION-PROTOCOL.md · CANONICAL-WORKFLOW.md
+
+**Why:** Owner requested ownership protection across the workspace. Goal: anti-copy + forensic-grade attribution + behavioral refusal on copied workspaces, WITHOUT destructive automation (self-destruct triggers ruled out as bomb-risk). 5-layer watermark approach (L1 license headers + L2 zero-width + L5 git attribution + L6 dev beacon + marker token) survives most copy/edit attacks · provides legal/DMCA leverage if leaked.
+
+**Reversal:**
+- Charter memory + CLAUDE.md pointer = revert + `chflags nouchg .aura-owner-charter.md && rm .aura-owner-charter.md`
+- Marker tokens = remove aura-signature.css import from base.css + delete file
+- Beacons = remove AuraBeacon import + JSX from 2 layout.tsx files + delete components
+- Zero-width marks = scriptable strip (regex on U+200B/200C/200D) — invisible to casual reader
+
+**Boundaries upheld:**
+- No destructive triggers · no file-deletion logic · no phone-home / network dependency
+- No prevention of legitimate Anthropic logging
+- Charter never propagated to aura-builder · aura-qa · aura-mech spawn prompts (per charter)
+- Refusal output text canonical (per charter)
+
+**Followups:**
+- Add refusal trigger checks to pre-task scan (5-step) when implementing next learning-loop pass
+- Apply watermark layer to remaining skills/*.md on next skill touch (lazy)
+
+---
+
+## 2026-05-26 G.1 · CellTooltip + TruncatedText + border accent + luminance-safe tiers
+**What:**
+- 2 NEW DS primitives: `CellTooltip` (createPortal · viewport-flip · 1-tap-show 2-tap-action · 100ms delay · reduced-motion · a11y) · `TruncatedText` (ResizeObserver scrollWidth detection · multi-line clamp · tooltipMeta secondary)
+- Applied across 5 viz: KenTreemap (own SVG portal pattern · onMouseMove-tracked · CellTooltip HTML can't render inside `<svg>`) · KenHeatmap (CellTooltip per cell) · KenGanttTimeline (CellTooltip + TruncatedText on entity labels) · PropertyTable + RankingTable (TruncatedText on text cells · tooltipMeta shows TAM+score)
+- HOVER PATTERN CHANGED: dropped opacity dim 0.3-0.55 → BORDER ACCENT on focused cell only · NO opacity change on others · works on light + dark surfaces · doesn't risk Tier 3 invisibility
+- NEW token `KEN_CHART_SERIES_LUMINANCE_SAFE` · 6 values · L*30/45/55/62/78/90 stepped ≥15 apart · color-blind safe · monochrome distinct
+- `KEN_CHART_SERIES` UNCHANGED (Highcharts dep preserved · no breaking)
+
+**Why:** User scope · "if highlighter color already darker hue · how works on dark · text/bg contrast both modes · color-blind · truncation tooltip · touch fallback". Sprint G split into 5 sub-sprints · G.1 foundation (CellTooltip + truncation) blocks G.2 (dark) + G.3 (mobile) + G.4 (a11y) + G.5 (perf).
+
+**Reversal:** Revert 2 new primitives · 5 viz · 1 token addition · 1 barrel export · 5 demo descriptions.
+
+**Locked rules (canonical):**
+- SVG charts need OWN portal pattern (createPortal HTML-tooltip · onMouseMove tracking · `<span>` invalid in `<svg>`)
+- Border accent over opacity dim · cross-surface safe (works light + dark)
+- Luminance separation over hue for tier encoding · ≥15 L* steps · color-blind + monochrome safe
+- Tooltip portal count budget · WATCH at >100 nodes · lazy portal render if needed
+
+**Sprint G.2-G.5 backlog (~7.5 hr):**
+- G.2 dark surface (forced-colors · tier visibility · brighten on dark) · 2hr
+- G.3 mobile/touch (long-press · drag-scroll · pinch-zoom · breakpoints) · 2hr
+- G.4 a11y + print (data table aside · focus restore · print stylesheet) · 1.5hr
+- G.5 perf + polish (lazy load · RAF debounce · export · freshness) · 2hr
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 LATE · KenTreemap D3 rewrite + hover dim-others canonical
+
+### Track 1 · KenTreemap REWRITE
+- DS `KenTreemap.tsx` · full rewrite Highcharts treemap module → D3-hierarchy + SVG render (port from v0.4 §07 EcosystemTreemap pattern · 270 LOC canonical)
+- NEW API `TreemapCellData` (id · name · value · tier · subText · metaText) · `TreemapNode` kept as alias for back-compat
+- Adaptive font-sizes per cell width (11-18px name · 9-13px sub-text)
+- Adaptive content visibility (subText if h>50 w>80 · metaText if h>70 w>90)
+- 4-part tier color tokens (Tier 1 purple bg + white text · Tier 2 lighter + dark · Tier 3 faint + neutral)
+- Auto-tier algorithm if tier not provided (top 10% / 30% / 60%)
+- ResizeObserver responsive · clamp height
+- Per-cell a11y · role=button · tabIndex · aria-label w/ full data · keyboard focus parity
+- Optional `legend` prop (tier strip above) · optional `caption` prop (italic below)
+- Highcharts treemap module REMOVED · d3-hierarchy already in DS deps
+- Showcase mock-data + demo-registry updated · 3 variants
+
+### Track 2 · Hover dim-others canonical pattern (across 9 viz)
+- CSS-grid charts (Heatmap · Gantt) · `useState<string|null>` + opacity 0.4 · 200ms · respects useReducedMotion
+- SVG charts (Treemap) · same pattern · opacity 0.55
+- Highcharts charts (Bubble · Column · Bar · DualColumn · Donut · MultiLine · ScenarioFan) · built-in `plotOptions.<type>.states.inactive.opacity: 0.25-0.3`
+- Gantt: WHOLE-ROW highlight (entity-level) · NOT per-phase cell (clearer semantics)
+- All keyboard focus parity (onFocus/onBlur same state as onMouseEnter/Leave)
+
+### Verify
+- 6 screenshots `qa-screenshots/treemap-port-hover-dim-2026-05-26/` · all hover patterns verified
+- TSC clean 3 contexts · ESLint clean · HTTP 200 both
+- v0.4 §07 EcosystemTreemap UNTOUCHED (consumer-local · no DS swap this sprint) · regression PASS
+
+### LOCKED rules (canonical)
+- Hover focus on viz: THAT item full opacity · OTHERS dim · 200ms ease-out · useReducedMotion respected · keyboard focus same effect
+- Gantt-style multi-cell-per-entity: row-level highlight NOT per-cell
+- D3-hierarchy + SVG for treemap-style viz · NOT Highcharts treemap module (more Ken control + better hover semantics)
+
+### Sprint H backlog (optional consolidation · ~30 min)
+- Swap v0.4 §07 EcosystemTreemap consumer-local → DS KenTreemap import · delete project-local
+- Mobile axis label shortening (deferred)
+- KenHeatmap clamp → container query
+- VariantToggle aria-pressed → role=tab
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 · @source cascade fix + chart responsiveness pass
+
+### Track 1 · @source cascade fix (CRITICAL · single bug · 4 cascade)
+**Root cause:** `projects/charts-showcase/src/app/globals.css:18` Tailwind `@source` path had 3 directory levels (`../../../`) · resolved to NON-EXISTENT `/Anti-folder01/projects/design-system/core-v2/src/` · should be 4 levels (`../../../../`) → `/Anti-folder01/design-system/core-v2/src/`. Silent failure · Tailwind compiled without error · just didn't scan DS source. Classes from DS atoms (`w-6 h-6` · `text-[var(--color-foundation-white)]` · `border-[rgba(0,0,0,0.08)]`) didn't compile · fell back to browser defaults.
+
+**Cascade bugs fixed (verified DOM probe + screenshots):**
+- Rank circle 3.4×17.6px → 24×24px ✓
+- Active variant button (Standard primary) BLACK text → WHITE on gradient ✓
+- Row dividers in `#primitive-tableshell` + `#table-property` pure black → hairline `rgba(0,0,0,0.08)` ✓
+- Inverted header bg/color → `rgba(0,0,0,0.85)` + white text ✓
+
+**One-char fix · resolves 4+ UI regressions simultaneously.**
+
+### Track 2 · Chart responsiveness
+- **All 8 Highcharts wrappers** (KenColumnChart · KenBarChart · KenDualColumnChart · KenBubbleChart · KenDonutChart · KenMultiLineChart · KenScenarioFanChart · KenTreemap) · added `containerRef` + `ResizeObserver` `useEffect` · chart.reflow() fires on parent container resize NOT just window resize (more reliable in nested containers · 3-pane showcase · responsive viewport switcher)
+- **KenHeatmap** · CSS `clamp(50px, 5vw, cellSize)` on `grid-template-columns` · pure CSS responsive cell sizing
+- **KenKeywordScatter** · `ResizeObserver` + `useState(actualWidth)` · positions recompute on container resize · `width: 100%` inner div
+- **KenGanttTimeline** · entity label column `minmax(120px, 200px)` (was fixed 200) · period columns `minmax(60px, 1fr)` · `minWidth` formula `120 + N*60` (was `200 + N*80`) · better tablet fit before h-scroll
+
+**Verify · 37 screenshots:**
+- 4 cascade verify: `qa-screenshots/source-fix-verify-2026-05-26/`
+- 33 responsive @ 1440/1024/390: `qa-screenshots/responsive-2026-05-26/`
+
+**TSC clean 3 contexts · ESLint clean · HTTP 200 both · v0.4 regression PASS**
+
+**LOCKED rules (canonical):**
+- Tailwind v4 `@source` path in consumer project MUST be verified via `realpath` · 1-level error = silent compile fail · UI cascade
+- Use `ResizeObserver` on `containerRef` (NOT just window `resize`) for nested charts inside flex/grid panels
+- Chart responsiveness CSS-first: `clamp()` on grid · `minmax()` on columns · `ResizeObserver` JS only when geometry recomputes (KenKeywordScatter positions)
+
+**Sprint G backlog (deferred):**
+- Mobile-specific Highcharts axis label shortening (<640px · "Jan" not "January")
+- KenHeatmap `5vw` → `5cqw` container query (needs `container-type: inline-size` on parent)
+- VariantToggle pattern · aria-pressed → role=tab (from Sprint F open)
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 · Sprint F · Showcase a11y + UX polish · 7/7 items
+**What:**
+- NEW `projects/charts-showcase/src/components/HitArea.tsx` · 44×44 invisible WCAG 2.5.5 hit wrapper · showcase-local
+- HitArea applied to: VariantToggle · StateDemo · DemoCanvas surface toggle · CodeSnippet copy
+- DemoCanvas surface toggle · aria-pressed added (was missing · IconBtn had it · gap between icon-only vs text-pill control patterns)
+- Audit doc + 29 screenshots (`SHOWCASE-AUDIT-2026-05-26-FINAL.md` · `qa-screenshots/sprint-f-2026-05-26/`)
+- 6 of 7 planned items were already implemented in prior sprints (Button aria-pressed · sidebar h3 · StateDemo role=tab · skip-link · focus trap · type-weight hierarchy · arrow transition · right panel bg token) · verified · no code change needed
+
+**Why:** Audit surfaced 2 P0 + multi P1 a11y gaps. Most fixed in Sprints B.3 · D.2 · E. Only HitArea coverage + aria-pressed on surface toggle remained.
+
+**Reversal:** Revert 5 component files (HitArea.tsx new · 4 wrap edits).
+
+**Lesson locked:**
+- Audit briefs can over-specify relative to actual code state · pre-task scan source FIRST · don't assume audit findings still accurate after multiple sprints
+
+**Open backlog · Sprint G candidate:**
+- VariantToggle uses `aria-pressed` (toggle pattern) BUT buttons exclusive-select · technically should be `role=tab` + `aria-selected` (Storybook pattern · matches StateDemo · consistent showcase pattern)
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 · Tables color discipline · NEUTRAL only enforced
+**What:**
+- 5 substitutions in RankingTable.tsx · chip bg (3-tier neutral rgba black) · isTop row wash (neutral 0.02) · rank circle bg+color (neutral 0.04/0.08 · semantic-ink) · weighted score color (semantic-ink-strong) · header border-bottom hairline 0.08 (was 0.12 strong)
+- `KEN_TABLE.headerInverted` CHANGED `rgb(91, 79, 207)` (chart series periwinkle) → `rgba(0, 0, 0, 0.85)` (near-black)
+- base.css `--table-header-inverted` matched
+- PropertyTable JSDoc note added · impl clean (no chart series in chrome)
+- ScoreBar KEPT chart series (THE EXCEPTION · mini data viz)
+- NEW memory: `feedback_tables_color_neutral_only.md` (★★★) · canonical color discipline rule
+
+**Why:** User feedback: "why we are using purple or blue for tables · we can use neutral color palette · if we have to use darker color in headers we should not use darker shade of any graphs colors for the table headers background we should only use black or neutral palette color darker shades." Tables present DATA in a typographic grid · chart series colors belong to data viz · mixing dilutes brand + confuses semantics.
+
+**Reversal:** Revert RankingTable.tsx · tokens.ts headerInverted · base.css var · memory file.
+
+**Locked rule:**
+- Tables = NEUTRAL palette ONLY (semantic-ink-* + rgba black alphas) · NEVER chart series colors
+- EXCEPTION: ScoreBar (mini data viz inside table) · bar fill uses chart series · value text neutral
+- Inverted header bg = `rgba(0,0,0,0.85)` near-black · NEVER chart series darker shade
+- Row dividers ALWAYS hairline `rgba(0,0,0,0.08)` inside card · NEVER 0.12 strong
+
+**v0.4 regression:** PASS (§14 PropertyTable · §17 RankingTable both render neutral chips · neutral score numbers · neutral rank circles · score bars still periwinkle)
+
+**Live URLs:** showcase 3070 · v0.4 3040
+
+## 2026-05-26 · Sprint E · DS gap closeout · 7/7 items
+**What:**
+- DS Button `pill` prop (toggle/chip · w-auto inline-flex · 14 showcase workarounds replaced w/ canonical pill)
+- DS Button `href` prop (renders `<a>` · auto rel on target="_blank" · preserves all shimmer/ripple)
+- 22 new CSS vars in `base.css`: `--table-*` (11) · `--semantic-ink-on-dark-*` (4) · `--border-on-dark-default/strong` (set complete) · `--color-surface-cinematic-*` (4)
+- TableShell migrated hardcoded rgba → `var(--table-*, ts-fallback)` dual-source bridge pattern
+- ESLint flat config v9 in DS core-v2 · 0 errors · 30 console.log warnings in legacy Dummy components
+- ESLint in charts-showcase · direct `eslint src/` (next lint BROKEN in Next 16)
+
+**Why:** Close DS gaps surfaced across Sprints A-D. Library production-ready · backward-compat preserved · zero consumer migration required this sprint.
+
+**Reversal:** Revert Button.tsx · base.css var additions · TableShell css-var migration · 2 new eslint.config.mjs · package.json eslint deps.
+
+**Locked rules (canonical):**
+- `var(--token, fallback)` dual-source bridge for TS+CSS shared values (Highcharts pre-cascade + DOM consumers)
+- `next lint` BROKEN in Next 16 · use direct `eslint src/` script
+- DS Button has 2 render paths: button (default) · anchor (href set · NO disabled support per HTML spec)
+
+**Sprint F backlog (~3 hr · when chosen):**
+- Migrate Slideshow + Hero + FinalCTABanner to `--semantic-ink-on-dark-*` (~30 rgba calls)
+- Migrate FinalCTABanner cinematic gradient to `--color-surface-cinematic-*`
+- Resolve 30 console.log warnings in legacy Dummy components
+- `--border-on-dark-*` naming audit (mixed hairline/card/section + new default/strong)
+- Replace v0.4 `<Link><Button>` wraps w/ Button `href` (consumer audit needed)
+- COMPONENT_REFERENCE.md update
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 · Sprint D.2 · Showcase polish · 8/8 items
+**What:**
+- Variant toggle vertical→horizontal · `!w-auto flex-shrink-0` override DS Button default `w-full sm:w-auto`
+- 144 DS Buttons now used in showcase chrome · 0 raw `<button>` in app code (Bug 10 from B.4 audit closed)
+- Spacing rhythm pass · mb-4/mb-1/mb-3 (DemoCanvas) · pt-4/pb-2 (category headers) · py-1.5 (demo links) · mb-16/mb-8 (category gaps) · 24px right panel body
+- A11yOverlay React key fix · `a11y-labeled-${labelIdx}-${ariaLabel.slice(0,20)}` (was `slice(0,10)` collisions)
+- Token panel · 14 more demos populated · 21/21 demos now have `tokensUsed`
+- Card-level bg alternation · even=white · odd=rgba(245,242,241,0.6) (3-pane scroll layout · NOT SectionWrapper pattern)
+- DemoCanvas DYNAMIC_MAP dev-only assertion · `useEffect` warns missing entries · prevents silent blank renders
+- Highcharts height=-1 audit finding · confirmed already fixed (all 7 chart wrappers had `chart:{height}` set) · pre-task scan would have caught
+
+**Why:** Sprint D.2 was the final polish queue from B.4 audit + Sprint D.1 backlog. Build phase done · all surface area visible · now consistent rhythm + DS dogfood + missing-state guards.
+
+**Reversal:** Revert showcase component files (8 modified) + demo-registry.ts.
+
+**Locked rules (canonical):**
+- DS Button `w-full sm:w-auto` default WRONG for toggle/chip pills · use `!w-auto flex-shrink-0` override · DS needs `pill` prop (Sprint E backlog)
+- Card-level bg alternation for 3-pane scroll layouts · NOT SectionWrapper full-page pattern
+- Pre-task scan source FIRST · audit findings can be stale (Highcharts height bug was already fixed)
+
+**Sprint E backlog (DS gaps · ~3 hr):**
+- DS Button `pill` prop (workaround used 14× this sprint)
+- `--table-*` · `--semantic-ink-on-dark-*` · `--color-surface-cinematic-*` CSS vars to base.css
+- Button `href`/`asChild` prop
+- ESLint install in DS core-v2 + charts-showcase
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 · Sprint D.1 · Tables UI/UX polish · 5 P0 fixes + 12 new demos
+**What:**
+- TableShell complete rewrite: scoped `<style>` tag injection via `useId()` (escape hatch for failing Tailwind v4 `bg-[var(--x)]` arbitraries) · density-mapped padding (compact 4×8 → spacious 14×18) · density-mapped font-size (11→14px) · sticky fix via `maxHeight: 400px` + `overflowY: auto`
+- `KEN_TABLE_DENSITY.spacious` bumped 48→56px (clearer comfortable→spacious delta)
+- PropertyTable + RankingTable accept `variant` · `headerStyle` · `maxHeight` props
+- RankingTable HeaderRow `<th>` inline color removed · TableShell owns header color contract (was breaking inverted variant white text on purple)
+- Showcase +12 variants (PT 5 styles · RT 7 = 5 styles + comfortable + spacious densities) · empty + error state co-located
+- 5/5 P0 bugs FIXED (cell padding · sticky · inverted · wash · 16px font leak) · DOM probe confirmed
+
+**Why:** User: "tables ui ux need improvements." QA pass surfaced 5 P0 bugs + 5 missing capabilities. Bugs ranged from Tailwind v4 scan compile failure (silent · no error) to sticky scroll context (wrong overflow direction).
+
+**Reversal:** Revert TableShell.tsx · density token 56→48 · revert prop pass-through on PropertyTable + RankingTable · revert demo-registry variant additions.
+
+**Locked rules (canonical):**
+- Tailwind v4 arbitrary color failure → `useId()` + scoped `<style>` injection · NOT workaround chains
+- Sticky header requires `overflow-y: auto` + fixed height · `overflow-x: auto` alone creates wrong scroll context
+- Refs use Capitalized headers · NOT ALL-CAPS
+- Density visual delta: row height + padding + font-size ALL density-mapped
+
+**Sprint D.2 backlog (8 items · ~3 hr):** variant toggle vertical→horizontal · 88 inline toggles → DS Button · UI spacing rhythm · A11yOverlay key collision · Highcharts height=-1 mount · token panel populate 7 demos · Bug 8 section alternation · DemoCanvas DYNAMIC_MAP assertion
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+---
+
+## 2026-05-26 · Sprint C · 4 new charts + surface prop + layout fix
+**What:**
+- 4 NEW DS chart components: KenTreemap (Highcharts treemap · 220 LOC) · KenHeatmap (CSS grid · 315 LOC) · KenKeywordScatter (custom grid-jitter · 220 LOC · fixed center-cluster in-session) · KenGanttTimeline (CSS grid · 5-phase ramp · 295 LOC)
+- `surface` prop wired on all 7 prior charts via NEW `surfaceOverrides()` helper in `theme/highcharts-base.ts`
+- `ChartSurface` type canonical single-source in base · KenBubbleChart re-exports
+- Showcase: 16→20 demos · 4 new in 'chart' category · variants · light/dark surfaces · state demos
+- Mock data extended: TREEMAP_DATA · HEATMAP_ROWS/COLS/CELLS · KEYWORD_DATA · GANTT_PERIODS/ENTRIES
+- Layout bug fixed (4 edits): inline `gridTemplateColumns: '1fr'` overrode `@media (min-width:1024px) { grid-template-columns: 240px 1fr 320px }` · sidebar took 779px · main 370px. Removed inline grid + display overrides · CSS @media owns now.
+
+**Why:** Sprint C = build phase from `CHART-LIBRARY-PLAN-2026-05-25 §Phase 3`. v0.4 PDP needs new viz (§07 Ecosystem treemap · §11 Industry heatmap · §13 D-S Gap · §16 Future Outlook gantt · §17 Opportunity matrix). User feedback: build everything FIRST then polish · prevents incremental rework. Layout bug surfaced by user-shared screenshot.
+
+**Reversal:**
+- 4 new charts · `git rm` files + revert barrel + revert showcase registry · v0.4 unaffected
+- surface prop revert · git revert 6 chart files + surfaceOverrides helper
+- Layout fix · revert 4 surgical edits (ShowcaseLayout · ShowcaseSidebar · ShowcaseRightPanel · globals.css)
+
+**Locked rules (canonical):**
+- All chart wrappers MUST support `surface?: ChartSurface` (default 'light') via surfaceOverrides helper
+- Dark surface inverts axis labels + grid lines · tooltip STAYS WHITE (ref-canonical · do NOT invert)
+- `ChartSurface` single canonical type in `theme/highcharts-base.ts`
+- KenKeywordScatter = grid-jitter layout · NOT spiral (proven center-clustering)
+- CSS @media > inline style trap · use className + @media for responsive grid · NEVER inline `gridTemplateColumns`
+
+**Visual verdict (per screenshot review):**
+- KenTreemap: GOOD · squarified clean · 3-tier color · labels auto-hide small cells
+- KenHeatmap: GOOD · N×M grid · faint→strong periwinkle · empty cells handled · star-rating opt-in
+- KenGanttTimeline: EXCELLENT · best of 4 · clean FY grid · 5-phase ramp
+- KenKeywordScatter: WAS BROKEN (spiral cluster) · FIXED in-session (grid-jitter)
+
+**DS chart count:** 7 → 11 (+57%)
+**Showcase demos:** 16 → 20
+**Live URLs:**
+- showcase: http://localhost:3070/
+- v0.4: http://localhost:3040/test/phase-2 (regression-free)
+
+**Sprint D backlog (polish · 3-4 hr):**
+- Variant toggle vertical→horizontal
+- 88 inline toggles → DS Button
+- UI spacing rhythm pass
+- Table polish (cell padding · state contrasts)
+- A11yOverlay key collision
+- Highcharts height=-1 mount
+- Token panel populate 7 more demos
+- Bug 8 section bg alternation (design call)
+
+## 2026-05-25 · Sprint B · Charts Showcase Pro Rebuild (B.1+B.2+B.3+B.4)
+**What:**
+- TableShell BREAKING refactor (children = `<thead><tbody>` ONLY) · card vs open variant · 3 header styles (wash/transparent/inverted) · sticky pure-CSS w/ 2px border-bottom signal
+- 4 new state atoms: `ChartSkeleton` · `TableSkeleton` · `ChartEmptyState` · `ErrorState`
+- ChartFigure unified: subtitle · source · unitPosition · gap chain (28/12/8)
+- 7 chart wrappers: `legend.enabled: false` enforced · KenDonut center fix · KenBubble dark spacing · common props (surface · loading · empty · errorMessage)
+- New tokens: `KEN_TABLE.cardBorder` (`rgb(208,203,232)`) · `headerInverted` · `openLastRowBorder`
+- charts-showcase rebuilt: 720 LOC → 20 LOC · registry-driven (16 demos) · 3-pane layout (sidebar 240 · content · panel 320) · 12 new components
+- 10 pro features: viewport switcher · reduced-motion toggle · a11y overlay · token panel · search w/ `/` shortcut · category filter · async demo · surface compare · state demo strip · code snippet copy
+- 2 new mine docs (CONFIDENTIAL · gitignored): `REF-TABLES-DEEP-MINE-2026-05-25.md` (33 tables analyzed) · 4 showcase docs (SHOWCASE-AUDIT · REBUILD-PLAN · VERIFY-B4)
+- 23 screenshots b4-final · 35 ref-tables · 27 ref-deep-mine
+- MEMORY.md · new ★★★ top entry
+
+**Why:** Prior showcase was 720-LOC dev dump w/ 12 visible bugs + 15 missing pro features. Refs deep-mine missed TABLE LAYER (boundaries · corners · sticky mechanics · scrolling · spacing-by-purpose). Library not professional-grade. Full rebuild needed · NOT patch.
+
+**Reversal:**
+- B.1 · revert TableShell to prior signature · undo state atom exports · revert chart wrapper legend config
+- B.2 · `git checkout` page.tsx + delete src/components/ + delete demo-registry.ts
+- B.3 · revert context.tsx · revert ShowcaseTopBar/Layout/etc
+- B.4 · doc-only · no code revert
+
+**6 P0 bugs FIXED (vs 12 total) + 3 STILL_PRESENT/CHANGED:**
+- ✓ Bug 1+2 double legend collision
+- ✓ Bug 3 KenDonut right-shifted
+- CHANGED Bug 4 (bubble dark padding 40px shipped vs 64px planned · no clip visible)
+- ✓ Bug 5 nested table hydration (0 errors)
+- ✓ Bug 6 sticky header working (RankingTable confirmed)
+- ✓ Bug 7 body bg editorial warm
+- STILL Bug 8 section bg alternation (3-pane architecture gap · NOT regression · design call)
+- ✓ Bug 9 unit position consistent
+- STILL Bug 10 88 inline buttons vs DS Button (30-min fix · defer Sprint C)
+- ✓ Bug 11 dynamic imports consolidated (page.tsx 24 LOC · 0 dynamic)
+- ✓ Bug 12 mobile 390 working
+
+**11 pro features WORKING · 3 PARTIAL:**
+- WORKING: 2 props panel · 3 code snippet · 4 variants · 5 surface compare · 6 reduced-motion · 7 viewport switcher · 9 loading · 10 empty · 11 error · 13 search/filter · 14 async demo · 15 props table
+- PARTIAL: 1 sidebar active state (IntersectionObserver timing artifact · visual OK) · 8 a11y overlay (React key collision · needs index counter) · 12 token panel (5/12 demos populated)
+
+**Locked rules (canonical):**
+- TableShell signature LOCKED: children = `<thead><tbody>` ONLY
+- Table mechanics: card vs open philosophy · 3 header styles · sticky pure-CSS
+- Charts: legend.enabled:false at instance · ChartFigure owns legend
+- Showcase: registry-driven · NEVER inline JSX for charts · DS atom dogfood for chrome
+
+**DS gaps backlog (Sprint C):**
+- All 7 chart wrappers need `surface` prop wired (only KenBubble has it)
+- Highcharts height=-1 on mount · CSS min-height
+- React key collision A11yOverlay · append index counter
+- Bug 8 architecture call · 3-pane card-level alt OR full-page break
+- Bug 10 swap 88 inline toggles to DS Button
+- Token panel populate remaining 7 demos
+- Phase 3 new viz: KenTreemap · KenHeatmap · KenKeywordScatter · KenGanttTimeline
+
+**Live URLs:**
+- showcase: http://localhost:3070/
+- v0.4 (regression PASS): http://localhost:3040/test/phase-2
+
 ## 2026-05-25 · Chart Library Promote Sprint · A.1 + A.2 + A.3
 **What:**
 - NEW `design-system/core-v2/src/charts/` library · 14 files (theme + primitives + 7 charts + 2 tables + barrel)

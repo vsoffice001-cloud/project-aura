@@ -10,7 +10,8 @@
     "dev": "next dev --port 3070",
     "build": "next build",
     "start": "next start --port 3070",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src/"
   },
   "dependencies": {
     "@kenresearch/design-system": "workspace:*",
@@ -27,6 +28,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.60.0",
+    "@typescript-eslint/parser": "^8.60.0",
+    "eslint": "^10.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

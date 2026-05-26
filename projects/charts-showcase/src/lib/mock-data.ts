@@ -124,6 +124,163 @@ export const PROPERTY_PLAYERS: PlayerColumn[] = [
   },
 ];
 
+// ─── KenTreemap ───────────────────────────────────────────────────
+
+// TreemapNode is still exported as alias from DS · TreemapCellData is the canonical new name
+import type { TreemapCellData } from '@kenresearch/design-system/charts';
+
+/** Cold-chain operator estimated capacity · pallets · 2024 estimates */
+// TODO: replace w/ real API: GET /api/v1/market/ecosystem/capacity
+export const TREEMAP_DATA: TreemapCellData[] = [
+  { id: 'lineage',    name: 'Lineage',          value: 590000, tier: 1, subText: '590,000 pallets', metaText: '12.5% share' },
+  { id: 'americold',  name: 'Americold',         value: 226000, tier: 1, subText: '226,000 pallets', metaText: '4.8% share' },
+  { id: 'lineage_au', name: 'Lineage AU',        value: 145000, tier: 2, subText: '145,000 pallets', metaText: '3.1% share' },
+  { id: 'swisslog',   name: 'Swisslog',          value: 98000,  tier: 2, subText: '98,000 pallets',  metaText: '2.1% share' },
+  { id: 'linfox',     name: 'Linfox',            value: 82000,  tier: 2, subText: '82,000 pallets',  metaText: '1.7% share' },
+  { id: 'cooltrans',  name: 'Cooltrans',         value: 61000,  tier: 2, subText: '61,000 pallets',  metaText: '1.3% share' },
+  { id: 'metcash',    name: 'Metcash Cold',      value: 44000,  tier: 3, subText: '44,000 pallets',  metaText: '0.9% share' },
+  { id: 'sigma',      name: 'Sigma Pharma',      value: 38000,  tier: 3, subText: '38,000 pallets',  metaText: '0.8% share' },
+  { id: 'nz_cold',    name: 'NZ Cold Storage',   value: 29000,  tier: 3, subText: '29,000 pallets',  metaText: '0.6% share' },
+  { id: 'other',      name: 'Other',             value: 22000,  tier: 3, subText: '22,000 pallets',  metaText: '0.5% share' },
+];
+
+// ─── KenHeatmap ───────────────────────────────────────────────────
+
+import type { HeatmapCell } from '@kenresearch/design-system/charts';
+
+export const HEATMAP_ROWS = ['Pharma', 'Food & Bev', 'Floral', 'Dairy', 'Meat & Seafood'];
+export const HEATMAP_COLS = ['Storage', 'Transport', 'Last-mile', 'Cross-border'];
+
+export const HEATMAP_CELLS: HeatmapCell[] = [
+  { rowKey: 'Pharma',        colKey: 'Storage',      value: 9.2, starRating: 5 },
+  { rowKey: 'Pharma',        colKey: 'Transport',    value: 8.8, starRating: 5 },
+  { rowKey: 'Pharma',        colKey: 'Last-mile',    value: 7.1, starRating: 4 },
+  { rowKey: 'Pharma',        colKey: 'Cross-border', value: 8.5, starRating: 5 },
+  { rowKey: 'Food & Bev',    colKey: 'Storage',      value: 7.5, starRating: 4 },
+  { rowKey: 'Food & Bev',    colKey: 'Transport',    value: 8.2, starRating: 4 },
+  { rowKey: 'Food & Bev',    colKey: 'Last-mile',    value: 8.9, starRating: 5 },
+  { rowKey: 'Food & Bev',    colKey: 'Cross-border', value: 6.4, starRating: 3 },
+  { rowKey: 'Floral',        colKey: 'Storage',      value: 5.1, starRating: 3 },
+  { rowKey: 'Floral',        colKey: 'Transport',    value: 4.8, starRating: 2 },
+  { rowKey: 'Floral',        colKey: 'Last-mile',    value: 3.9, starRating: 2 },
+  { rowKey: 'Dairy',         colKey: 'Storage',      value: 8.1, starRating: 4 },
+  { rowKey: 'Dairy',         colKey: 'Transport',    value: 7.7, starRating: 4 },
+  { rowKey: 'Dairy',         colKey: 'Last-mile',    value: 6.8, starRating: 3 },
+  { rowKey: 'Dairy',         colKey: 'Cross-border', value: 5.5, starRating: 3 },
+  { rowKey: 'Meat & Seafood', colKey: 'Storage',     value: 8.7, starRating: 5 },
+  { rowKey: 'Meat & Seafood', colKey: 'Transport',   value: 7.9, starRating: 4 },
+  { rowKey: 'Meat & Seafood', colKey: 'Cross-border', value: 7.3, starRating: 4 },
+];
+
+// ─── KenKeywordScatter ────────────────────────────────────────────
+
+import type { KeywordItem } from '@kenresearch/design-system/charts';
+
+export const KEYWORD_DATA: KeywordItem[] = [
+  { id: 'k1',  text: 'AI-Vision QC',      weight: 1.00 },
+  { id: 'k2',  text: 'Reefer-EV Fleet',   weight: 0.88 },
+  { id: 'k3',  text: 'Blockchain Track',  weight: 0.75 },
+  { id: 'k4',  text: 'IoT Monitoring',    weight: 0.82 },
+  { id: 'k5',  text: 'Pharma GDP',        weight: 0.90 },
+  { id: 'k6',  text: 'Last-mile Cold',    weight: 0.70 },
+  { id: 'k7',  text: 'Automation',        weight: 0.68 },
+  { id: 'k8',  text: 'Dark Stores',       weight: 0.63 },
+  { id: 'k9',  text: 'Micro-fulfilment',  weight: 0.58 },
+  { id: 'k10', text: 'Carbon Credits',    weight: 0.50 },
+  { id: 'k11', text: 'Cross-border',      weight: 0.55 },
+  { id: 'k12', text: 'Drone Delivery',    weight: 0.45 },
+  { id: 'k13', text: 'Gene Therapy',      weight: 0.42 },
+  { id: 'k14', text: 'Solar Reefer',      weight: 0.48 },
+  { id: 'k15', text: 'RFID Tags',         weight: 0.38 },
+  { id: 'k16', text: 'NDC Build-out',     weight: 0.72 },
+  { id: 'k17', text: 'Biosimilars',       weight: 0.35 },
+  { id: 'k18', text: 'AgriFood Tech',     weight: 0.40 },
+  { id: 'k19', text: 'mRNA Logistics',    weight: 0.80 },
+  { id: 'k20', text: 'ESG Reporting',     weight: 0.30 },
+  { id: 'k21', text: 'Pallet Pooling',    weight: 0.28 },
+  { id: 'k22', text: 'Hydrogen Trucks',   weight: 0.52 },
+  { id: 'k23', text: 'Smart Packaging',   weight: 0.34 },
+  { id: 'k24', text: 'Digital Twin',      weight: 0.60 },
+  { id: 'k25', text: 'Predictive Maint',  weight: 0.44 },
+];
+
+// ─── KenGanttTimeline ─────────────────────────────────────────────
+
+import type { GanttEntry } from '@kenresearch/design-system/charts';
+
+export const GANTT_PERIODS = ['FY25', 'FY26', 'FY27', 'FY28', 'FY29', 'FY30'] as const;
+
+export const GANTT_ENTRIES: GanttEntry[] = [
+  {
+    id: 'lin-syd',
+    entityName: 'Lineage Sydney NDC',
+    phases: [
+      { period: 'FY25', phase: 'planning' },
+      { period: 'FY26', phase: 'build' },
+      { period: 'FY27', phase: 'commissioning' },
+      { period: 'FY28', phase: 'live' },
+    ],
+  },
+  {
+    id: 'amer-mel',
+    entityName: 'Americold Melbourne',
+    phases: [
+      { period: 'FY25', phase: 'build' },
+      { period: 'FY26', phase: 'commissioning' },
+      { period: 'FY27', phase: 'live' },
+      { period: 'FY28', phase: 'live' },
+    ],
+  },
+  {
+    id: 'linfox-bris',
+    entityName: 'Linfox Brisbane Hub',
+    phases: [
+      { period: 'FY25', phase: 'planning' },
+      { period: 'FY26', phase: 'planning' },
+      { period: 'FY27', phase: 'build' },
+      { period: 'FY28', phase: 'commissioning' },
+      { period: 'FY29', phase: 'live' },
+    ],
+  },
+  {
+    id: 'cool-perth',
+    entityName: 'Cooltrans Perth WA',
+    phases: [
+      { period: 'FY26', phase: 'planning' },
+      { period: 'FY27', phase: 'build' },
+      { period: 'FY28', phase: 'live' },
+    ],
+  },
+  {
+    id: 'sigma-darwin',
+    entityName: 'Sigma Pharma Darwin',
+    phases: [
+      { period: 'FY27', phase: 'planning' },
+      { period: 'FY28', phase: 'build' },
+      { period: 'FY29', phase: 'commissioning' },
+      { period: 'FY30', phase: 'live' },
+    ],
+  },
+  {
+    id: 'metcash-adl',
+    entityName: 'Metcash Adelaide',
+    phases: [
+      { period: 'FY25', phase: 'completed' },
+      { period: 'FY26', phase: 'live' },
+      { period: 'FY27', phase: 'live' },
+    ],
+  },
+  {
+    id: 'new-entrant',
+    entityName: 'New Entrant (TBD)',
+    phases: [
+      { period: 'FY28', phase: 'planning' },
+      { period: 'FY29', phase: 'build' },
+      { period: 'FY30', phase: 'commissioning' },
+    ],
+  },
+];
+
 // ─── RankingTable ─────────────────────────────────────────────────
 
 import type { RankingRow, RankingTableColumns } from '@kenresearch/design-system/charts';

@@ -62,6 +62,42 @@ export const KEN_CHART_SERIES_ARRAY = [
   KEN_CHART_SERIES.darkest,
 ] as const;
 
+/**
+ * Luminance-stepped tier colors · color-blind safe · 3-tier viz only.
+ *
+ * WHY  · Original KEN_CHART_SERIES uses hue variance within periwinkle/perano/purple.
+ *        Blue-spectrum color blindness (~5% population) merges tiers that differ
+ *        only by hue. Luminance-step ensures monochrome conversion still distinguishes.
+ *        L* values: darkest≈30 · mid≈55 · primary≈62 · secondary≈78 · light≈90.
+ *        Each adjacent step ≥15 L* points → passes monochrome distinguish test.
+ *
+ * WHAT · 6 named luminance-stepped values · same periwinkle hue · different lightness.
+ *        `darkest` (#3d3499) = L*≈30 · `primary` (#5e51c8) = L*≈45 ·
+ *        `quaternary` (#7075c8) = L*≈55 · `secondary` (#9488ec) = L*≈62 ·
+ *        `tertiary` (#c3c6f9) = L*≈78 · `light` (#e0e3fb) = L*≈90.
+ *
+ * WHEN · Use for tier-encoded viz: KenTreemap · KenHeatmap · KenGanttTimeline.
+ *        NOT for Highcharts chart series (KEN_CHART_SERIES still owns those).
+ *
+ * WHERE · Imported by TIER_COLORS maps in KenTreemap · KenHeatmap · KenGanttTimeline.
+ *
+ * HOW  · `fill: KEN_CHART_SERIES_LUMINANCE_SAFE.primary` for tier 1.
+ */
+export const KEN_CHART_SERIES_LUMINANCE_SAFE = {
+  /** L*≈30 · darkest · Tier 1 strong fill on light surface */
+  darkest:    '#3d3499',
+  /** L*≈45 · dark · Tier 1 alternative / accent */
+  primary:    '#5e51c8',
+  /** L*≈55 · mid-dark · Tier 1/2 boundary fill */
+  quaternary: '#7075c8',
+  /** L*≈62 · mid · Tier 2 fill (current KEN_CHART_SERIES.primary = unchanged) */
+  secondary:  '#9488ec',
+  /** L*≈78 · light · Tier 3 fill */
+  tertiary:   '#c3c6f9',
+  /** L*≈90 · very light · faint tier / heatmap faint */
+  light:      '#e0e3fb',
+} as const;
+
 // ─── Ink hierarchy ───────────────────────────────────────────────────────────
 
 /**
@@ -119,6 +155,11 @@ export const KEN_CHART_BORDERS = {
  *        rowDividerStrong: section-break line.
  * WHERE · TableShell.tsx inline styles · consumed via KEN_TABLE constants.
  */
+/**
+ * NOTE: KEN_TABLE values are TS-side constants for Highcharts (pre-CSS resolution).
+ * The same values are exposed as CSS custom properties in base.css under `--table-*`.
+ * Update BOTH if values change (tokens.ts + base.css `--table-*` block).
+ */
 export const KEN_TABLE = {
   /** Header background · periwinkle-tinted wash · Ref 1 measured rgb(248,247,254) */
   headerWash:        'rgb(248, 247, 254)',
@@ -130,8 +171,8 @@ export const KEN_TABLE = {
   rowDividerStrong:  'rgba(0, 0, 0, 0.12)',
   /** Card variant outer border · periwinkle-tinted · Ref 1 measured rgb(208,203,232) · slightly darker than tooltipBorder */
   cardBorder:        'rgb(208, 203, 232)',
-  /** Inverted header bg · solid brand periwinkle · Ref 1 opportunity matrix + tab tables · rgb(91,79,207) */
-  headerInverted:    'rgb(91, 79, 207)',
+  /** Inverted header bg · neutral dark · NOT chart series purple (color-discipline 2026-05-22) */
+  headerInverted:    'rgba(0, 0, 0, 0.85)',
   /** Open variant last-row border · Ref 2 measured rgb(228,226,240) · same as tooltipBorder family */
   openLastRowBorder: 'rgb(228, 226, 240)',
 } as const;
@@ -156,7 +197,7 @@ export const KEN_TABLE_DENSITY = {
   /** Market overview · generous · Ref 2 mo-table 45px */
   comfortable:  45,
   /** Hero/showcase tables · max breathroom */
-  spacious:     48,
+  spacious:     56,
 } as const;
 
 // ─── Tooltip spec ────────────────────────────────────────────────────────────

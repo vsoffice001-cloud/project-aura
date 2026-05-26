@@ -1,0 +1,287 @@
+{
+  "feature3_code_snippet": {
+    "preCount": 2,
+    "copyBtnCount": 2,
+    "firstCode": "import { ChartFigure } from '@kenresearch/design-system/charts';"
+  },
+  "feature4_variants": {
+    "count": 4,
+    "texts": [
+      "Mid \u00b7 12 months",
+      "Low \u00b7 12 months",
+      "High \u00b7 12 months",
+      "Top 5 highlight"
+    ]
+  },
+  "feature5_surface": {
+    "count": 14,
+    "texts": [
+      "light",
+      "dark",
+      "light",
+      "dark",
+      "light",
+      "dark"
+    ]
+  },
+  "topbar_controls": {
+    "buttonCount": 6,
+    "buttonDetails": [
+      {
+        "text": "",
+        "ariaLabel": "Open navigation",
+        "title": null,
+        "className": "md:hidden"
+      },
+      {
+        "text": "1440",
+        "ariaLabel": "Preview at 1440px viewport",
+        "title": "1440px",
+        "className": ""
+      },
+      {
+        "text": "1024",
+        "ariaLabel": "Preview at 1024px viewport",
+        "title": "1024px",
+        "className": ""
+      },
+      {
+        "text": "390",
+        "ariaLabel": "Preview at 390px viewport",
+        "title": "390px",
+        "className": ""
+      },
+      {
+        "text": "A11y",
+        "ariaLabel": "Show a11y overlay \u2014 reveals aria labels and focus order",
+        "title": "A11y overlay",
+        "className": ""
+      },
+      {
+        "text": "System",
+        "ariaLabel": "Toggle reduced motion \u2014 currently using system preference",
+        "title": "Motion: system",
+        "className": ""
+      }
+    ],
+    "svgCount": 7
+  },
+  "feature7_breakpoints": {
+    "count": 3,
+    "texts": [
+      "1440",
+      "1024",
+      "390"
+    ]
+  },
+  "feature8_a11y": {
+    "buttonCount": 1,
+    "buttonTexts": [
+      "A11y"
+    ],
+    "overlayCount": 0
+  },
+  "features9_11_states": {
+    "skeletonCount": 0,
+    "emptyStateCount": 0,
+    "errorStateCount": 0,
+    "tabCount": 0,
+    "tabTexts": [],
+    "stateLinks": [
+      {
+        "text": "ChartSkeleton",
+        "href": "#state-chartskeleton"
+      },
+      {
+        "text": "TableSkeleton",
+        "href": "#state-tableskeleton"
+      },
+      {
+        "text": "ChartEmptyState",
+        "href": "#state-emptystate"
+      },
+      {
+        "text": "ErrorState",
+        "href": "#state-errorstate"
+      },
+      {
+        "text": "AsyncFetchDemo",
+        "href": "#state-async-fetch"
+      }
+    ]
+  },
+  "feature14_async": {
+    "found": true,
+    "hasButton": true,
+    "buttonTexts": [
+      "Refetch",
+      "Simulate error"
+    ]
+  },
+  "feature12_tokens": {
+    "cssVarCount": 0,
+    "tokenPanelCount": 0,
+    "sampleVars": []
+  },
+  "feature13_search": {
+    "searchFound": true,
+    "searchType": "search",
+    "searchPlaceholder": "Search components\u2026 ( / )",
+    "checkboxCount": 4
+  },
+  "feature15_props_table": {
+    "totalTables": 5,
+    "propsTableCount": 1,
+    "firstHeaders": [
+      "name",
+      "type",
+      "default",
+      "description"
+    ]
+  },
+  "bug3_donut_detail": {
+    "found": true,
+    "chartWidth": 239,
+    "parentWidth": 240,
+    "leftMargin": null,
+    "rightMargin": 1,
+    "centered": true
+  },
+  "bug4_bubble_detail": {
+    "found": true,
+    "darkSurfaceFound": true,
+    "darkSurfacePaddingTop": "0px",
+    "darkSurfaceClasses": "absolute inset-0 w-[200%] transition-transform ease-out pointer-events-none moti",
+    "chartTop": 351
+  },
+  "bug6_sticky": {
+    "found": true,
+    "totalThs": 5,
+    "stickyThCount": 0,
+    "stickyTop": null,
+    "stickyBorderBottom": null,
+    "stickyZIndex": null,
+    "scrollParentCount": 1
+  },
+  "table_header_styles": {
+    "count": 0,
+    "texts": []
+  },
+  "bug8_demo_bgs": [
+    {
+      "id": "chart-column",
+      "found": true,
+      "sectionBg": "rgba(0, 0, 0, 0)",
+      "canvasBg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "id": "chart-bar",
+      "found": true,
+      "sectionBg": "rgba(0, 0, 0, 0)",
+      "canvasBg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "id": "chart-dual-column",
+      "found": true,
+      "sectionBg": "rgba(0, 0, 0, 0)",
+      "canvasBg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "id": "chart-bubble",
+      "found": true,
+      "sectionBg": "rgba(0, 0, 0, 0)",
+      "canvasBg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    },
+    {
+      "id": "chart-donut",
+      "found": true,
+      "sectionBg": "rgba(0, 0, 0, 0)",
+      "canvasBg": "rgba(0, 0, 0, 0)",
+      "classes": ""
+    }
+  ],
+  "bug9_unit": [
+    {
+      "hasUnit": false,
+      "unitText": null,
+      "unitTop": null,
+      "unitRight": null,
+      "unitPosition": null,
+      "hasEyebrow": false,
+      "hasTitle": true
+    },
+    {
+      "hasUnit": false,
+      "unitText": null,
+      "unitTop": null,
+      "unitRight": null,
+      "unitPosition": null,
+      "hasEyebrow": false,
+      "hasTitle": true
+    },
+    {
+      "hasUnit": false,
+      "unitText": null,
+      "unitTop": null,
+      "unitRight": null,
+      "unitPosition": null,
+      "hasEyebrow": false,
+      "hasTitle": true
+    }
+  ],
+  "bug10_btn_detail": {
+    "total": 88,
+    "withMeaningfulInlineStyle": 88,
+    "withClasses": 83,
+    "inlineSamples": [
+      {
+        "text": "",
+        "style": "background: none; border-width: medium; border-style: none; border-color: curren",
+        "classes": "md:hidden"
+      },
+      {
+        "text": "1440",
+        "style": "background: rgba(148, 136, 236, 0.15); border: 1px solid rgba(91, 79, 207, 0.3);",
+        "classes": ""
+      },
+      {
+        "text": "1024",
+        "style": "background: none; border: 1px solid transparent; border-radius: 5px; cursor: poi",
+        "classes": ""
+      },
+      {
+        "text": "390",
+        "style": "background: none; border: 1px solid transparent; border-radius: 5px; cursor: poi",
+        "classes": ""
+      },
+      {
+        "text": "A11y",
+        "style": "background: none; border: 1px solid transparent; border-radius: 5px; cursor: poi",
+        "classes": ""
+      }
+    ]
+  },
+  "bug12_mobile": {
+    "sidebarDisplay": "none",
+    "sidebarPosition": "sticky",
+    "hamburgerFound": true,
+    "hamburgerLabel": "Open navigation",
+    "chartWidths": [
+      300,
+      300,
+      300
+    ],
+    "viewportWidth": 390
+  },
+  "v04_probes": {
+    "chartCount": 7,
+    "tableCount": 3,
+    "nestedTableCount": 0,
+    "propTableCount": 1
+  },
+  "v04_errors": []
+}

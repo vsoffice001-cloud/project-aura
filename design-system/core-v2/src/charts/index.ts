@@ -22,12 +22,25 @@
  *   - chart presets (area · line · pie · bar · column)
  */
 
+// ─── Phase C · New Charts (Sprint 2026-05-26) ─────────────────────────────────
+export { KenTreemap } from './charts/KenTreemap';
+export type { KenTreemapProps, TreemapCellData, TreemapNode } from './charts/KenTreemap';
+
+export { KenHeatmap } from './charts/KenHeatmap';
+export type { KenHeatmapProps, HeatmapCell, HeatmapTier } from './charts/KenHeatmap';
+
+export { KenKeywordScatter } from './charts/KenKeywordScatter';
+export type { KenKeywordScatterProps, KeywordItem } from './charts/KenKeywordScatter';
+
+export { KenGanttTimeline } from './charts/KenGanttTimeline';
+export type { KenGanttTimelineProps, GanttEntry, GanttPhase } from './charts/KenGanttTimeline';
+
 // ─── Phase A.2 · Charts ───────────────────────────────────────────────────────
 export { KenBarChart } from './charts/KenBarChart';
 export type { KenBarChartProps } from './charts/KenBarChart';
 
 export { KenBubbleChart } from './charts/KenBubbleChart';
-export type { KenBubbleChartProps, BubblePoint, ChartSurface } from './charts/KenBubbleChart';
+export type { KenBubbleChartProps, BubblePoint } from './charts/KenBubbleChart';
 
 export { KenColumnChart } from './charts/KenColumnChart';
 export type { KenColumnChartProps } from './charts/KenColumnChart';
@@ -64,6 +77,13 @@ export type { ChartEmptyStateProps } from './states/EmptyState';
 export { ErrorState } from './states/ErrorState';
 export type { ErrorStateProps } from './states/ErrorState';
 
+// ─── Phase G.1 · Tooltip + Truncation primitives ─────────────────────────────
+export { CellTooltip } from './primitives/CellTooltip';
+export type { CellTooltipProps } from './primitives/CellTooltip';
+
+export { TruncatedText } from './primitives/TruncatedText';
+export type { TruncatedTextProps } from './primitives/TruncatedText';
+
 // ─── Phase A.1 · Primitives ───────────────────────────────────────────────────
 export { ChartFigure } from './primitives/ChartFigure';
 export type { ChartFigureProps, LegendEntry, LegendKind, SourceInfo } from './primitives/ChartFigure';
@@ -84,6 +104,7 @@ export type { TableShellProps, TableDensity, TableVariant, TableHeaderStyle } fr
 export {
   KEN_CHART_SERIES,
   KEN_CHART_SERIES_ARRAY,
+  KEN_CHART_SERIES_LUMINANCE_SAFE,
   KEN_INK,
   KEN_CHART_BORDERS,
   KEN_TOOLTIP,
@@ -91,7 +112,8 @@ export {
   KEN_CHART_FONT,
 } from './theme/tokens';
 
-export { buildKenChartBase, prefersReducedMotion } from './theme/highcharts-base';
+export { buildKenChartBase, prefersReducedMotion, surfaceOverrides } from './theme/highcharts-base';
+export type { ChartSurface } from './theme/highcharts-base';
 
 // ─── Legacy · v1 DS (kept for backward compat) ───────────────────────────────
 // SSR: Highcharts is browser-only — wrap consumer with next/dynamic({ ssr: false })

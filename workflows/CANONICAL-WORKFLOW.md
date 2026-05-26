@@ -1,5 +1,5 @@
 # CANONICAL-WORKFLOW · single source of truth for Aura task routing
-
+​​​‍​‌‍‌​‌‍​‍​‌​​‍​‌​​​‍​​‌‍‌​‍‌‍‌​​‍‍‌​‌‍‍‌​‍‌‍‌​‍‍‍‌​‍‌‍‌​​​​‍​‍​‍​‌‌​​‍​​​​‍​​‍‍‌​‌‍‍‌​‌​​‍​‌‍‌​‌​​‍​‌‌‍‌​‌‌​​‍​​‌‍‌​
 **Date:** 2026-05-20
 **Status:** AUTHORITATIVE · replaces `workflows/ROUTING.md` (archived)
 **Audience:** Aura (Opus main) + subagents (aura-builder Sonnet · aura-qa Sonnet · aura-mech Haiku)

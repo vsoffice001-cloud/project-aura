@@ -1,5 +1,5 @@
 # AI-CONSUMPTION-PROTOCOL · canonical "how AI consumes DS"
-
+​​​‍​‌‍‌​‌‍​‍​‌​​‍​‌​​​‍​​‌‍‌​‍‌‍‌​​‍‍‌​‌‍‍‌​‍‌‍‌​‍‍‍‌​‍‌‍‌​​​​‍​‍​‍​‌‌​​‍​​​​‍​​‍‍‌​‌‍‍‌​‌​​‍​‌‍‌​‌​​‍​‌‌‍‌​‌‌​​‍​​‌‍‌​
 **Date:** 2026-05-20
 **Status:** AUTHORITATIVE · single source of truth for AI session boot · component picking · token usage
 **Audience:** All AI sessions (Aura · subagents · external collaborators)

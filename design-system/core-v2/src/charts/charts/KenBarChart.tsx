@@ -3,6 +3,10 @@
 /**
  * KenBarChart · horizontal bar chart · Ken DS chart wrapper.
  *
+ * Mobile strategy (Sprint G.3) · REFLOW:
+ *   Already horizontal — handles narrow viewports well.
+ *   At <640px: reduce left margin (from 96 to 72px) via responsive.rules.
+ *
  * WHY  · Horizontal bars handle long category names cleanly · vertical ColumnChart
  *        rotates labels 45° (rejected per refs). 3-8 categories · % share OR
  *        absolute value · ranked OR ordered.
@@ -36,7 +40,8 @@
 import { useMemo, useRef, useEffect } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
-import { buildKenChartBase } from '../theme/highcharts-base';
+import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
@@ -55,7 +60,7 @@ export interface KenBarChartProps {
   /** Show value at end of each bar · default true */
   showValueLabels?: boolean;
   /** Surface context (light=default · dark=cinematic section) */
-  surface?: 'light' | 'dark';
+  surface?: ChartSurface;
   /** Loading state · renders ChartSkeleton instead of chart */
   loading?: boolean;
   /** Empty state · renders EmptyState instead of chart */
@@ -101,7 +106,7 @@ export function KenBarChart({
   height = 240,
   unit = '',
   showValueLabels = true,
-  surface: _surface = 'light',
+  surface = 'light' as ChartSurface,
   loading,
   empty,
   errorMessage,
@@ -110,10 +115,12 @@ export function KenBarChart({
   disableReveal = false,
 }: KenBarChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
-    return deepMerge(base, {
+    const surfOpts = surfaceOverrides(surface);
+    return deepMerge(deepMerge(base, surfOpts), {
       chart: {
         type: 'bar',
         height,
@@ -173,6 +180,10 @@ export function KenBarChart({
           borderWidth: 0,
           pointPadding: 0.15,
           groupPadding: 0.1,
+          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          states: {
+            inactive: { opacity: 0.3 },
+          },
           dataLabels: {
             enabled: showValueLabels,
             inside: false,
@@ -202,13 +213,35 @@ export function KenBarChart({
           showInLegend: false,
         },
       ],
+      // Mobile strategy: REFLOW · reduce left margin at narrow to reclaim horizontal space
+      responsive: {
+        rules: [
+          {
+            condition: { maxWidth: 640 },
+            chartOptions: {
+              chart: { marginLeft: 72 },
+              legend: { itemDistance: 8 },
+            },
+          },
+        ],
+      },
     } as Partial<Highcharts.Options>);
-  }, [labels, data, height, unit, showValueLabels]);
+  }, [labels, data, height, unit, showValueLabels, surface]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks
@@ -219,6 +252,7 @@ export function KenBarChart({
   return (
     <ChartReveal disabled={disableReveal}>
       <div
+        ref={(el) => { containerRef.current = el; }}
         className={['w-full', className ?? ''].join(' ')}
         role="img"
         aria-label={ariaLabel ?? 'Horizontal bar chart'}

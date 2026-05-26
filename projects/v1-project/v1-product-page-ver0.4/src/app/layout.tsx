@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Noto_Serif } from 'next/font/google';
 import './globals.css';
+import { AuraBeacon } from './aura-beacon';
 
 // Variable fonts · omit `weight` prop → next/font fetches the variable axis (single file · full weight range)
 const dmSans = DM_Sans({
@@ -39,6 +40,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <AuraBeacon />
         {children}
       </body>
     </html>

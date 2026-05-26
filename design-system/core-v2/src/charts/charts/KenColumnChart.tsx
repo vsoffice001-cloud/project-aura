@@ -3,6 +3,10 @@
 /**
  * KenColumnChart · vertical-bar chart · Ken DS chart wrapper.
  *
+ * Mobile strategy (Sprint G.3) · SIMPLIFY at <640px:
+ *   x-axis labels rotate -45° when >6 bars · 10px font size.
+ *   Via Highcharts `responsive.rules` — ONE place · no JS resize listener.
+ *
  * WHY  · `@ken-research/charts` ColumnChart hardcodes `column.borderRadius:4` ·
  *        wraps every chart in 16px-radius padded card · concatenates AUD0Mn labels
  *        · uses violet `#7c3aed` bars. Local wrapper owns Highcharts directly ·
@@ -38,7 +42,8 @@
 import { useMemo, useRef, useEffect } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
-import { buildKenChartBase } from '../theme/highcharts-base';
+import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
+import type { ChartSurface } from '../theme/highcharts-base';
 import { KEN_CHART_SERIES_ARRAY } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
@@ -64,7 +69,7 @@ export interface KenColumnChartProps {
    */
   projectionStartIndex?: number;
   /** Surface context (light=default · dark=cinematic section) */
-  surface?: 'light' | 'dark';
+  surface?: ChartSurface;
   /** Loading state · renders ChartSkeleton instead of chart */
   loading?: boolean;
   /** Empty state · renders EmptyState instead of chart */
@@ -114,7 +119,7 @@ export function KenColumnChart({
   height = 360,
   unit,
   projectionStartIndex,
-  surface: _surface = 'light',
+  surface = 'light' as ChartSurface,
   loading,
   empty,
   errorMessage,
@@ -123,6 +128,7 @@ export function KenColumnChart({
   disableReveal = false,
 }: KenColumnChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
 
   // Mark projected points w/ dashed border + reduced opacity (built into pointWise data array)
   const pointWiseData = useMemo(() => {
@@ -143,7 +149,8 @@ export function KenColumnChart({
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
-    return deepMerge(base, {
+    const surfOpts = surfaceOverrides(surface);
+    return deepMerge(deepMerge(base, surfOpts), {
       chart: {
         type: 'column',
         height,
@@ -172,6 +179,14 @@ export function KenColumnChart({
           `;
         },
       },
+      plotOptions: {
+        column: {
+          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          states: {
+            inactive: { opacity: 0.3 },
+          },
+        },
+      },
       series: [
         {
           type: 'column',
@@ -180,14 +195,42 @@ export function KenColumnChart({
           showInLegend: false,
         },
       ],
+      // Mobile strategy: SIMPLIFY · rotate x-axis labels at <640px
+      // Highcharts responsive.rules applied here — ONE place · no JS resize listener
+      responsive: {
+        rules: [
+          {
+            condition: { maxWidth: 640 },
+            chartOptions: {
+              xAxis: {
+                labels: {
+                  rotation: labels.length > 6 ? -45 : 0,
+                  style: { fontSize: '10px' },
+                },
+              },
+              legend: { itemDistance: 8 },
+            },
+          },
+        ],
+      },
     } as Partial<Highcharts.Options>);
-  }, [labels, height, unit, pointWiseData]);
+  }, [labels, height, unit, pointWiseData, surface]);
 
   // Reflow on window resize · Highcharts doesn't always catch container resize w/o it
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // ResizeObserver · fires when parent container resizes (more reliable than window resize)
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return;
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => chartRef.current?.chart?.reflow());
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
   // State guards AFTER all hooks (Rules of Hooks: no conditional hook calls)
@@ -198,6 +241,7 @@ export function KenColumnChart({
   return (
     <ChartReveal disabled={disableReveal}>
       <figure
+        ref={(el) => { containerRef.current = el; }}
         className={className}
         role="img"
         aria-label={ariaLabel ?? 'Market data column chart'}
