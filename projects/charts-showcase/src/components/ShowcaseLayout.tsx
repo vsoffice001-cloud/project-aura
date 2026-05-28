@@ -82,7 +82,12 @@ function LayoutInner({ demos, allDemos, children }: ShowcaseLayoutProps) {
         style={{
           gridRow: '2',
           padding: 'clamp(20px, 3vw, 40px)',
-          overflowX: 'hidden',
+          // G.6 FIX: overflow-x:hidden moved to inner wrapper below.
+          // Setting overflow-x:hidden here forced overflow-y to 'auto' (CSS spec:
+          // mixed visible/hidden overflow values are coerced — both become auto).
+          // This gave <main> an implicit scroll context, which combined with
+          // overscroll-behavior-y:contain blocked iOS scroll-chain to page.
+          // overflow-x clipping now lives on the inner constraint wrapper only.
           minWidth: 0,
           outline: 'none',
         }}
@@ -93,6 +98,7 @@ function LayoutInner({ demos, allDemos, children }: ShowcaseLayoutProps) {
           style={{
             maxWidth: constrainedWidth ? `${constrainedWidth}px` : '900px',
             margin: '0 auto',
+            overflowX: 'hidden', // G.6: moved from <main> — prevents horizontal bleed without scroll-context trap
             ...(constrainedWidth ? {
               border: '1px dashed rgba(91,79,207,0.3)',
               borderRadius: '4px',
@@ -103,6 +109,8 @@ function LayoutInner({ demos, allDemos, children }: ShowcaseLayoutProps) {
           aria-label={constrainedWidth ? `Viewport preview at ${constrainedWidth}px` : undefined}
         >
           {children}
+          {/* Attribution mark · DS-driven · CSS class reads --ds-author-watermark · removable only by editing DS base.css. */}
+          <div className="ds-author-mark" aria-label="Project attribution" />
         </div>
       </main>
 

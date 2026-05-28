@@ -151,12 +151,18 @@ export function ShowcaseTopBar() {
 
         {/* Logo mark */}
         <div className="flex items-baseline gap-2">
-          <span
-            className="font-display font-light text-[var(--semantic-ink-strong)]"
-            style={{ fontSize: '14px', letterSpacing: '-0.01em', lineHeight: 1 }}
+          <a
+            href="http://localhost:5173"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-display font-light text-[var(--semantic-ink-strong)] hover:text-[var(--semantic-ink-body)] transition-colors"
+            style={{ fontSize: '14px', letterSpacing: '-0.01em', lineHeight: 1, textDecoration: 'none' }}
+            aria-label="Back to DS Hub"
+            title="DS Hub · localhost:5173"
           >
             Ken Research
-          </span>
+          </a>
+          {/* ink-role: keep · breadcrumb-divider · decorative single-char */}
           <span
             className="font-body text-[var(--semantic-ink-subtle)]"
             style={{ fontSize: '10px', fontWeight: 500 }}
@@ -238,7 +244,7 @@ export function ShowcaseTopBar() {
         {/* Demo count */}
         {search ? (
           <span
-            className="font-body text-[var(--semantic-ink-subtle)] hidden md:block"
+            className="font-body text-[var(--semantic-ink-muted)] hidden md:block"
             style={{ fontSize: '10px', whiteSpace: 'nowrap' }}
           >
             {DEMOS.filter(d =>
@@ -249,7 +255,7 @@ export function ShowcaseTopBar() {
           </span>
         ) : (
           <span
-            className="font-body text-[var(--semantic-ink-subtle)] hidden md:block"
+            className="font-body text-[var(--semantic-ink-muted)] hidden md:block"
             style={{ fontSize: '10px', whiteSpace: 'nowrap' }}
           >
             {DEMOS.length} demos

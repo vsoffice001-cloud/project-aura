@@ -74,6 +74,13 @@ export interface KenDualColumnChartProps {
    * @default false
    */
   disableReveal?: boolean;
+  /**
+   * Compare-mode flag · set true when rendered inside a `[data-compare-cell]` scope.
+   * Reduces min-width from 600px → 480px so chart fits compare-mode panes (~370-380px viewport)
+   * without triggering mobile scroll at desktop viewport. Bible § 4.2 KenDualColumnChart spec.
+   * @default false
+   */
+  compareMode?: boolean;
 }
 
 function deepMerge<T>(target: T, source: Partial<T>): T {
@@ -111,9 +118,21 @@ export function KenDualColumnChart({
   ariaLabel,
   className,
   disableReveal = false,
+  compareMode = false,
 }: KenDualColumnChartProps) {
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents hardcoded light rgba strings from leaking into dark surface formatters
+  const isDark = surface === 'dark';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  const inkBody   = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.75)';
+  // BUG C fix: tooltip bg is WHITE on both surfaces — text must always be dark ink
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
+  const tooltipInkBody   = 'rgba(26,26,46,0.75)';
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
@@ -124,22 +143,24 @@ export function KenDualColumnChart({
       tooltip: {
         useHTML: true,
         shared: true,
+        // PART A fix: surface-aware tooltip text via closure (bg stays WHITE per Bible § 9.14)
         formatter: function () {
           const points = (this as Highcharts.TooltipFormatterContextObject).points ?? [];
           const cat = (this as Highcharts.TooltipFormatterContextObject).x;
           const rows = points
             .map((p) => {
               const v = (p.y ?? 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+              // BUG C fix: tooltipInk* always dark — white tooltip bg on both surfaces
               return `<div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
                 <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${p.color};"></span>
-                <span style="font-size:10.5px;color:rgba(0,0,0,0.6);">${p.series.name}</span>
-                <span style="font-size:11.5px;color:rgb(26,26,46);font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v}${unit ? ' ' + unit : ''}</span>
+                <span style="font-size:10.5px;color:${tooltipInkBody};">${p.series.name}</span>
+                <span style="font-size:11.5px;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v}${unit ? ' ' + unit : ''}</span>
               </div>`;
             })
             .join('');
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};min-width:150px;">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:2px;">${cat}</div>
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:2px;">${cat}</div>
               ${rows}
             </div>
           `;
@@ -152,9 +173,13 @@ export function KenDualColumnChart({
           groupPadding: 0.12,
           pointPadding: 0.05,
           maxPointWidth: 42,
-          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          // PART B fix: Bible § 2.2 Column · inactive 0.4 · hover halo per § 2.6
           states: {
-            inactive: { opacity: 0.3 },
+            hover: {
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
+            },
+            inactive: { opacity: 0.4 },
           },
         },
       },
@@ -166,7 +191,7 @@ export function KenDualColumnChart({
         { type: 'column', name: series2.name, data: [...series2.data], color: KEN_CHART_SERIES_ARRAY[1] },
       ],
     } as Partial<Highcharts.Options>);
-  }, [labels, series1, series2, height, unit, surface]);
+  }, [labels, series1, series2, height, unit, surface, inkStrong, inkMuted, inkBody]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
@@ -191,8 +216,13 @@ export function KenDualColumnChart({
 
   return (
     <ChartReveal disabled={disableReveal}>
-      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper maintains 2-series legibility */}
+      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper maintains 2-series legibility.
+          G.7 Phase 5 Task 1: compareMode reduces min-width 600→480 per Bible § 4.2.
+          Compare cells are ~370-380px · 480px min still triggers horizontal scroll at compare
+          but 480px gives more legible bars than 600px. 600 is standard single-col mobile.
+          tabIndex={0} per axe scrollable-region-focusable rule (WCAG 2.1.1). */}
       <div
+        tabIndex={0}
         style={{
           overflowX: 'auto',
           WebkitOverflowScrolling: 'touch' as unknown as undefined,
@@ -204,9 +234,9 @@ export function KenDualColumnChart({
           className={[className ?? ''].join(' ')}
           role="img"
           aria-label={ariaLabel ?? 'Dual-series column chart'}
-          style={{ minWidth: 600 }}
+          style={{ minWidth: compareMode ? 480 : 600 }}
         >
-          <HighchartsReact ref={chartRef} highcharts={Highcharts} options={options} containerProps={{ style: { width: '100%', minWidth: 600 } }} />
+          <HighchartsReact ref={chartRef} highcharts={Highcharts} options={options} containerProps={{ style: { width: '100%', minWidth: compareMode ? 480 : 600 } }} />
         </div>
       </div>
     </ChartReveal>

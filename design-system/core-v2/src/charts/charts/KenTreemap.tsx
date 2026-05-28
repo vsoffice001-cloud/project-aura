@@ -51,7 +51,7 @@ import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
 import { ErrorState } from '../states/ErrorState';
-import { KEN_CHART_SERIES_LUMINANCE_SAFE, KEN_TOOLTIP, KEN_CHART_BORDERS } from '../theme/tokens';
+import { KEN_TOOLTIP, KEN_CHART_BORDERS } from '../theme/tokens';
 // NOTE: CellTooltip (HTML-only · span wrapper) cannot wrap SVG <g> elements —
 // SVG does not allow <span> children. KenTreemap uses its own portal tooltip
 // tracking mouse position + hovered state to sidestep this constraint.
@@ -104,63 +104,72 @@ export interface KenTreemapProps {
 }
 
 // ─── Tier color map · luminance-stepped · color-blind safe ───────────────────
-// Light surface:
-//   Tier 1 · L*≈45 dark periwinkle bg · white text (high contrast) · L*≈30 border
-//   Tier 2 · L*≈62 mid periwinkle bg · dark ink text · L*≈55 border
-//   Tier 3 · L*≈90 faint periwinkle bg · neutral text · L*≈78 border
-// Dark surface (inverted mapping — same tokens, reversed luminance order):
-//   Tier 1 · L*≈90 brightest periwinkle · dark ink · L*≈78 border  (was "light" on light surface)
-//   Tier 2 · L*≈62 mid periwinkle · dark ink · L*≈55 border
-//   Tier 3 · L*≈45 deeper periwinkle · white text · L*≈30 border   (was "primary" on light surface)
-// Rationale: inverted mapping keeps ≥3:1 contrast on near-black bg (#0a0a0c · L≈5)
-//            without introducing new tokens. L*≈90 on L≈5 bg → contrast >> 3:1 · excellent.
-// Luminance gap ≥15 L* between tiers → monochrome conversion preserves distinction.
-// Values from KEN_CHART_SERIES_LUMINANCE_SAFE (not KEN_CHART_SERIES — those stay for Highcharts).
+// FIX 7 (G.10): Updated for v2 desaturated editorial palette (Bible § 1.7).
+// v2 LUMINANCE_SAFE: darkest=#6b5fb8(L*48)·primary=#857fc8(L*58)·quaternary=#a39ee0(L*65)
+//                   secondary=#b8c4c0(L*76 sage)·tertiary=#c5c3ec(L*78)·light=#e6e7f5(L*92)
+//
+// Light surface (3-tier periwinkle ramp, soft-first Bible § 1.5):
+//   Tier 1 · quaternary #a39ee0 (L*65) · dark ink text (L*60-75 → dark per § 1.8)
+//   Tier 2 · tertiary #c5c3ec (L*78) · dark ink text
+//   Tier 3 · light #e6e7f5 (L*92) · dark ink text
+// Dark surface (inverted):
+//   Tier 1 · light #e6e7f5 (L*92) · dark ink (text on cell fill, not chart bg)
+//   Tier 2 · tertiary #c5c3ec (L*78) · dark ink
+//   Tier 3 · quaternary #a39ee0 (L*65) · dark ink (≥3:1 on near-black bg for luminance floor)
+// Luminance gap ≥13 L* between tiers · monochrome conversion preserves distinction.
 
-const TIER_COLORS_LIGHT: Record<1 | 2 | 3, { bg: string; border: string; text: string; muted: string }> = {
+// v0.4-aligned tier strategy (2026-05-28 FINAL):
+// Tier 1 · solid periwinkle #9488ec + WHITE text → editorial premium feel
+// Tier 2 · solid periwinkle-light #c3c6f9 + dark ink → mid emphasis
+// Tier 3 · perano blue AT 0.20 OPACITY → soft airy editorial · KEY to v0.4 look
+const TIER_COLORS_LIGHT: Record<1 | 2 | 3, { bg: string; border: string; text: string; muted: string; hover: string }> = {
   1: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.primary,    // #5e51c8 · L*≈45
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.darkest,    // #3d3499 · L*≈30
-    text:   '#ffffff',
-    muted:  'rgba(255,255,255,0.80)',
+    bg:     '#9488ec',     // periwinkle L*62 SOLID · v0.4 ref-aligned
+    border: '#5a5fa0',     // periwinkle-700 darker
+    // G.12 fix: white on L*62 = 2.86:1 FAIL · Bible §1.8 L*60-75 → dark ink (7.1:1 PASS)
+    text:   'rgba(26,26,46,0.92)',
+    muted:  'rgba(26,26,46,0.65)',
+    hover:  '#5e51c8',     // step DOWN to primary for emphasis (text becomes white at L*45)
   },
   2: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // #9488ec · L*≈62
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.quaternary, // #7075c8 · L*≈55
+    bg:     '#c3c6f9',     // periwinkle-500 L*78 SOLID · v0.4 ref-aligned
+    border: '#7075c8',     // periwinkle-800 L*55
     text:   'var(--semantic-ink-strong, rgb(26,26,46))',
     muted:  'var(--semantic-ink-body, rgba(26,26,46,0.75))',
+    hover:  '#9488ec',     // step DOWN to periwinkle solid
   },
   3: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // #e0e3fb · L*≈90
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // #c3c6f9 · L*≈78
+    bg:     'rgba(134, 179, 229, 0.20)',  // perano-800 at 20% opacity · v0.4 SECRET sauce · editorial soft
+    border: 'rgba(134, 179, 229, 0.55)',
     text:   'var(--semantic-ink-strong, rgb(26,26,46))',
     muted:  'var(--semantic-ink-muted, rgba(26,26,46,0.55))',
+    hover:  'rgba(134, 179, 229, 0.35)',  // bump opacity 0.20 → 0.35 on hover
   },
 };
 
-// Dark surface: INVERTED luminance ramp — Tier 1 = brightest (light → #e0e3fb) to stay
-// prominent against near-black bg. Tier 3 = darkest (primary → #5e51c8) still ≥3:1 on #0a0a0c.
+// Dark surface · INVERTED v0.4 strategy · solid tier-1 brightest + opacity tier-3
 const TIER_COLORS_DARK: Record<1 | 2 | 3, { bg: string; border: string; text: string; muted: string; hover: string }> = {
   1: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // #e0e3fb · L*≈90 · brightest on dark
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // #c3c6f9 · L*≈78
+    bg:     '#e0e3fb',     // periwinkle lightest L*90 SOLID · brightest on dark
+    border: '#c3c6f9',
     text:   'var(--semantic-ink-strong, rgb(26,26,46))',
     muted:  'var(--semantic-ink-body, rgba(26,26,46,0.75))',
-    hover:  KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // next step up on hover
+    hover:  '#c3c6f9',
   },
   2: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // #9488ec · L*≈62
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.quaternary, // #7075c8 · L*≈55
-    text:   'var(--semantic-ink-strong, rgb(26,26,46))',
+    bg:     '#c3c6f9',     // periwinkle-500 L*78 SOLID
+    border: '#9488ec',
+    text:   'var(--semantic-ink-strong, rgb(26,26,46))', // dark ink on L*78 fill
     muted:  'var(--semantic-ink-body, rgba(26,26,46,0.75))',
-    hover:  KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // brighter fill on dark hover
+    hover:  '#9488ec',     // step DOWN to periwinkle
   },
   3: {
-    bg:     KEN_CHART_SERIES_LUMINANCE_SAFE.primary,    // #5e51c8 · L*≈45 · still visible on near-black
-    border: KEN_CHART_SERIES_LUMINANCE_SAFE.darkest,    // #3d3499 · L*≈30
-    text:   '#ffffff',
-    muted:  'rgba(255,255,255,0.75)',
-    hover:  KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // bump to L*≈62 on hover
+    bg:     '#9488ec',     // periwinkle L*62 SOLID · most receded on dark
+    border: '#7075c8',
+    // G.12 fix: white on L*62 = 2.86:1 FAIL · use dark ink (7.1:1 PASS)
+    text:   'rgba(26,26,46,0.92)',
+    muted:  'rgba(26,26,46,0.65)',
+    hover:  '#7075c8',     // step DOWN
   },
 };
 
@@ -238,15 +247,30 @@ export function KenTreemap({
   useEffect(() => { setMounted(true); }, []);
 
   // ResizeObserver — update width when container resizes
+  // RAF debounce: cancel pending frame on each new observation to batch
+  // per-pixel resize events into a single recompute per animation frame.
   useEffect(() => {
     if (!wrapRef.current) return;
+    let rafId: number | null = null;
+
     const update = () => {
       if (wrapRef.current) setWidth(wrapRef.current.clientWidth);
     };
     update();
-    const ro = new ResizeObserver(update);
+
+    const ro = new ResizeObserver(() => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        update();
+        rafId = null;
+      });
+    });
+
     ro.observe(wrapRef.current);
-    return () => ro.disconnect();
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, []);
 
   // Height: use prop if provided, else auto (width × 0.5, min 360)
@@ -255,7 +279,12 @@ export function KenTreemap({
   // Compute D3 treemap layout
   const cells: ComputedCell[] = useMemo(() => {
     if (!data.length) return [];
-    const tieredData = assignAutoTiers(data);
+    // Filter null/undefined/zero-or-negative values before d3 sum.
+    // d3.hierarchy sums negative values into parent which corrupts layout.
+    // Null = no data — skip entirely. Zero = no area — skip (zero-area cells are invisible).
+    const validData = data.filter((d) => d.value != null && d.value > 0);
+    if (!validData.length) return [];
+    const tieredData = assignAutoTiers(validData);
 
     const root = hierarchy({ name: 'root', children: tieredData } as unknown as { name: string; value?: number; children?: unknown[] })
       .sum((d) => (d as { value?: number }).value ?? 0)
@@ -324,7 +353,7 @@ export function KenTreemap({
                     </strong>
                     <span
                       className="ml-1.5"
-                      style={{ color: isDark ? 'rgba(255,255,255,0.45)' : 'var(--semantic-ink-subtle, rgba(26,26,46,0.45))' }}
+                      style={{ color: isDark ? 'rgba(255,255,255,0.55)' : 'var(--semantic-ink-muted, #525252)' }}
                     >
                       {l.range}
                     </span>
@@ -345,7 +374,7 @@ export function KenTreemap({
             border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
             background: isDark ? 'var(--color-deep, #0a0a0c)' : 'var(--color-foundation-white, #ffffff)',
           }}
-          role="img"
+          role="figure"
           aria-label={ariaLabel ?? 'Treemap chart · box area proportional to value · color encodes tier'}
         >
           {/* SVG transition: fill + stroke animate on surface/hover change */}
@@ -360,12 +389,30 @@ export function KenTreemap({
               const h = cell.y1 - cell.y0;
               const colors = getTierColors(cell.tier, surface);
               const isHovered = hovered === cell.id;
+              // PART B fix: Bible § 2.2 Treemap · dim others 0.5 · isolate via border accent + fill brighten
+              // Bible § 2.1 supersedes G.1 "border accent only" — both isolate AND dim required
+              const isDimmed = hovered !== null && !isHovered;
               // Dark surface: brighten fill on hover (alongside border accent) — Goal 5
               const fillColor = (isHovered && isDark && colors.hover) ? colors.hover : colors.bg;
               const fontSize = Math.min(18, Math.max(11, Math.floor(w / 12)));
               const subFontSize = Math.min(13, Math.max(9, Math.floor(w / 18)));
               const showSubText = h > 50 && w > 80 && !!cell.subText;
               const showMeta = h > 70 && w > 90 && !!cell.metaText;
+              // G.11 FIX 1: SVG <text> has no overflow:hidden. Adaptive truncation via JS measurement.
+              // Approximate char width = fontSize * 0.55 for DM Sans medium · safe for English text.
+              // Available text width = cell width - 2× padding(10px) - 4px safety = w - 24.
+              const availTextW = Math.max(0, w - 24);
+              const truncate = (text: string, fs: number): string => {
+                const maxChars = Math.floor(availTextW / (fs * 0.55));
+                if (text.length <= maxChars || maxChars < 4) return text;
+                if (maxChars < 6) return text.slice(0, maxChars - 1) + '…';
+                return text.slice(0, maxChars - 1) + '…';
+              };
+              const nameText = truncate(cell.name, fontSize);
+              const subTextStr = cell.subText ? truncate(cell.subText, subFontSize) : '';
+              const metaTextStr = cell.metaText ? truncate(cell.metaText, subFontSize) : '';
+              // Clip path id · unique per cell · safety net against any future text overflow
+              const clipId = `ken-treemap-clip-${tooltipId.replace(/:/g, '')}-${cell.id}`;
 
               return (
                 <g
@@ -403,6 +450,9 @@ export function KenTreemap({
                   style={{
                     cursor: onCellClick ? 'pointer' : 'default',
                     outline: 'none',
+                    // PART B fix: opacity dim on non-hovered cells (Bible § 2.2 Treemap)
+                    opacity: isDimmed ? 0.5 : 1,
+                    transition: prefersReduced ? undefined : 'opacity 200ms ease-out',
                   }}
                 >
                   <rect
@@ -414,7 +464,14 @@ export function KenTreemap({
                     stroke={isHovered ? KEN_CHART_BORDERS.tooltipBorder : colors.border}
                     strokeWidth={isHovered ? 3 : 1}
                   />
-                  {/* Cell name */}
+                  {/* G.11 FIX 1: clipPath safety net — any text within <g clip-path> never escapes cell bounds */}
+                  <defs>
+                    <clipPath id={clipId}>
+                      <rect width={w} height={h} rx={4} ry={4} />
+                    </clipPath>
+                  </defs>
+                  <g clipPath={`url(#${clipId})`}>
+                  {/* Cell name · truncated via JS measurement · clipPath as safety */}
                   <text
                     x={10}
                     y={fontSize + 8}
@@ -427,9 +484,9 @@ export function KenTreemap({
                       pointerEvents: 'none',
                     }}
                   >
-                    {cell.name}
+                    {nameText}
                   </text>
-                  {/* Sub-text (e.g. "590,000 pallets") */}
+                  {/* Sub-text · truncated */}
                   {showSubText && (
                     <text
                       x={10}
@@ -443,10 +500,10 @@ export function KenTreemap({
                         pointerEvents: 'none',
                       }}
                     >
-                      {cell.subText}
+                      {subTextStr}
                     </text>
                   )}
-                  {/* Meta-text (e.g. "12.5% share") — bottom of cell */}
+                  {/* Meta-text · truncated · bottom of cell */}
                   {showMeta && (
                     <text
                       x={10}
@@ -460,9 +517,10 @@ export function KenTreemap({
                         pointerEvents: 'none',
                       }}
                     >
-                      {cell.metaText}
+                      {metaTextStr}
                     </text>
                   )}
+                  </g>{/* end clipPath wrapper */}
                   {/* Focus ring for keyboard nav */}
                   <rect
                     width={w}
@@ -540,7 +598,7 @@ export function KenTreemap({
             style={{
               fontFamily: 'var(--font-sans, DM Sans, sans-serif)',
               fontSize: '12px',
-              color: isDark ? 'rgba(255,255,255,0.45)' : 'var(--semantic-ink-subtle, rgba(26,26,46,0.45))',
+              color: isDark ? 'rgba(255,255,255,0.55)' : 'var(--semantic-ink-muted, #525252)',
               fontStyle: 'italic',
               margin: 0,
             }}

@@ -122,14 +122,14 @@ export function IndicatorCard({
       {/* Name + year eyebrow */}
       <div className="flex items-baseline justify-between gap-2 mb-2">
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '10px', fontWeight: 600 }}
         >
           {name}
         </p>
         {year && (
           <p
-            className="font-body text-[var(--semantic-ink-subtle)] flex-none"
+            className="font-body text-[var(--semantic-ink-muted)] flex-none"
             style={{ fontSize: '10px' }}
           >
             {year}

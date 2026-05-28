@@ -143,17 +143,18 @@ export function PremiumLockCard({
         role="region"
         aria-label={`${tierLabel} content · ${headline}`}
       >
-        <Lock size={11} aria-hidden="true" className="text-[var(--semantic-ink-subtle)] flex-none" />
+        {/* G.13 paywall UX: lock icon 11→14px for WCAG visible-indicator + scale match */}
+        <Lock size={14} aria-hidden="true" className="text-[var(--semantic-ink-subtle)] flex-none" />
         <span
           className="font-body text-[var(--semantic-ink-strong)] flex-1 min-w-0 truncate"
-          style={{ fontSize: '12px', lineHeight: 1.3, fontWeight: 500 }}
+          style={{ fontSize: 'var(--text-paywall-body, 13px)', lineHeight: 1.3, fontWeight: 500 }}
         >
           {headline}
         </span>
         <a
           href={primaryCta.href}
           className="inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 font-body font-medium text-[var(--color-brand-red,#b01f24)] hover:bg-[var(--black-50)] transition-colors flex-none whitespace-nowrap flex-shrink-0"
-          style={{ fontSize: '11.5px', letterSpacing: '0.01em' }}
+          style={{ fontSize: 'var(--text-paywall-cta, 12.8px)', letterSpacing: '0.01em' }}
         >
           {primaryCta.label}
           <span aria-hidden="true">→</span>
@@ -192,24 +193,24 @@ export function PremiumLockCard({
             padding: '2px 8px',
           }}
         >
-          <Lock size={9} aria-hidden="true" />
+          <Lock size={12} aria-hidden="true" />
           <span
             className="font-body uppercase"
-            style={{ fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.10em' }}
+            style={{ fontSize: 'var(--text-eyebrow, 11px)', fontWeight: 600, letterSpacing: 'var(--text-eyebrow-tracking, 0.10em)' }}
           >
             {tierLabel}
           </span>
         </span>
         <span
           className="font-body text-[var(--semantic-ink-strong)] flex-1 min-w-0"
-          style={{ fontSize: '12.5px', lineHeight: 1.4, fontWeight: 500 }}
+          style={{ fontSize: 'var(--text-paywall-body, 13px)', lineHeight: 1.4, fontWeight: 500 }}
         >
           {headline}
         </span>
         <a
           href={primaryCta.href}
           className={compactCtaClass}
-          style={{ fontSize: '12px', letterSpacing: '0.01em' }}
+          style={{ fontSize: 'var(--text-paywall-cta, 12.8px)', letterSpacing: '0.01em' }}
         >
           {primaryCta.label}
           <span aria-hidden="true">→</span>
@@ -240,19 +241,19 @@ export function PremiumLockCard({
           padding: '3px 10px',
         }}
       >
-        <Lock size={10} aria-hidden="true" />
+        <Lock size={14} aria-hidden="true" />
         <span
           className="font-body uppercase"
-          style={{ fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.10em' }}
+          style={{ fontSize: 'var(--text-eyebrow, 11px)', fontWeight: 600, letterSpacing: 'var(--text-eyebrow-tracking, 0.10em)' }}
         >
           {tierLabel}
         </span>
       </div>
 
-      {/* Headline · the specific value prop */}
+      {/* Headline · the specific value prop · G.13 paywall-title token */}
       <p
         className="font-display text-[var(--semantic-ink-strong)] tracking-tight"
-        style={{ fontSize: '17px', lineHeight: 1.3, fontWeight: 400 }}
+        style={{ fontSize: 'var(--text-paywall-title, 18px)', lineHeight: 1.3, fontWeight: 400 }}
       >
         {headline}
       </p>
@@ -264,7 +265,7 @@ export function PremiumLockCard({
             <li
               key={i}
               className="flex items-start gap-2 font-body text-[var(--semantic-ink-body)]"
-              style={{ fontSize: '12.5px', lineHeight: 1.5 }}
+              style={{ fontSize: 'var(--text-paywall-body, 13px)', lineHeight: 1.5 }}
             >
               <span
                 aria-hidden="true"

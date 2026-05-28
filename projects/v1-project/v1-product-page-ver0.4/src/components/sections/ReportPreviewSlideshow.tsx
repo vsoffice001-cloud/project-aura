@@ -328,10 +328,10 @@ export function ReportPreviewSlideshow({
         >
           Inside the Report
         </h2>
-        {/* DS gap: no --semantic-ink-on-dark-body token yet · rgba(255,255,255,0.60) kept · TODO: map once DS adds dark-surface text-opacity scale */}
+        {/* G.13.3 user direction · standalone subtitle = body */}
         <p
           className="font-body text-[1rem] max-w-2xl"
-          style={{ color: isDark ? 'rgba(255,255,255,0.60)' : 'var(--semantic-ink-subtle)' }}
+          style={{ color: isDark ? 'rgba(255,255,255,0.78)' : 'var(--semantic-ink-body)' }}
         >
           Browse through sample pages from our comprehensive market analysis report.
           Each report delivers in-depth research, expert insights, and data-driven
@@ -429,7 +429,7 @@ export function ReportPreviewSlideshow({
         {/* Disclaimer */}
         <p
           className="text-center text-[0.7rem] italic mt-1 relative z-[1]"
-          style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-subtle)' }}
+          style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-muted)' }}
         >
           Note: These are illustrative representations and do not reflect the actual data or real-world figures.
         </p>
@@ -650,7 +650,7 @@ export function ReportPreviewSlideshow({
             <div className="flex items-center gap-4 justify-center sm:justify-start">
               <span
                 className="font-body text-[0.875rem] flex items-center gap-1.5"
-                style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-subtle)' }}
+                style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-muted)' }}
               >
                 <Lock className="h-3 w-3 flex-shrink-0" />
                 No sign-up required
@@ -663,7 +663,7 @@ export function ReportPreviewSlideshow({
               </span>
               <span
                 className="font-body text-[0.875rem]"
-                style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-subtle)' }}
+                style={{ color: isDark ? 'rgba(255,255,255,0.50)' : 'var(--semantic-ink-muted)' }}
               >
                 PDF &middot; 4.2 MB
               </span>

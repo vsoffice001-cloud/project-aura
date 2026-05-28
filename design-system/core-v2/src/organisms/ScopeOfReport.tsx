@@ -170,7 +170,7 @@ export function ScopeOfReport({
                 maxWidth: '48rem',
                 lineHeight: '1.6',
                 marginTop: 'var(--space-4)',
-                fontFamily: 'var(--font-body)',
+                fontFamily: 'var(--font-sans)',
               }}
             >
               {description}
@@ -253,7 +253,7 @@ export function ScopeOfReport({
                       style={{
                         fontSize: 'var(--text-base)',
                         fontWeight: '700',
-                        fontFamily: 'var(--font-body)',
+                        fontFamily: 'var(--font-sans)',
                       }}
                     >
                       Click to Explore Interactive Mind Map

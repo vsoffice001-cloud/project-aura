@@ -22,7 +22,7 @@ export function ChapterExecutiveSummary() {
       {/* Chapter Label */}
       <div className="mb-4">
         <span
-          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle,#a3a3a3)]"
+          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle)]"
           style={{ fontSize: '10.5px', fontWeight: 600 }}
         >
           Chapter 1 · Executive Summary
@@ -81,9 +81,9 @@ function StatCard({ icon: Icon, label, value, sublabel }: StatCardProps) {
         <Icon className="h-4 w-4" strokeWidth={2} style={{ color: '#806ce0' }} />
       </div>
       <div className="flex flex-col">
-        <p className="text-[14px] text-[var(--black-500,#a3a3a3)]">{label}</p>
+        <p className="text-[14px] text-[var(--semantic-ink-subtle)]">{label}</p>
         <p className="text-[18px] font-bold text-black">{value}</p>
-        <p className="text-[13px] text-[var(--black-500,#a3a3a3)]">{sublabel}</p>
+        <p className="text-[13px] text-[var(--semantic-ink-subtle)]">{sublabel}</p>
       </div>
     </div>
   );
@@ -95,7 +95,7 @@ function SampleReportBody() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="space-y-4 text-[1rem] text-[var(--black-500,#a3a3a3)] leading-[1.7]">
+    <div className="space-y-4 text-[1rem] text-[var(--semantic-ink-subtle)] leading-[1.7]">
       <p>
         The Australia Cold Chain Market reached AUD 6,547.8 million in 2022 and is projected
         to grow at a compound annual growth rate (CAGR) of 10.03% through 2027, reaching an

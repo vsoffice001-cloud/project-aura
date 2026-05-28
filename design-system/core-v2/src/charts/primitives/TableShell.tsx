@@ -183,6 +183,14 @@ export interface TableShellProps {
   /** aria-label on the `<table>` element. */
   ariaLabel?: string;
   /**
+   * Optional ARIA role override on the `<table>` element.
+   * Use `"treegrid"` when the table has expandable parent-child rows (KenHierarchyTable)
+   * so that `aria-level` + `aria-expanded` on `<tr>` rows are semantically valid.
+   * Per WAI-ARIA spec, `aria-level` on `row` is only permitted inside a `treegrid`.
+   * @default undefined (uses native `<table>` implicit role)
+   */
+  tableRole?: 'treegrid' | 'grid';
+  /**
    * @deprecated Use `headerStyle="wash"` or `headerStyle="transparent"`.
    * Kept for backward compat — ignored when headerStyle is explicitly set.
    */
@@ -213,6 +221,7 @@ export function TableShell({
   className,
   caption,
   ariaLabel,
+  tableRole,
   headerWash,
 }: TableShellProps) {
   // Resolve headerStyle: explicit prop wins · fall back to legacy headerWash boolean
@@ -254,10 +263,22 @@ export function TableShell({
       }
       ${sel} thead th {
         background: ${isTransparent ? 'transparent' : headerBg};
-        ${isInverted ? 'color: #ffffff;' : ''}
+        ${isInverted ? 'color: rgba(255,255,255,0.92);' : ''}
         ${isTransparent ? `border-bottom: 1px solid var(--table-open-last-row-border, ${KEN_TABLE.openLastRowBorder});` : ''}
         ${!isTransparent ? `border-bottom: 1px solid var(--table-row-divider, rgba(0,0,0,0.10));` : ''}
       }
+      ${isInverted ? `
+        ${sel} thead th * {
+          color: rgba(255,255,255,0.92) !important;
+        }
+        ${sel} thead th [data-header-subtitle],
+        ${sel} thead th .subtitle,
+        ${sel} thead th p:last-child:not(:first-child),
+        ${sel} thead th p[style*="italic"],
+        ${sel} thead th p[class*="italic"] {
+          color: rgba(255,255,255,0.78) !important;
+        }
+      ` : ''}
       ${stickyHeader ? `
         ${sel} thead th {
           position: sticky;
@@ -368,9 +389,17 @@ export function TableShell({
         data-tableshell-id={instanceId}
         className={cn('tableshell', className)}
         style={wrapperStyle}
+        // WCAG 2.1 SC 2.1.1 · axe:scrollable-region-focusable
+        // Scrollable regions must be keyboard-focusable. tabIndex=0 when scrollX or
+        // stickyHeader creates a scroll context. SR users can then reach + scroll content.
+        tabIndex={(effectiveScrollX || stickyHeader) ? 0 : undefined}
       >
         <table
           aria-label={ariaLabel}
+          // BUG-FIX G.12: tableRole prop enables role="treegrid" for KenHierarchyTable.
+          // Per WAI-ARIA: aria-level on <tr> (row role) only valid inside treegrid.
+          // Without this, axe flags aria-conditional-attr serious violation.
+          role={tableRole}
           style={{
             borderCollapse: 'collapse',
             width: '100%',

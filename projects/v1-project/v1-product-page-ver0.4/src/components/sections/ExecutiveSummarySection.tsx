@@ -78,7 +78,7 @@ export function ExecutiveSummarySection() {
           {/* Top 3 takeaways */}
           <div className="pt-2">
             <p
-              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-3"
+              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-3"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', fontWeight: 600 }}
             >
               Top takeaways
@@ -106,7 +106,7 @@ export function ExecutiveSummarySection() {
           />
           <div>
             <p
-              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-3"
+              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-3"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', fontWeight: 600 }}
             >
               Use cases

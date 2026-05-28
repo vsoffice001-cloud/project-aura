@@ -113,7 +113,7 @@ export function CountryInfrastructureSection() {
           >
             <p
               id={`${ind.id}-label`}
-              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}
             >
               {ind.label}
@@ -124,7 +124,7 @@ export function CountryInfrastructureSection() {
             >
               {ind.value}
             </p>
-            <p className="font-body text-[12px] text-[var(--semantic-ink-subtle)]">
+            <p className="font-body text-[12px] text-[var(--semantic-ink-muted)]">
               {ind.period}
             </p>
             <p className="font-body text-[14px] leading-[1.55] text-[var(--semantic-ink-body)] italic mt-1">
@@ -135,7 +135,7 @@ export function CountryInfrastructureSection() {
       </div>
 
       {/* Infrastructure DEFERRED notice */}
-      <p className="font-body text-[12px] text-[var(--semantic-ink-subtle)] italic mt-6">
+      <p className="font-body text-[12px] text-[var(--semantic-ink-muted)] italic mt-6">
         Infrastructure context (roads · ports · rail · air) pending content-team data fill.
       </p>
     </section>

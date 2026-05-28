@@ -107,8 +107,11 @@ details[open] > summary span[aria-hidden]:last-child { transform: rotate(180deg)
   -webkit-overflow-scrolling: touch;
 }
 
-/* Prevent iOS bounce on main chart containers */
+/* Touch scroll on page-level main pane.
+ * G.6: overscroll-behavior-y:contain was here (G.3) but removed — it blocked
+ * iOS scroll-chaining. Root cause was overflow-x:hidden on <main> forcing
+ * overflow-y:auto (CSS spec coercion), creating implicit scroll context.
+ * Fix applied in ShowcaseLayout.tsx: overflow-x moved to inner wrapper div. */
 .showcase-main {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
 }

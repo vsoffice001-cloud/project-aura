@@ -83,12 +83,12 @@ export function GenesisTimeline({ milestones }: GenesisTimelineProps) {
                       : '0 0 0 1px rgba(0,0,0,0.12)',
                   }}
                 />
-                {/* Year · ink-subtle */}
+                {/* Year · ink-muted · G.13.1 unit/micro-label role */}
                 <span
                   className="font-display font-light tracking-[0.04em] block mb-0.5"
                   style={{
                     fontSize: 'var(--text-sm)',
-                    color: 'var(--semantic-ink-subtle)',
+                    color: 'var(--semantic-ink-muted)',
                     fontVariantNumeric: 'tabular-nums lining-nums',
                   }}
                 >
@@ -158,7 +158,7 @@ export function GenesisTimeline({ milestones }: GenesisTimelineProps) {
                   style={{
                     fontSize: 'var(--text-xs)',
                     fontWeight: 600,
-                    color: 'var(--semantic-ink-subtle)',
+                    color: 'var(--semantic-ink-muted)',
                     fontVariantNumeric: 'tabular-nums lining-nums',
                   }}
                 >

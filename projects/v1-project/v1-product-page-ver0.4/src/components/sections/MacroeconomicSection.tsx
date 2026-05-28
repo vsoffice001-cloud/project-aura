@@ -180,7 +180,7 @@ export function MacroeconomicSection() {
         {/* Tab 1 · Snapshot 2024 · 5 IndicatorCards (single row) */}
         <TabsContent value="snapshot">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-4"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-4"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Current macro snapshot · key indicators · 2024

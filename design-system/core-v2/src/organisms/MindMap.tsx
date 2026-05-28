@@ -357,7 +357,7 @@ export function MindMap({
         .attr('text-anchor', 'start')
         .text((d: MindMapHierarchyNode) => d.data.name)
         .style('font-size', '13px')
-        .style('font-family', 'var(--font-body)')
+        .style('font-family', 'var(--font-sans)')
         .style('fill', 'var(--black-900)');
 
       // Badge group

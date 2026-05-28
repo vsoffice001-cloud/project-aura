@@ -52,11 +52,12 @@ const PLAYERS: Player[] = [
 
 const TIER_COLORS: Record<Player['tier'], { bg: string; border: string; text: string; muted: string }> = {
   1: {
-    // Tier 1 · purple-500 bg · purple-700 border · white text (high contrast)
+    // Tier 1 · purple-500 bg · purple-700 border · dark ink (WCAG 4.5:1 fix · was white 2.86:1 FAIL)
+    // Bible §1.8: L*62 fill requires dark ink · white text WCAG fail.
     bg: '#9488ec',
     border: '#5a5fa0',
-    text: '#ffffff',
-    muted: 'rgba(255,255,255,0.80)',
+    text: 'rgba(26,26,46,0.92)',
+    muted: 'rgba(26,26,46,0.65)',
   },
   2: {
     // Tier 2 · periwinkle-500 bg · periwinkle-700 border · ink-strong text
@@ -262,7 +263,7 @@ export function EcosystemTreemap() {
       </div>
 
       {/* Caption */}
-      <p className="font-body text-[12px] text-[var(--semantic-ink-subtle)] italic">
+      <p className="font-body text-[12px] text-[var(--semantic-ink-muted)] italic">
         Box area is proportional to pallet capacity. Source: Ken Research Analysis · 13 named players · 200–250 total operators.
       </p>
     </div>

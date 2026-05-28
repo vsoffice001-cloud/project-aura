@@ -66,6 +66,12 @@ export interface BadgeProps {
    * CSS custom-property opacity bumps). Avoid for normal usage; use `theme` instead.
    */
   style?: CSSProperties;
+  /**
+   * Accessible title tooltip · Bible § 1.9 truncation doctrine.
+   * Pass full text when badge content may truncate at max-width: 200px.
+   * Maps to native HTML `title` attribute — screen readers + pointer hover reveal.
+   */
+  title?: string;
 }
 
 interface ThemeColor {
@@ -218,6 +224,7 @@ export function Badge({
   icon,
   className,
   style,
+  title,
 }: BadgeProps) {
   const [isHovered, setIsHovered] = useState(false);
   const colors = themeColors[theme];
@@ -226,17 +233,29 @@ export function Badge({
   return (
     <span
       data-component="Badge"
-      style={style}
+      // Bible § 1.9: title attr reveals full text when truncated at max-width: 200px.
+      // Pointer hover + screen reader fallback. Always pass title when content may be long.
+      title={title}
+      style={{
+        maxWidth: '200px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        ...style,
+      }}
       className={cn(
         'inline-flex items-center gap-1.5 font-medium uppercase',
         'transition-all duration-200 ease-in-out cursor-default',
-        'relative overflow-hidden',
+        'relative',
         isMinimal ? 'bg-transparent' : colors.bg,
         bordered && !isMinimal && `border ${colors.border}`,
         interactive && [
           !isMinimal && colors.hoverBg,
           bordered && !isMinimal && colors.hoverBorder,
           'cursor-pointer',
+          // FIX 4 (G.10): WCAG 2.5.5 — interactive badges need min 44px touch target.
+          // Applied via padding expansion when interactive prop true.
+          'min-h-[44px] px-4 py-3',
         ],
         variantShape[variant],
         sizeClasses[size],

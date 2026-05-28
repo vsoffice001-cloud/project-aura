@@ -108,7 +108,7 @@ export function ChartTitleHeader({
           style={{
             fontSize: 'var(--text-sm)',
             color: 'var(--black-900)',
-            fontFamily: 'var(--font-body)',
+            fontFamily: 'var(--font-sans)',
           }}
         >
           {title}

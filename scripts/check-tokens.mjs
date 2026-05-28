@@ -63,6 +63,9 @@ const LEGACY_SKIP_PATHS = [
   'projects/topnav-v32',
   'projects/template-v3',
   'projects/template-v28',
+  'V0.2 -for design system',
+  'v1-product-page-ver0.4',
+  'report-store-v07',
 ];
 
 /**

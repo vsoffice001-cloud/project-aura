@@ -68,6 +68,10 @@
  */
 
 import type { ReactNode } from 'react';
+import { ChartDataTable } from './ChartDataTable';
+import type { ChartDataTableProps } from './ChartDataTable';
+import { DataFreshness } from './DataFreshness';
+import { ExportMenu } from './ExportMenu';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -130,6 +134,38 @@ export interface ChartFigureProps {
   children: ReactNode;
   /** Optional className passthrough for outer `<figure>` container */
   className?: string;
+  /**
+   * Optional screen reader data table — WCAG 1.1.1 fallback for visual chart data.
+   * When provided, renders a `<table className="sr-only">` after the chart canvas.
+   * Revealed as primary content in `@media print` via print.css override.
+   * Omit for purely decorative / label-only charts.
+   */
+  dataTable?: ChartDataTableProps;
+  /**
+   * Data cutoff date · renders an italic "Data as of: <date>" caption below source.
+   * - Date object: formatted via Intl (e.g. "Jun 1, 2025")
+   * - String: rendered verbatim (e.g. "Q2 2025")
+   * B2B research standard — always provide for forecast/historical charts.
+   */
+  dataAsOf?: string | Date;
+  /**
+   * Enable CSV export button (top-right icon).
+   * Requires `dataTable` to be provided — uses it as the export data source.
+   * @default false
+   */
+  enableExport?: boolean;
+  /**
+   * Filename for CSV download (without extension).
+   * @default 'chart-data'
+   */
+  exportFilename?: string;
+  /**
+   * Surface context — passed to DataFreshness + ExportMenu for contrast-safe colors.
+   * 'light' (default): editorial-light surfaces.
+   * 'dark': cinematic-dark sections — text/icon on #0a0a0c.
+   * @default 'light'
+   */
+  surface?: 'light' | 'dark';
 }
 
 // ─── Legend swatch ────────────────────────────────────────────────────────────
@@ -209,7 +245,7 @@ function SourceLine({ source }: { source: SourceInfo }) {
   }
   return (
     <p
-      className="font-body italic text-[var(--semantic-ink-subtle)] max-w-[72ch]"
+      className="font-body italic text-[var(--semantic-ink-muted)] max-w-[72ch]"
       style={{ fontSize: '10px', lineHeight: 1.5, marginTop: '8px' }}
     >
       {parts.join(' · ')}
@@ -231,16 +267,21 @@ export function ChartFigure({
   source,
   children,
   className,
+  dataTable,
+  dataAsOf,
+  enableExport = false,
+  exportFilename = 'chart-data',
+  surface = 'light',
 }: ChartFigureProps) {
   return (
     <figure className={['w-full', className ?? ''].join(' ')}>
 
-      {/* ── Row 1: eyebrow + unit ─────────────────────────────────────────── */}
-      {(eyebrow || (unit && unitPosition === 'top-right')) && (
+      {/* ── Row 1: eyebrow + unit + export ───────────────────────────────── */}
+      {(eyebrow || (unit && unitPosition === 'top-right') || (enableExport && dataTable)) && (
         <div className="flex items-start justify-between gap-4 flex-wrap mb-1.5">
           {eyebrow && (
             <p
-              className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] flex-1 min-w-0"
+              className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] flex-1 min-w-0"
               style={{ fontSize: '10px', fontWeight: 600 }}
             >
               {eyebrow}
@@ -256,15 +297,21 @@ export function ChartFigure({
               )}
             </p>
           )}
-          {unit && unitPosition === 'top-right' && (
-            <span
-              className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] flex-none pt-0"
-              style={{ fontSize: '10px', fontWeight: 600 }}
-              aria-label={`Unit: ${unit}`}
-            >
-              {unit}
-            </span>
-          )}
+          <div className="flex items-center gap-2 flex-none">
+            {unit && unitPosition === 'top-right' && (
+              <span
+                className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
+                style={{ fontSize: '10px', fontWeight: 600 }}
+                aria-label={`Unit: ${unit}`}
+              >
+                {unit}
+              </span>
+            )}
+            {/* Export button — only when dataTable is provided (CSV source) */}
+            {enableExport && dataTable && (
+              <ExportMenu dataTable={dataTable} filename={exportFilename} surface={surface} />
+            )}
+          </div>
         </div>
       )}
 
@@ -318,7 +365,19 @@ export function ChartFigure({
               style={{ fontSize: '11px' }}
             >
               <LegendSwatch kind={entry.kind} color={entry.color} />
-              <span>{entry.label}</span>
+              {/* Bible § 1.9: truncate long legend labels at 32 chars · full text in title tooltip */}
+              <span
+                title={entry.label.length > 32 ? entry.label : undefined}
+                style={{
+                  maxWidth: '200px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-block',
+                }}
+              >
+                {entry.label.length > 32 ? `${entry.label.slice(0, 32)}…` : entry.label}
+              </span>
             </li>
           ))}
         </ul>
@@ -336,6 +395,18 @@ export function ChartFigure({
 
       {/* ── Row 7: source citation ────────────────────────────────────────── */}
       {source && <SourceLine source={source} />}
+
+      {/* ── Row 7b: data freshness indicator ─────────────────────────────── */}
+      {dataAsOf && <DataFreshness asOf={dataAsOf} surface={surface} />}
+
+      {/* ── Row 8: sr-only data table · WCAG 1.1.1 screen reader fallback ── */}
+      {dataTable && (
+        <ChartDataTable
+          caption={dataTable.caption}
+          headers={dataTable.headers}
+          rows={dataTable.rows}
+        />
+      )}
 
     </figure>
   );

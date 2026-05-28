@@ -63,7 +63,7 @@ export function SidebarTOC({
               Table of Contents
             </h3>
             {tocState === 'open' && (
-              <span className="ml-auto text-xs text-[var(--black-500)] bg-[var(--black-100)] px-2 py-0.5 rounded-full">
+              <span className="ml-auto text-xs text-[var(--semantic-ink-subtle)] bg-[var(--black-100)] px-2 py-0.5 rounded-full">
                 56m
               </span>
             )}
@@ -83,10 +83,10 @@ export function SidebarTOC({
                   >
                     <div className="flex-shrink-0">
                       <div className="w-5 h-5 rounded-full flex items-center justify-center">
-                        <Lock size={12} className="text-[var(--black-500,#a3a3a3)] opacity-40" />
+                        <Lock size={12} className="text-[var(--semantic-ink-subtle)] opacity-40" />
                       </div>
                     </div>
-                    <span className="truncate flex-1 text-[14px] text-[var(--black-300,#d4d4d4)]">{item.title}</span>
+                    <span className="truncate flex-1 text-[14px] text-[var(--semantic-ink-muted)]">{item.title}</span>
                   </div>
                 );
               }
@@ -100,7 +100,7 @@ export function SidebarTOC({
                     ${
                       chapterState === 'present'
                         ? 'bg-[var(--black-100,#f5f5f5)] text-black font-bold'
-                        : 'text-[var(--black-500,#a3a3a3)] hover:bg-[var(--black-50,#fafafa)] hover:text-black'
+                        : 'text-[var(--semantic-ink-subtle)] hover:bg-[var(--black-50,#fafafa)] hover:text-black'
                     }`}
                   onClick={() => onChapterClick(item.number)}
                   aria-current={chapterState === 'present' ? 'step' : undefined}
@@ -115,7 +115,7 @@ export function SidebarTOC({
                         <span className="text-xs">{item.number}</span>
                       </div>
                     ) : (
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[var(--black-100,#f5f5f5)] text-[var(--black-500,#a3a3a3)]">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[var(--black-100,#f5f5f5)] text-[var(--semantic-ink-subtle)]">
                         <span className="text-xs">{item.number}</span>
                       </div>
                     )}
@@ -130,7 +130,7 @@ export function SidebarTOC({
           {tocState === 'open' && (
             <div className="px-4 pt-3 pb-4 border-t border-[var(--black-100)]">
               <div className="p-4 rounded-[5px] bg-[var(--black-100,#f5f5f5)]">
-                <p className="text-xs text-[var(--black-500,#a3a3a3)] mb-3 leading-[1.5]">
+                <p className="text-xs text-[var(--semantic-ink-subtle)] mb-3 leading-[1.5]">
                   Comprehensive market analysis across 8 Australian states & territories
                 </p>
                 <a
@@ -173,11 +173,11 @@ export function SidebarTOC({
             return chapterState === 'locked' ? (
               <div
                 key={item.number}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-[var(--black-100,#f5f5f5)] text-[var(--black-300,#d4d4d4)] cursor-not-allowed"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-[var(--black-100,#f5f5f5)] text-[var(--semantic-ink-muted)] cursor-not-allowed"
                 aria-disabled="true"
                 aria-label={`${item.title} (locked)`}
               >
-                <Lock size={10} className="text-[var(--black-300,#d4d4d4)]" />
+                <Lock size={10} className="text-[var(--semantic-ink-muted)]" />
               </div>
             ) : (
               <button
@@ -193,7 +193,7 @@ export function SidebarTOC({
                       ? 'bg-black text-white font-bold'
                       : chapterState === 'past'
                       ? 'bg-black text-white hover:scale-110'
-                      : 'bg-[var(--black-100,#f5f5f5)] text-[var(--black-500,#a3a3a3)] hover:scale-110'
+                      : 'bg-[var(--black-100,#f5f5f5)] text-[var(--semantic-ink-subtle)] hover:scale-110'
                   }`}
               >
                 {chapterState === 'past' ? (
@@ -210,7 +210,7 @@ export function SidebarTOC({
             className="mt-4 p-2 hover:bg-[var(--black-100,#f5f5f5)] rounded-[5px] transition-colors"
             aria-label="Expand sidebar"
           >
-            <ChevronRight className="h-4 w-4 text-[var(--black-500,#a3a3a3)]" />
+            <ChevronRight className="h-4 w-4 text-[var(--semantic-ink-subtle)]" />
           </button>
         </div>
       )}

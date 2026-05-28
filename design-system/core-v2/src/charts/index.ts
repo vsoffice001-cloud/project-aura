@@ -22,6 +22,19 @@
  *   - chart presets (area · line · pie · bar · column)
  */
 
+// ─── Phase G.11 · New Charts Batch (Sprint 2026-05-27) ───────────────────────
+export { KenWaterfallChart } from './charts/KenWaterfallChart';
+export type { KenWaterfallChartProps, WaterfallPoint } from './charts/KenWaterfallChart';
+
+export { KenStackedBarChart } from './charts/KenStackedBarChart';
+export type { KenStackedBarChartProps, StackedSeries } from './charts/KenStackedBarChart';
+
+export { KenSparklineChart } from './charts/KenSparklineChart';
+export type { KenSparklineChartProps } from './charts/KenSparklineChart';
+
+export { KenRadarChart } from './charts/KenRadarChart';
+export type { KenRadarChartProps, RadarSeries } from './charts/KenRadarChart';
+
 // ─── Phase C · New Charts (Sprint 2026-05-26) ─────────────────────────────────
 export { KenTreemap } from './charts/KenTreemap';
 export type { KenTreemapProps, TreemapCellData, TreemapNode } from './charts/KenTreemap';
@@ -57,6 +70,29 @@ export type { KenMultiLineChartProps, MultiLineSeries } from './charts/KenMultiL
 export { KenScenarioFanChart } from './charts/KenScenarioFanChart';
 export type { KenScenarioFanChartProps } from './charts/KenScenarioFanChart';
 
+// ─── Phase G.11 · New Tables Batch (Sprint 2026-05-27) ───────────────────────
+export { KenMatrixComparisonTable } from './tables/KenMatrixComparisonTable';
+export type {
+  KenMatrixComparisonTableProps,
+  MatrixCell,
+  MatrixCellAccent,
+  MatrixRow,
+} from './tables/KenMatrixComparisonTable';
+
+export { KenTimeSeriesTable } from './tables/KenTimeSeriesTable';
+export type { KenTimeSeriesTableProps, TimeSeriesRow } from './tables/KenTimeSeriesTable';
+
+export { KenScorecardTable } from './tables/KenScorecardTable';
+export type {
+  KenScorecardTableProps,
+  ScoreCell,
+  ScoreTier,
+  ScorecardRow,
+} from './tables/KenScorecardTable';
+
+export { KenHierarchyTable } from './tables/KenHierarchyTable';
+export type { KenHierarchyTableProps, HierarchyNode } from './tables/KenHierarchyTable';
+
 // ─── Phase A.2 · Tables ───────────────────────────────────────────────────────
 export { PropertyTable } from './tables/PropertyTable';
 export type { PropertyTableProps, PlayerProperty, PlayerColumn } from './tables/PropertyTable';
@@ -77,6 +113,18 @@ export type { ChartEmptyStateProps } from './states/EmptyState';
 export { ErrorState } from './states/ErrorState';
 export type { ErrorStateProps } from './states/ErrorState';
 
+// ─── Phase G.5 · Perf + polish primitives ─────────────────────────────────────
+export { LazyChart } from './primitives/LazyChart';
+export type { LazyChartProps } from './primitives/LazyChart';
+
+export { ExportMenu } from './primitives/ExportMenu';
+export type { ExportMenuProps } from './primitives/ExportMenu';
+
+export { DataFreshness } from './primitives/DataFreshness';
+export type { DataFreshnessProps } from './primitives/DataFreshness';
+
+export { dataTableToCSV, downloadCSV } from './utils/csv';
+
 // ─── Phase G.1 · Tooltip + Truncation primitives ─────────────────────────────
 export { CellTooltip } from './primitives/CellTooltip';
 export type { CellTooltipProps } from './primitives/CellTooltip';
@@ -87,6 +135,9 @@ export type { TruncatedTextProps } from './primitives/TruncatedText';
 // ─── Phase A.1 · Primitives ───────────────────────────────────────────────────
 export { ChartFigure } from './primitives/ChartFigure';
 export type { ChartFigureProps, LegendEntry, LegendKind, SourceInfo } from './primitives/ChartFigure';
+
+export { ChartDataTable } from './primitives/ChartDataTable';
+export type { ChartDataTableProps } from './primitives/ChartDataTable';
 
 export { ChartReveal } from './primitives/ChartReveal';
 export type { ChartRevealProps } from './primitives/ChartReveal';

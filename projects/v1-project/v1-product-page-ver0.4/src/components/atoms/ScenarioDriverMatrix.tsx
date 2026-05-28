@@ -110,7 +110,7 @@ export function ScenarioDriverMatrix({
         <div className="grid grid-cols-[140px_1fr_1fr_1fr] gap-2 mb-2">
           {/* Driver label col header */}
           <div
-            className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)] py-2 px-1"
+            className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)] py-2 px-1"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Driver
@@ -155,7 +155,7 @@ export function ScenarioDriverMatrix({
                 </p>
                 {driver.descriptor && (
                   <p
-                    className="font-body italic text-[var(--semantic-ink-subtle)] mt-0.5"
+                    className="font-body italic text-[var(--semantic-ink-muted)] mt-0.5"
                     style={{ fontSize: '10px', lineHeight: 1.3 }}
                   >
                     {driver.descriptor}
@@ -173,7 +173,7 @@ export function ScenarioDriverMatrix({
 
         {/* Footer note */}
         <p
-          className="font-body italic text-[var(--semantic-ink-subtle)] mt-4"
+          className="font-body italic text-[var(--semantic-ink-muted)] mt-4"
           style={{ fontSize: '10.5px' }}
         >
           Direction arrows indicate scenario-relative driver force: ↑↑ strong upside · ↑ moderate upside · → neutral · ↓ moderate headwind · ↓↓ strong headwind. All assessments per Ken analyst judgment.

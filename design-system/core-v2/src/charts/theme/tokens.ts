@@ -37,13 +37,27 @@
  * WHERE · highcharts-base.ts `colors` array · per-chart color override props.
  * HOW   · `color: KEN_CHART_SERIES.primary` on chart options.
  */
+// Bible § 1.7 v3 (2026-05-28 FINAL) · ORIGINAL Ken palette restored · v0.4 reference-aligned.
+// Lesson from v0.4: editorial-soft feel comes from OPACITY VARIATION + section bg + spacing ·
+// NOT from pre-blended desaturated hex. Solid #9488ec + white text reads premium · not dashboard-y.
+// Soft tier = SAME color family at low opacity (e.g. `rgba(134,179,229,0.20)` for tier 3 perano).
+// Plus neutral grays for "Other" semantic + sage green for growth-context emphasis (per user).
 export const KEN_CHART_SERIES = {
-  primary:    '#9488ec', // purple-500
-  secondary:  '#c3c6f9', // periwinkle-500
-  tertiary:   '#86b3e5', // perano-800
-  quaternary: '#7075c8', // periwinkle-800
-  light:      '#a7c9ed', // perano-700
-  darkest:    '#5a5fa0', // periwinkle-900
+  primary:    '#9488ec', // purple-500 L*62 · ORIGINAL · solid + white text reads editorial
+  secondary:  '#c3c6f9', // periwinkle-500 L*78 · ORIGINAL
+  tertiary:   '#86b3e5', // perano-800 L*70 · ORIGINAL · use at 0.20-0.30 opacity for tier 3 soft
+  quaternary: '#7075c8', // periwinkle-800 L*55 · ORIGINAL · darker accent
+  light:      '#a7c9ed', // perano-700 L*78 · ORIGINAL · slot 5
+  neutral:    '#b8c4c0', // sage gray L*76 · "Other"/"Sparse" · neutral chrome only
+  /** @deprecated Use neutral · kept for back-compat */
+  darkest:    '#b8c4c0',
+  // Emphasis tokens · darker · hover/active OR semantic emphasis
+  accentEmphasis: '#5e51c8', // purple-700 · hover/active periwinkle
+  /** @deprecated Alias removed. Use accentEmphasis or sageGrowth. */
+  accentWarm:     '#5e51c8',
+  // Per user direction (2026-05-28): green for growth-oriented data ONLY when necessary.
+  // NOT a default · semantic emphasis: positive growth · success · upward trend.
+  sageGrowth:     '#7da982', // muted sage green L*65 · ~50% sat · growth semantic ONLY
 } as const;
 
 /**
@@ -59,7 +73,7 @@ export const KEN_CHART_SERIES_ARRAY = [
   KEN_CHART_SERIES.tertiary,
   KEN_CHART_SERIES.quaternary,
   KEN_CHART_SERIES.light,
-  KEN_CHART_SERIES.darkest,
+  KEN_CHART_SERIES.neutral, // slot 6 = "Other" semantic · Bible § 1.5 soft-first
 ] as const;
 
 /**
@@ -83,18 +97,21 @@ export const KEN_CHART_SERIES_ARRAY = [
  *
  * HOW  · `fill: KEN_CHART_SERIES_LUMINANCE_SAFE.primary` for tier 1.
  */
+// Bible § 1.7 v3 (2026-05-28 FINAL) · ORIGINAL Ken palette · v0.4 reference-aligned.
+// Soft feel achieved via OPACITY VARIATION in tier maps (e.g. rgba periwinkle 0.20-0.30)
+// NOT via pre-blended desaturated hex values.
 export const KEN_CHART_SERIES_LUMINANCE_SAFE = {
-  /** L*≈30 · darkest · Tier 1 strong fill on light surface */
+  /** L*≈30 · darkest periwinkle · emphasis only · hover/active · NEVER default */
   darkest:    '#3d3499',
-  /** L*≈45 · dark · Tier 1 alternative / accent */
+  /** L*≈45 · primary deep · accent / hover step */
   primary:    '#5e51c8',
-  /** L*≈55 · mid-dark · Tier 1/2 boundary fill */
+  /** L*≈55 · quaternary periwinkle-800 · semi-deep accent */
   quaternary: '#7075c8',
-  /** L*≈62 · mid · Tier 2 fill (current KEN_CHART_SERIES.primary = unchanged) */
+  /** L*≈62 · secondary periwinkle / Ken purple-500 · DEFAULT tier-1 fill */
   secondary:  '#9488ec',
-  /** L*≈78 · light · Tier 3 fill */
+  /** L*≈78 · tertiary periwinkle-500 · mid fill */
   tertiary:   '#c3c6f9',
-  /** L*≈90 · very light · faint tier / heatmap faint */
+  /** L*≈90 · lightest periwinkle · soft fill OR use perano at 0.20 opacity for editorial */
   light:      '#e0e3fb',
 } as const;
 

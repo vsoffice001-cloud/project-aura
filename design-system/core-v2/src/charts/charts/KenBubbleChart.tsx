@@ -3,11 +3,13 @@
 /**
  * KenBubbleChart · scatter w/ sized bubbles · Highcharts bubble type.
  *
- * Mobile strategy (Sprint G.3) · SIMPLIFY at <640px:
+ * Mobile strategy (Sprint G.3 · REVISED G.7 Phase 4) · SIMPLIFY at ≤480px viewport:
  *   Only top-3 bubbles by Z-value show dataLabels — prevents label collision.
- *   Bubble minSize reduced 8% → 4% at narrow.
+ *   Bubble minSize reduced 8% → 4% at narrow (via responsive.rules ≤360px container).
  *   Tooltip becomes primary disclosure (already wired via Highcharts built-in).
- *   Via Highcharts responsive.rules — ONE place.
+ *   Label suppression via viewport matchMedia (NOT responsive.rules) — compare-safe.
+ *   Bible § 4.1: responsive.rules fires on container width · catches compare mode (~370px).
+ *   Fix: isMobile state = window.matchMedia('(max-width: 480px)') · viewport only.
  *
  * WHY  · `@ken-research/charts` v0.1.5 has NO bubble chart (KEN-CHARTS-PLAN.md
  *        gap). Builds via Highcharts bubble series directly. Refs canonical
@@ -53,7 +55,7 @@
  * @relatedDoc projects/v1-project/v1-product-page-ver0.4/docs/_internal/CURRENT-STATE-CHARTS-TABLES-2026-05-25.md §14
  */
 
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 // highcharts-more factory · MUST be called w/ Highcharts to register bubble series.
@@ -69,7 +71,7 @@ if (typeof window !== 'undefined' && typeof HighchartsMore === 'function') {
 import { buildKenChartBase } from '../theme/highcharts-base';
 export type { ChartSurface } from '../theme/highcharts-base';
 import type { ChartSurface } from '../theme/highcharts-base';
-import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
+import { KEN_CHART_SERIES_ARRAY, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
@@ -96,7 +98,7 @@ export interface KenBubbleChartProps {
   xCategories?: readonly string[];
   /** Show bubble name as inline label · default true */
   showLabels?: boolean;
-  /** Bubble fill opacity · default 0.5 */
+  /** Bubble fill opacity · default 0.55 (v0.4 editorial canonical · G.11 P2 confirmed) */
   bubbleOpacity?: number;
   /**
    * Surface context.
@@ -149,7 +151,7 @@ export function KenBubbleChart({
   yAxisTitle,
   xCategories,
   showLabels = true,
-  bubbleOpacity = 0.5,
+  bubbleOpacity = 0.55,
   surface = 'light',
   loading,
   empty,
@@ -161,11 +163,37 @@ export function KenBubbleChart({
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
+  // TRUE mobile detection via viewport width — NOT container width.
+  // Bible § 4.1: Highcharts responsive.rules fires on CONTAINER width, not viewport.
+  // In compare mode each pane is ~370-380px — a container-width rule at maxWidth:640
+  // would incorrectly suppress labels when viewport is desktop (compare mode).
+  // matchMedia('(max-width: 480px)') fires only on true mobile viewport · safe in compare.
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(max-width: 480px)').matches
+      : false
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 480px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   // Dark surface: axis labels invert · tooltip text also inverts (bg stays white — ref canonical)
   const isDark = surface === 'dark';
-  const axisLabelColor = isDark ? 'rgba(255,255,255,0.6)' : KEN_INK.muted;
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents KEN_INK.* constants (hardcoded light values) from leaking into dark surface
+  const axisLabelColor = isDark ? 'rgba(255,255,255,0.60)' : 'rgba(0,0,0,0.62)';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  // BUG C fix: tooltip bg is WHITE on both surfaces — text must always be dark ink
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
 
-  // Mobile simplify: top-3 by z-value get labels · others suppressed at <640px
+  // Mobile simplify: top-3 by z-value get labels · others suppressed on true mobile (≤480 viewport)
   // Computed once per data change — stable across re-renders
   const top3ZIds = useMemo(() => {
     const sorted = [...data].sort((a, b) => b.z - a.z);
@@ -233,15 +261,18 @@ export function KenBubbleChart({
       },
       tooltip: {
         useHTML: true,
+        // PART A fix: surface-aware colors via closure (inkStrong/inkMuted resolved at useMemo time)
+        // Tooltip bg stays WHITE per Bible § 9.14 · only text colors adapt
         formatter: function () {
           const point = this.point as Highcharts.Point & { z?: number };
           const xVal = xCategories && typeof this.x === 'number'
             ? xCategories[this.x]
             : String(this.x);
+          // BUG C fix: tooltipInk* always dark — white tooltip bg on both surfaces
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};max-width:200px;">
-              <div style="font-size:12px;font-weight:600;color:rgb(26,26,46);margin-bottom:4px;">${point.name}</div>
-              <div style="font-size:10.5px;color:rgba(0,0,0,0.6);font-variant-numeric:tabular-nums;">
+              <div style="font-size:12px;font-weight:600;color:${tooltipInkStrong};margin-bottom:4px;">${point.name}</div>
+              <div style="font-size:10.5px;color:${tooltipInkMuted};font-variant-numeric:tabular-nums;">
                 ${xAxisTitle ?? 'X'}: ${xVal}<br/>
                 ${yAxisTitle ?? 'Y'}: ${this.y}<br/>
                 Magnitude: ${point.z ?? '—'}
@@ -258,7 +289,7 @@ export function KenBubbleChart({
           color: KEN_CHART_SERIES_ARRAY[0],
           marker: {
             lineColor: KEN_CHART_SERIES_ARRAY[0],
-            lineWidth: 1.5,
+            lineWidth: 1,
             fillOpacity: bubbleOpacity,
           },
           dataLabels: {
@@ -275,7 +306,8 @@ export function KenBubbleChart({
             crop: false,
             overflow: 'allow',
             style: {
-              color: KEN_INK.strong,
+              // PART A fix: inkStrong resolved at useMemo time · surface-aware
+              color: inkStrong,
               fontFamily: KEN_CHART_FONT.sans,
               fontSize: '11px',
               fontWeight: '500',
@@ -283,13 +315,13 @@ export function KenBubbleChart({
             },
           },
           states: {
+            // PART B fix: Bible § 2.2 Bubble · hover = full opacity + halo + z×1.0
+            // inactive opacity 0.35 per Bible § 2.3 medium-density matrix
             hover: {
-              halo: { size: 8, opacity: 0.3 },
-              brightness: 0.05,
+              halo: { size: 8, opacity: 0.25 },
+              brightness: 0,
             },
-            // Hover dim-others: non-hovered bubbles dim to 0.25 opacity
-            // Highcharts auto-handles inactive state when any bubble is hovered
-            inactive: { opacity: 0.25 },
+            inactive: { opacity: 0.35 },
           },
         },
       },
@@ -297,18 +329,19 @@ export function KenBubbleChart({
         {
           type: 'bubble',
           name: 'Items',
-          // Per-point dataLabels: mobile simplify — only top-3 by z get labels at narrow
-          // At wide viewport: all show labels (if showLabels=true) — plotOptions.bubble.dataLabels applies
-          // At narrow (<640px): responsive rules disable plotOptions labels; top-3 points re-enable via point-level override
+          // Per-point dataLabels: mobile simplify via viewport matchMedia (NOT responsive.rules).
+          // Bible § 4.1: responsive.rules fires on CONTAINER width · triggers in compare mode (~370px).
+          // isMobile = true only when viewport ≤480px (matchMedia · see state above).
+          // At mobile: show only top-3 by z · at desktop/tablet: show all (if showLabels=true).
           data: data.map((d) => ({
             name: d.name,
             x: d.x,
             y: d.y,
             z: d.z,
             color: d.color,
-            // Point-level dataLabels enabled only for top-3 at mobile (responsive rule sets plotOptions to disabled)
+            // Label enabled: showLabels AND (not mobile OR top-3 on mobile)
             dataLabels: {
-              enabled: showLabels && top3ZIds.has(d.name),
+              enabled: showLabels && (!isMobile || top3ZIds.has(d.name)),
               format: '{point.name}',
               align: 'center' as const,
               verticalAlign: 'top' as const,
@@ -318,7 +351,7 @@ export function KenBubbleChart({
               crop: false,
               overflow: 'allow' as const,
               style: {
-                color: KEN_INK.strong,
+                color: inkStrong,
                 fontFamily: KEN_CHART_FONT.sans,
                 fontSize: '11px',
                 fontWeight: '500',
@@ -328,18 +361,21 @@ export function KenBubbleChart({
           showInLegend: false,
         },
       ],
-      // Mobile strategy: SIMPLIFY · reduce bubble sizes + suppress non-top-3 labels at <640px
+      // Mobile strategy (container-width rules): ONLY adjust sizes + axis font at ≤360px.
+      // BUG FIX (Sprint G.7 Phase 4): was maxWidth:640 which fired in compare mode (~370px).
+      // Label suppression MOVED to per-point isMobile check above (viewport-based · compare-safe).
+      // Bible § 4.2: keep all labels in compare mode · threshold 360 prevents firing on compare cells.
       responsive: {
         rules: [
           {
-            condition: { maxWidth: 640 },
+            condition: { maxWidth: 360 },
             chartOptions: {
               plotOptions: {
                 bubble: {
                   minSize: '4%',
                   maxSize: '16%',
-                  // Disable global dataLabels — point-level top3ZIds override re-enables for top-3
-                  dataLabels: { enabled: false },
+                  // NOTE: label enabled/disabled controlled at point-level (isMobile state)
+                  // NOT here — responsive.rules would also fire in compare mode at 360px
                 },
               },
               xAxis: {
@@ -353,8 +389,7 @@ export function KenBubbleChart({
         ],
       },
     } as Partial<Highcharts.Options>);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, height, xAxisTitle, yAxisTitle, xCategories, showLabels, bubbleOpacity, isDark, axisLabelColor, top3ZIds]);
+  }, [data, height, xAxisTitle, yAxisTitle, xCategories, showLabels, bubbleOpacity, isDark, axisLabelColor, inkStrong, inkMuted, top3ZIds, isMobile]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();

@@ -53,6 +53,7 @@ import type { ReactNode } from 'react';
 import { TableShell, useTableDensity, type TableDensity, type TableVariant, type TableHeaderStyle } from '../primitives/TableShell';
 import { TruncatedText } from '../primitives/TruncatedText';
 import { KEN_CHART_SERIES } from '../theme/tokens';
+import type { ChartSurface } from '../theme/highcharts-base';
 
 // ─── Score bar ────────────────────────────────────────────────────────────────
 
@@ -68,7 +69,7 @@ interface ScoreBarProps {
 function ScoreBar({ score, max = 10 }: ScoreBarProps) {
   const pct = (score / max) * 100;
   return (
-    <div className="flex items-center gap-2 min-w-[80px]">
+    <div className="flex items-center gap-2 min-w-[80px] max-w-[120px]">
       <div
         className="relative flex-1 h-[6px] rounded-full overflow-hidden"
         // Track: 15% opacity of primary token
@@ -168,6 +169,12 @@ export interface RankingTableProps {
    */
   variant?: TableVariant;
   /**
+   * Surface context · light (default) or dark.
+   * Controls row hover bg per Bible § 2.4 skip-shade doctrine.
+   * @default 'light'
+   */
+  surface?: ChartSurface;
+  /**
    * Header background style passthrough to TableShell.
    * wash: periwinkle wash · transparent: border-bottom only · inverted: neutral dark + white text.
    * @default 'wash'
@@ -191,9 +198,19 @@ const CHIP_STYLES = {
 function Chip({ label, urgency = 'slow' }: { label: string; urgency?: 'fast' | 'medium' | 'slow' }) {
   const style = CHIP_STYLES[urgency];
   return (
+    // FIX 4 (G.10): min-w-[44px] + min-h-[24px] for visual breathing room.
+    // Chip is non-interactive · WCAG 2.5.5 44px applies only to interactive targets.
+    // px-2.5 py-1 replaces tight px-1.5 py-0.5 · more generous readable chip.
     <span
-      className="inline-block rounded-[3px] px-1.5 py-0.5 font-body tabular-nums"
-      style={{ fontSize: '11px', fontWeight: 500, background: style.bg, color: style.text }}
+      className="inline-flex items-center justify-center rounded-[3px] px-2.5 py-1 font-body tabular-nums"
+      style={{
+        fontSize: '11px',
+        fontWeight: 500,
+        background: style.bg,
+        color: style.text,
+        minWidth: '44px',
+        minHeight: '24px',
+      }}
     >
       {label}
     </span>
@@ -202,15 +219,22 @@ function Chip({ label, urgency = 'slow' }: { label: string; urgency?: 'fast' | '
 
 // ─── Row inner ────────────────────────────────────────────────────────────────
 
-function RankingRowInner({ row, isTop }: { row: RankingRow; isTop: boolean }) {
+function RankingRowInner({ row, isTop, surface = 'light' }: { row: RankingRow; isTop: boolean; surface?: ChartSurface }) {
   const rowHeightPx = useTableDensity();
+  const isDark = surface === 'dark';
+  // Bible § 2.4 skip-shade: surface-aware hover · light skip dark skip
+  const rowHoverBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const rowTopBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)';
   return (
     <tr
       className="group border-b border-[rgba(0,0,0,0.08)] last:border-0 transition-colors"
       style={{
         height: `${rowHeightPx}px`,
-        background: isTop ? 'rgba(0,0,0,0.02)' : undefined,
+        background: isTop ? rowTopBg : undefined,
       }}
+      // Bible § 2.4 skip-shade: shift hovered row · keep siblings legible · surface-aware
+      onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = rowHoverBg; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = isTop ? rowTopBg : ''; }}
     >
       {/* Rank */}
       <td className="py-2.5 pr-4 align-middle">
@@ -368,6 +392,7 @@ export function RankingTable({
   variant = 'card',
   headerStyle = 'wash',
   maxHeight,
+  surface = 'light',
 }: RankingTableProps) {
   return (
     <div className={['w-full', className ?? ''].join(' ')}>
@@ -387,6 +412,7 @@ export function RankingTable({
               key={row.rank}
               row={row}
               isTop={row.rank <= topHighlightCount}
+              surface={surface}
             />
           ))}
         </tbody>
@@ -398,7 +424,7 @@ export function RankingTable({
       {/* Footnote / legend */}
       {footnote && (
         <p
-          className="font-body italic text-[var(--semantic-ink-subtle)] mt-3"
+          className="font-body italic text-[var(--semantic-ink-muted)] mt-3"
           style={{ fontSize: '10.5px', lineHeight: 1.5 }}
         >
           {footnote}

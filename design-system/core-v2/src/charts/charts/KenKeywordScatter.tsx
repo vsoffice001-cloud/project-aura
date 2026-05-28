@@ -203,6 +203,9 @@ export function KenKeywordScatter({
   const prefersReducedMotion = useReducedMotion();
   const isDark = surface === 'dark';
   const containerRef = useRef<HTMLDivElement | null>(null);
+  // PART B fix: dim-others pattern per Bible § 2.2 Scatter
+  // Hovered = full opacity + scale 1.05 · others = opacity 0.3 + label hidden (via opacity)
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   // Track actual rendered container width for responsive position recompute
   const [actualWidth, setActualWidth] = useState(width);
@@ -211,15 +214,28 @@ export function KenKeywordScatter({
     if (typeof ResizeObserver === 'undefined') return;
     const el = containerRef.current;
     if (!el) return;
+
+    // RAF debounce: cancel pending frame on new fire — prevents per-pixel
+    // layout recompute during drag-resize. Max one recompute per frame.
+    let rafId: number | null = null;
+
     const ro = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (entry) {
-        const w = Math.floor(entry.contentRect.width);
-        if (w > 0) setActualWidth(w);
-      }
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const entry = entries[0];
+        if (entry) {
+          const w = Math.floor(entry.contentRect.width);
+          if (w > 0) setActualWidth(w);
+        }
+        rafId = null;
+      });
     });
+
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, []);
 
   const positions = useMemo(
@@ -254,12 +270,33 @@ export function KenKeywordScatter({
           {keywords.map((kw, i) => {
             const pos = positions[i] ?? { x: 0, y: 0 };
             const fontSize = minFontSize + (maxFontSize - minFontSize) * kw.weight;
-            const opacity = minOpacity + (maxOpacity - minOpacity) * kw.weight;
-            const color = kw.color ?? (isDark
-              ? KEN_CHART_SERIES_ARRAY[i % KEN_CHART_SERIES_ARRAY.length]
-              : KEN_CHART_SERIES_ARRAY[i % KEN_CHART_SERIES_ARRAY.length]);
+            // G.7 Phase 5 a11y fix: opacity encoding causes WCAG 1.4.3 failures on light surface.
+            // At minOpacity=0.45 · #5e51c8 on white = 2.7:1 after alpha compositing — fails 4.5:1.
+            // Light surface: weight encoded by font-size only (opacity = 1) per WCAG compliance.
+            // Dark surface: dual encoding via opacity (dark bg gives headroom for alpha compositing).
+            const baseOpacity = isDark
+              ? minOpacity + (maxOpacity - minOpacity) * kw.weight
+              : 1;
+            // FIX 3 FINAL (G.10): WCAG 4.5:1 floor for text on white · within Ken periwinkle/perano family.
+            // Alternate 3 distinct hues from EXISTING palette · creates visual variety without leaving brand.
+            //   #5e51c8 = purple-700 (Ken accentEmphasis) · ~7:1 on white ✓
+            //   #3d3499 = purple-900 (deepest periwinkle in original) · ~10:1 on white ✓
+            //   #4b6694 = perano-900 (deepest perano blue · existing family) · ~7:1 on white ✓
+            const LIGHT_SAFE_COLORS = [
+              '#5e51c8',  // purple-700 periwinkle deep
+              '#4b6694',  // perano-900 deep blue (cool hue variant within Ken palette)
+              '#3d3499',  // purple-900 darkest periwinkle
+              '#4b6694',  // alternate perano
+              '#5e51c8',  // alternate periwinkle
+            ];
+            const colorPalette = isDark ? KEN_CHART_SERIES_ARRAY : LIGHT_SAFE_COLORS;
+            const color = kw.color ?? colorPalette[i % colorPalette.length];
             const isClickable = !!onKeywordClick;
             const transition = prefersReducedMotion ? undefined : 'transform 0.15s ease-out, opacity 0.15s ease-out';
+            // PART B fix: Bible § 2.2 Scatter · dim others 0.3 · hovered = full opacity + scale
+            const isHoveredKw = hoveredId === kw.id;
+            const isDimmedKw = hoveredId !== null && !isHoveredKw;
+            const effectiveOpacity = isDimmedKw ? 0.3 : isHoveredKw ? 1 : baseOpacity;
 
             return (
               <span
@@ -271,15 +308,28 @@ export function KenKeywordScatter({
                 onKeyDown={isClickable ? (e) => {
                   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onKeywordClick(kw); }
                 } : undefined}
-                onMouseEnter={prefersReducedMotion ? undefined : (e) => {
-                  const el = e.currentTarget;
-                  el.style.transform = `translate(${pos.x}px, ${pos.y}px) translateY(-2px) scale(1.05)`;
-                  el.style.opacity = '1';
+                onMouseEnter={(e) => {
+                  setHoveredId(kw.id);
+                  if (!prefersReducedMotion) {
+                    const el = e.currentTarget;
+                    el.style.transform = `translate(${pos.x}px, ${pos.y}px) translateY(-2px) scale(1.05)`;
+                  }
                 }}
-                onMouseLeave={prefersReducedMotion ? undefined : (e) => {
-                  const el = e.currentTarget;
-                  el.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-                  el.style.opacity = String(opacity);
+                onMouseLeave={(e) => {
+                  setHoveredId(null);
+                  if (!prefersReducedMotion) {
+                    const el = e.currentTarget;
+                    el.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+                  }
+                }}
+                onFocus={(e) => {
+                  setHoveredId(kw.id);
+                  e.currentTarget.style.outline = '2px solid rgba(148,136,236,0.6)';
+                  e.currentTarget.style.outlineOffset = '2px';
+                }}
+                onBlur={(e) => {
+                  setHoveredId(null);
+                  e.currentTarget.style.outline = 'none';
                 }}
                 style={{
                   position: 'absolute',
@@ -287,7 +337,7 @@ export function KenKeywordScatter({
                   top: 0,
                   transform: `translate(${pos.x}px, ${pos.y}px)`,
                   fontSize,
-                  opacity,
+                  opacity: effectiveOpacity,
                   fontFamily: KEN_CHART_FONT.sans,
                   fontWeight: kw.weight > 0.7 ? 700 : kw.weight > 0.4 ? 500 : 400,
                   color,
@@ -299,9 +349,6 @@ export function KenKeywordScatter({
                   // Focus ring for keyboard nav
                   outline: 'none',
                 }}
-                // eslint-disable-next-line react/no-unknown-property
-                onFocus={(e) => { e.currentTarget.style.outline = '2px solid rgba(148,136,236,0.6)'; e.currentTarget.style.outlineOffset = '2px'; }}
-                onBlur={(e) => { e.currentTarget.style.outline = 'none'; }}
               >
                 {kw.text}
               </span>

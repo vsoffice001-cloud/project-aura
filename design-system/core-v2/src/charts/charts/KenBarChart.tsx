@@ -42,7 +42,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
 import type { ChartSurface } from '../theme/highcharts-base';
-import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
+import { KEN_CHART_SERIES_ARRAY, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
@@ -117,6 +117,15 @@ export function KenBarChart({
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents KEN_INK.* constants (hardcoded light values) from leaking into dark surface
+  const isDark = surface === 'dark';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  // BUG C fix: tooltip bg is always WHITE. Text must always be dark — never flip to white.
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
+
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
     const surfOpts = surfaceOverrides(surface);
@@ -133,7 +142,8 @@ export function KenBarChart({
         categories: labels,
         labels: {
           style: {
-            color: KEN_INK.strong,
+            // PART A fix: inkStrong resolved at useMemo time · surface-aware
+            color: inkStrong,
             fontFamily: KEN_CHART_FONT.sans,
             fontSize: '12px',
             fontWeight: '500',
@@ -143,11 +153,13 @@ export function KenBarChart({
         tickColor: 'transparent',
       },
       yAxis: {
-        gridLineColor: '#f5f5f5',
+        // PART A fix: surface-aware grid color
+        gridLineColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
         gridLineWidth: 1,
         labels: {
           style: {
-            color: KEN_INK.muted,
+            // PART A fix: inkMuted resolved at useMemo time · surface-aware
+            color: inkMuted,
             fontFamily: KEN_CHART_FONT.sans,
             fontSize: '10px',
           },
@@ -160,15 +172,17 @@ export function KenBarChart({
       },
       tooltip: {
         useHTML: true,
+        // PART A fix: surface-aware tooltip text via closure (bg stays WHITE per Bible § 9.14)
         formatter: function () {
           const v = (this.y as number).toLocaleString('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 1,
           });
+          // BUG C fix: use tooltipInk* (always dark) — white tooltip on both surfaces
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:2px;">${this.key}</div>
-              <div style="font-size:12px;font-weight:500;color:rgb(26,26,46);font-variant-numeric:tabular-nums;">${v}${unit ? ` ${unit}` : ''}</div>
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:2px;">${this.key}</div>
+              <div style="font-size:12px;font-weight:500;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;">${v}${unit ? ` ${unit}` : ''}</div>
             </div>
           `;
         },
@@ -180,16 +194,21 @@ export function KenBarChart({
           borderWidth: 0,
           pointPadding: 0.15,
           groupPadding: 0.1,
-          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          // PART B fix: Bible § 2.2 Bar · inactive 0.4 · hover halo per § 2.6
           states: {
-            inactive: { opacity: 0.3 },
+            hover: {
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
+            },
+            inactive: { opacity: 0.4 },
           },
           dataLabels: {
             enabled: showValueLabels,
             inside: false,
             align: 'left',
             style: {
-              color: KEN_INK.strong,
+              // PART A fix: inkStrong resolved at useMemo time · surface-aware
+              color: inkStrong,
               fontFamily: KEN_CHART_FONT.sans,
               fontSize: '11px',
               fontWeight: '500',
@@ -214,10 +233,12 @@ export function KenBarChart({
         },
       ],
       // Mobile strategy: REFLOW · reduce left margin at narrow to reclaim horizontal space
+      // BUG FIX (Sprint G.7 Phase 4): was maxWidth:640 — fired in compare mode (~370px container).
+      // Bible § 4.1: threshold ≤360 prevents firing on compare mode cells (~370-380px each).
       responsive: {
         rules: [
           {
-            condition: { maxWidth: 640 },
+            condition: { maxWidth: 360 },
             chartOptions: {
               chart: { marginLeft: 72 },
               legend: { itemDistance: 8 },
@@ -226,7 +247,7 @@ export function KenBarChart({
         ],
       },
     } as Partial<Highcharts.Options>);
-  }, [labels, data, height, unit, showValueLabels, surface]);
+  }, [labels, data, height, unit, showValueLabels, surface, isDark, inkStrong, inkMuted]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();

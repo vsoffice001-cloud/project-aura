@@ -120,6 +120,19 @@ export function buildKenChartBase(): Options {
       marginTop: 8,
       marginBottom: 32, // x-axis year labels
       animation: reducedMotion ? false : { duration: animDuration },
+      events: {
+        // WCAG 1.1.1 · svg-img-alt fix: hide Highcharts SVG from AT.
+        // Wrapper (figure + aria-label / ChartFigure + figcaption + ChartDataTable)
+        // provides all accessible context. The raw SVG is redundant to AT and
+        // generates svg-img-alt axe violations when not hidden.
+        load: function (this: { renderer: { box: SVGElement | null } }) {
+          const svg = this.renderer?.box;
+          if (svg) {
+            svg.setAttribute('aria-hidden', 'true');
+            svg.setAttribute('focusable', 'false');
+          }
+        },
+      },
     },
     title:    { text: undefined },
     subtitle: { text: undefined },

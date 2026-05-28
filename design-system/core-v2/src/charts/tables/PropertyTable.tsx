@@ -50,6 +50,7 @@
 import { Lock } from 'lucide-react';
 import { TableShell, useTableDensity, type TableDensity, type TableVariant, type TableHeaderStyle } from '../primitives/TableShell';
 import { TruncatedText } from '../primitives/TruncatedText';
+import type { ChartSurface } from '../theme/highcharts-base';
 
 export interface PlayerProperty {
   /** Row label · property name */
@@ -108,6 +109,12 @@ export interface PropertyTableProps {
    * @default 'wash'
    */
   headerStyle?: TableHeaderStyle;
+  /**
+   * Surface context · light (default) or dark.
+   * Controls row hover bg and ensures correct contrast on both surfaces.
+   * @default 'light'
+   */
+  surface?: ChartSurface;
   /** Optional className passthrough on the outer wrapper */
   className?: string;
 }
@@ -118,8 +125,12 @@ function PropertyTableInner({
   properties,
   players,
   gatedFrom,
-}: Required<Pick<PropertyTableProps, 'properties' | 'players' | 'gatedFrom'>>) {
+  surface = 'light',
+}: Required<Pick<PropertyTableProps, 'properties' | 'players' | 'gatedFrom'>> & { surface?: ChartSurface }) {
   const rowHeightPx = useTableDensity();
+  const isDark = surface === 'dark';
+  // Bible § 2.4 skip-shade: light = rgba(0,0,0,0.06) · dark = rgba(255,255,255,0.08)
+  const rowHoverBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const visiblePlayers = players.slice(0, gatedFrom);
   const gatedPlayers = players.slice(gatedFrom);
   const hasGated = gatedPlayers.length > 0;
@@ -153,7 +164,8 @@ function PropertyTableInner({
               </p>
               {p.descriptor && (
                 <p
-                  className="font-body text-[var(--semantic-ink-subtle)] italic mt-0.5"
+                  className="font-body text-[var(--semantic-ink-muted)] italic mt-0.5"
+                  data-header-subtitle="true"
                   style={{ fontSize: '11px', lineHeight: 1.3 }}
                 >
                   {p.descriptor}
@@ -171,10 +183,12 @@ function PropertyTableInner({
               aria-label="Premium · gated competitor data"
             >
               <div className="relative select-none">
-                {/* Blurred player names */}
+                {/* Blurred player names · blur alone obfuscates without opacity reducing contrast ratio.
+                    Removed opacity: 0.4 — axe flags low-contrast at opacity < 1 even in aria-hidden.
+                    filter: blur(6px) is sufficient for gating UX per WCAG 1.4.3 intent. */}
                 <div
                   aria-hidden="true"
-                  style={{ filter: 'blur(5px)', opacity: 0.4 }}
+                  style={{ filter: 'blur(6px)' }}
                 >
                   {gatedPlayers.map((p) => (
                     <p
@@ -211,8 +225,12 @@ function PropertyTableInner({
           return (
             <tr
               key={prop.property}
-              className="group hover:bg-[var(--black-50,rgba(0,0,0,0.03))] transition-colors"
+              className="group transition-colors"
+              // Bible § 2.4 skip-shade: skip one shade beyond default · surface-aware
+              // Tailwind hover:bg-[] arbitrary class unreliable at compile — inline onMouseEnter
               style={{ height: `${rowHeightPx}px` }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = rowHoverBg; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.backgroundColor = ''; }}
             >
               {/* Row header · property name */}
               <th
@@ -230,7 +248,7 @@ function PropertyTableInner({
                 </p>
                 {prop.sublabel && (
                   <p
-                    className="font-body italic text-[var(--semantic-ink-subtle)] mt-0.5"
+                    className="font-body italic text-[var(--semantic-ink-muted)] mt-0.5"
                     style={{ fontSize: '10px', lineHeight: 1.3 }}
                   >
                     {prop.sublabel}
@@ -267,11 +285,13 @@ function PropertyTableInner({
                   aria-label="Gated · requires premium access"
                 >
                   <div className="relative select-none">
-                    {/* Blurred decoy values */}
+                    {/* Blurred decoy values · blur alone per gating UX. Removed opacity: 0.35 —
+                        axe correctly flags low-contrast at opacity < 1 even when aria-hidden.
+                        blur(5px) is sufficient to obfuscate values without failing WCAG 1.4.3. */}
                     <div
                       aria-hidden="true"
                       className="flex gap-5"
-                      style={{ filter: 'blur(4.5px)', opacity: 0.35 }}
+                      style={{ filter: 'blur(5px)' }}
                     >
                       {gatedPlayers.map((p) => (
                         <p
@@ -305,6 +325,7 @@ export function PropertyTable({
   maxHeight,
   variant = 'card',
   headerStyle = 'wash',
+  surface = 'light',
   className,
 }: PropertyTableProps) {
   const hasGated = players.length > gatedFrom;
@@ -324,6 +345,7 @@ export function PropertyTable({
           properties={properties}
           players={players}
           gatedFrom={gatedFrom}
+          surface={surface}
         />
       </TableShell>
 

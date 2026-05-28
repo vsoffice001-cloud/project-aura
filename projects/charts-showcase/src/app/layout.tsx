@@ -39,6 +39,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${notoSerif.variable} ${dmSans.variable}`}>
+      <head>
+        {/* G.5: Declare support for both schemes — browser native controls + scrollbars
+            adapt to the active surface without flash. Mitigates theme-switch flicker
+            for system-level UI elements (scrollbars, form inputs). */}
+        <meta name="color-scheme" content="light dark" />
+      </head>
       <body className="font-body">
         <AuraBeacon />
         {children}

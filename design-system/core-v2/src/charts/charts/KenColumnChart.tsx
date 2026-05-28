@@ -44,7 +44,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
 import type { ChartSurface } from '../theme/highcharts-base';
-import { KEN_CHART_SERIES_ARRAY } from '../theme/tokens';
+import { KEN_CHART_SERIES_ARRAY, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
@@ -130,6 +130,16 @@ export function KenColumnChart({
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents hardcoded light rgba strings from leaking into dark surface formatters
+  const isDark = surface === 'dark';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  // BUG C fix: tooltip bg is always WHITE (canonical). Tooltip text must always be dark ink.
+  // inkStrong/inkMuted flip to white on dark → white-on-white in tooltip. Use fixed dark values.
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
+
   // Mark projected points w/ dashed border + reduced opacity (built into pointWise data array)
   const pointWiseData = useMemo(() => {
     if (projectionStartIndex === undefined || projectionStartIndex < 0) {
@@ -164,26 +174,32 @@ export function KenColumnChart({
       },
       tooltip: {
         useHTML: true,
+        // PART A fix: surface-aware tooltip text via closure (bg stays WHITE per Bible § 9.14)
         formatter: function () {
           const v = (this.y as number).toLocaleString('en-US', {
             minimumFractionDigits: 1,
             maximumFractionDigits: 1,
           });
           const cat = this.x;
-          const unitPart = unit ? ` <span style="color:rgba(0,0,0,0.55)">${unit}</span>` : '';
+          // BUG C fix: use tooltipInk* (always dark) — tooltip bg is white on both surfaces
+          const unitPart = unit ? ` <span style="color:${tooltipInkMuted}">${unit}</span>` : '';
           return `
-            <div style="font-family:'DM Sans', -apple-system, sans-serif;">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:2px;">${cat}</div>
-              <div style="font-size:12px;font-weight:500;color:rgb(26,26,46);font-variant-numeric:tabular-nums;">${v}${unitPart}</div>
+            <div style="font-family:${KEN_CHART_FONT.sans};">
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:2px;">${cat}</div>
+              <div style="font-size:12px;font-weight:500;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;">${v}${unitPart}</div>
             </div>
           `;
         },
       },
       plotOptions: {
         column: {
-          // Hover dim-others: non-hovered bars dim to 0.3 opacity (Highcharts built-in)
+          // PART B fix: Bible § 2.2 Column · inactive 0.4 · hover halo per § 2.6
           states: {
-            inactive: { opacity: 0.3 },
+            hover: {
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
+            },
+            inactive: { opacity: 0.4 },
           },
         },
       },
@@ -195,12 +211,15 @@ export function KenColumnChart({
           showInLegend: false,
         },
       ],
-      // Mobile strategy: SIMPLIFY · rotate x-axis labels at <640px
-      // Highcharts responsive.rules applied here — ONE place · no JS resize listener
+      // Mobile strategy: SIMPLIFY · rotate x-axis labels at ≤360px container width
+      // BUG FIX (Sprint G.7 Phase 4): was maxWidth:640 — fired in compare mode (~370px container)
+      // which incorrectly rotated labels when viewport is desktop. 360px = true narrow single-col.
+      // Bible § 4.1: Highcharts responsive.rules fires on container width NOT viewport · threshold
+      // must be ≤360 to avoid triggering inside compare mode cells (~370-380px each).
       responsive: {
         rules: [
           {
-            condition: { maxWidth: 640 },
+            condition: { maxWidth: 360 },
             chartOptions: {
               xAxis: {
                 labels: {
@@ -214,7 +233,7 @@ export function KenColumnChart({
         ],
       },
     } as Partial<Highcharts.Options>);
-  }, [labels, height, unit, pointWiseData, surface]);
+  }, [labels, height, unit, pointWiseData, surface, inkStrong, inkMuted]);
 
   // Reflow on window resize · Highcharts doesn't always catch container resize w/o it
   useEffect(() => {

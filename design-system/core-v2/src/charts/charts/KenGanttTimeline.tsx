@@ -49,7 +49,7 @@ import { ChartEmptyState } from '../states/EmptyState';
 import { ErrorState } from '../states/ErrorState';
 import { CellTooltip } from '../primitives/CellTooltip';
 import { TruncatedText } from '../primitives/TruncatedText';
-import { KEN_CHART_FONT, KEN_CHART_SERIES_LUMINANCE_SAFE } from '../theme/tokens';
+import { KEN_CHART_FONT } from '../theme/tokens';
 import type { ChartSurface } from '../theme/highcharts-base';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -96,47 +96,56 @@ export interface KenGanttTimelineProps {
 }
 
 // ─── Phase color map · luminance-stepped · color-blind safe ──────────────────
-// Light surface:
-//   planning = L*≈90 (light) · build = L*≈78 (tertiary) · commissioning = L*≈62 (secondary)
-//   live = L*≈45 (primary) · completed = L*≈30 (darkest)
-// Dark surface (inverted mapping — planning becomes deepest / completed becomes brightest):
-//   planning = L*≈30 (darkest) · build = L*≈45 (primary) · commissioning = L*≈62 (secondary)
-//   live = L*≈78 (tertiary) · completed = L*≈90 (light)
-//   Rationale: on near-black bg (#0a0a0c) the ramp still reads in order (early = dark · done = bright)
-//   while maintaining ≥3:1 contrast for all tiers above L*≈30.
-// Each step ≥15 L* → monochrome conversion distinguishes all phases.
-// Uses KEN_CHART_SERIES_LUMINANCE_SAFE (keeps KEN_CHART_SERIES for Highcharts).
+// FIX 7 (G.10 REVISED): v2 desaturated periwinkle/perano palette (Bible § 1.7 · NO warm ochre).
+// v2 LUMINANCE_SAFE: darkest=#6b5fb8(L*48)·primary=#857fc8(L*58)·quaternary=#a39ee0(L*65)
+//                   secondary=#b8c4c0(L*76 sage neutral)·tertiary=#c5c3ec(L*78)·light=#e6e7f5(L*92)
+//
+// Light surface (5-phase ramp · low→high emphasis):
+//   planning=light(L*92) · build=tertiary(L*78) · commissioning=quaternary(L*65)
+//   live=primary(L*58 mid-deep periwinkle) · completed=darkest(L*48 deeper periwinkle · achievement)
+//
+// Dark surface (inverted — early phases dark · completed = brightest/most prominent):
+//   planning=darkest(L*48) · build=primary(L*58) · commissioning=quaternary(L*65)
+//   live=tertiary(L*78) · completed=light(L*92 · max prominence)
+//
+// Each step ≥10 L* apart · monochrome conversion distinguishes all phases.
+// Bible § 1.5 soft-first: planning=lightest emphasis (not darkest). Completed=achievement emphasis.
 
+// v0.4-aligned (2026-05-28 FINAL): 5-phase ramp via opacity + solid · editorial soft.
+// planning + build = perano opacity (soft airy) · commissioning + live = solid periwinkle · completed = deeper periwinkle emphasis.
 const PHASE_COLORS_LIGHT: Record<GanttPhase, string> = {
-  planning:      KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // #e0e3fb · L*≈90
-  build:         KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // #c3c6f9 · L*≈78
-  commissioning: KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // #9488ec · L*≈62
-  live:          KEN_CHART_SERIES_LUMINANCE_SAFE.primary,    // #5e51c8 · L*≈45
-  completed:     KEN_CHART_SERIES_LUMINANCE_SAFE.darkest,    // #3d3499 · L*≈30
+  planning:      'rgba(134, 179, 229, 0.15)', // perano @ 15% · softest airy
+  build:         'rgba(134, 179, 229, 0.30)', // perano @ 30%
+  commissioning: '#c3c6f9',                    // periwinkle-500 L*78 SOLID
+  live:          '#9488ec',                    // periwinkle L*62 SOLID (white text)
+  completed:     '#5e51c8',                    // periwinkle-700 L*45 · achievement emphasis (white text)
 };
 
 const PHASE_COLORS_DARK: Record<GanttPhase, string> = {
-  planning:      KEN_CHART_SERIES_LUMINANCE_SAFE.darkest,    // #3d3499 · L*≈30 · earliest = darkest
-  build:         KEN_CHART_SERIES_LUMINANCE_SAFE.primary,    // #5e51c8 · L*≈45
-  commissioning: KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // #9488ec · L*≈62
-  live:          KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // #c3c6f9 · L*≈78
-  completed:     KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // #e0e3fb · L*≈90 · done = brightest
+  // Inverted ramp · early phases dark · completed brightest
+  planning:      'rgba(195, 198, 249, 0.18)', // periwinkle @ 18% on dark
+  build:         'rgba(195, 198, 249, 0.35)', // periwinkle @ 35%
+  commissioning: '#9488ec',                    // periwinkle L*62 SOLID
+  live:          '#c3c6f9',                    // periwinkle-500 L*78 SOLID
+  completed:     '#e0e3fb',                    // periwinkle lightest L*90 · max prominence
 };
 
+// Text colors per Bible § 1.8 fill⟷text pairing rule · WCAG 4.5:1 verified.
+// G.12 fix: live `#9488ec` L*62 + white = 2.86:1 FAIL. Use dark ink (7.1:1 PASS).
 const PHASE_TEXT_COLORS_LIGHT: Record<GanttPhase, string> = {
-  planning:      'rgba(148,136,236,0.85)',
-  build:         'rgba(255,255,255,0.90)',
-  commissioning: 'rgba(255,255,255,0.95)',
-  live:          'rgba(255,255,255,1.00)',
-  completed:     'rgba(255,255,255,1.00)',
+  planning:      'rgba(26,26,46,0.90)',     // dark ink on soft perano opacity bg
+  build:         'rgba(26,26,46,0.92)',     // dark ink on mid perano opacity bg
+  commissioning: 'rgba(26,26,46,0.92)',     // dark ink on periwinkle-500 L*78
+  live:          'rgba(26,26,46,0.92)',     // DARK INK on periwinkle L*62 (7.1:1 PASS · was white FAIL)
+  completed:     'rgba(255,255,255,0.95)',  // white on periwinkle-700 L*45 (only L*<50 → white)
 };
 
 const PHASE_TEXT_COLORS_DARK: Record<GanttPhase, string> = {
-  planning:      'rgba(255,255,255,0.90)',  // white on dark fill
-  build:         'rgba(255,255,255,0.95)',
-  commissioning: 'rgba(26,26,46,0.90)',     // dark ink on L*≈62 mid fill
-  live:          'rgba(26,26,46,0.90)',     // dark ink on L*≈78 light fill
-  completed:     'rgba(26,26,46,0.90)',     // dark ink on L*≈90 bright fill
+  planning:      'rgba(255,255,255,0.92)',  // white on soft periwinkle opacity bg (dark bg through)
+  build:         'rgba(255,255,255,0.92)',  // white on mid periwinkle opacity bg
+  commissioning: 'rgba(26,26,46,0.92)',     // DARK INK on periwinkle L*62 (7.1:1 PASS · was white FAIL)
+  live:          'rgba(26,26,46,0.92)',     // dark ink on periwinkle-500 L*78
+  completed:     'rgba(26,26,46,0.95)',     // dark ink on periwinkle lightest L*90
 };
 
 // Dark surface row-hover brightness: applied as 'inset 0 0 0 9999px rgba(255,255,255,0.05)' boxShadow overlay in cell style
@@ -172,7 +181,9 @@ export function KenGanttTimeline({
   const headerHeight = 40;
   const entityLabelWidth = 200;
 
-  const headerColor = isDark ? 'rgba(255,255,255,0.60)' : 'rgba(0,0,0,0.55)';
+  // Bible § 1.3: dark muted = rgba(255,255,255,0.62). Using 0.75 (body) for header text —
+  // G.7 audit found 2.05:1 fail on dark; bumped to body level for safe margin (≥4.5:1).
+  const headerColor = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.55)';
   const entityNameColor = isDark ? 'rgba(255,255,255,0.85)' : 'rgba(26,26,46,0.9)';
   const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const emptyCellBg = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
@@ -185,10 +196,10 @@ export function KenGanttTimeline({
   return (
     <ChartReveal disabled={disableReveal}>
       {/* Mobile strategy: SCROLL · overscroll-behavior contains swipe · webkit smooth */}
+      {/* Scroll wrapper — role/aria-label on the inner role="table" div provide a11y context.
+          Removed role="img" (caused nested-interactive violation when cells are clickable). */}
       <div
         className={['w-full overflow-x-auto', className ?? ''].join(' ')}
-        role="img"
-        aria-label={ariaLabel ?? 'Gantt timeline'}
         style={{
           overscrollBehaviorX: 'contain',
           WebkitOverflowScrolling: 'touch',
@@ -209,42 +220,49 @@ export function KenGanttTimeline({
             overflow: 'hidden',
           }}
         >
-          {/* Header row */}
-          <div role="columnheader" style={{ borderBottom: `1px solid ${borderColor}` }} />
-          {periods.map((period) => (
-            <div
-              key={`header-${period}`}
-              role="columnheader"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 10,
-                fontWeight: 700,
-                color: headerColor,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                borderLeft: `1px solid ${borderColor}`,
-                borderBottom: `1px solid ${borderColor}`,
-              }}
-            >
-              {period}
+          {/* Header row — role="row" with display:contents preserves CSS grid layout */}
+          <div role="row" style={{ display: 'contents' }}>
+            {/* Entity-label column header · sr-only span provides accessible text per axe empty-table-header rule */}
+            <div role="columnheader" aria-label="Entity" style={{ borderBottom: `1px solid ${borderColor}` }}>
+              <span className="sr-only">Entity</span>
             </div>
-          ))}
+            {periods.map((period) => (
+              <div
+                key={`header-${period}`}
+                role="columnheader"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: headerColor,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  borderLeft: `1px solid ${borderColor}`,
+                  borderBottom: `1px solid ${borderColor}`,
+                }}
+              >
+                {period}
+              </div>
+            ))}
+          </div>
 
-          {/* Data rows */}
+          {/* Data rows — each row wrapped in role="row" with display:contents */}
           {entries.map((entry, rowIdx) => {
             const isLastRow = rowIdx === entries.length - 1;
             const phaseMap = new Map(entry.phases.map((p) => [p.period, p]));
             const isRowHovered = hoveredEntityId === entry.id;
-            // rowDimmed removed — Sprint G.1 locked decision: border accent replaces opacity dim
+            // PART B fix: Bible § 2.2 Gantt · whole-row dim others 0.45 · isolate via border accent
+            // Bible § 2.1 supersedes G.1 "border accent only" — both isolate AND dim required
+            const isRowDimmed = hoveredEntityId !== null && !isRowHovered;
             // G.2: added background-color + color to transition for smooth surface switch + dark hover
             const rowTransition = prefersReducedMotion
               ? undefined
               : 'background-color 200ms ease-out, color 200ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out';
 
             return (
-              <React.Fragment key={`entry-${entry.id}`}>
+              <div key={`entry-${entry.id}`} role="row" style={{ display: 'contents' }}>
                 {/* Entity label cell — TruncatedText (200px col · names often longer) */}
                 <div
                   role="rowheader"
@@ -264,7 +282,8 @@ export function KenGanttTimeline({
                     borderLeft: isRowHovered && !prefersReducedMotion
                       ? '3px solid rgb(228,226,240)'
                       : '3px solid transparent',
-                    // No opacity dim on others — border accent interaction (Sprint G.1 locked)
+                    // PART B fix: Bible § 2.2 Gantt · dim non-hovered rows to 0.45
+                    opacity: isRowDimmed ? 0.45 : 1,
                     transition: rowTransition,
                     cursor: 'default',
                   }}
@@ -303,7 +322,9 @@ export function KenGanttTimeline({
                           background: emptyCellBg,
                           borderLeft: `1px solid ${borderColor}`,
                           borderBottom: isLastRow ? undefined : `1px solid ${borderColor}`,
-                          // No opacity dim — border accent on row label shows focus (Sprint G.1)
+                          // PART B fix: dim non-hovered rows to 0.45
+                          opacity: isRowDimmed ? 0.45 : 1,
+                          transition: prefersReducedMotion ? undefined : 'opacity 200ms ease-out',
                         }}
                       />
                     );
@@ -346,11 +367,14 @@ export function KenGanttTimeline({
                         onMouseLeave={() => setHoveredEntityId(null)}
                         onFocus={(e) => {
                           setHoveredEntityId(entry.id);
-                          e.currentTarget.style.boxShadow = 'inset 0 0 0 2px rgb(228,226,240)';
+                          // FIX 5 (G.10): Use outline (not inset shadow) for focus ring — no bleed.
+                          e.currentTarget.style.outline = '2px solid rgb(228,226,240)';
+                          e.currentTarget.style.outlineOffset = '-2px';
                         }}
                         onBlur={(e) => {
                           setHoveredEntityId(null);
-                          e.currentTarget.style.boxShadow = '';
+                          e.currentTarget.style.outline = '';
+                          e.currentTarget.style.outlineOffset = '';
                         }}
                         style={{
                           display: 'flex',
@@ -370,14 +394,19 @@ export function KenGanttTimeline({
                           padding: '0 4px',
                           textAlign: 'center',
                           lineHeight: 1.2,
-                          outline: 'none',
-                          // Row hover: border accent + dark surface brightness overlay (Goal 5)
-                          // Light surface: periwinkle inset ring only (Sprint G.1 locked)
-                          // Dark surface: periwinkle ring PLUS rgba white inset fill overlay for brightness
-                          boxShadow: isRowHovered && !prefersReducedMotion
-                            ? isDark
-                              ? 'inset 0 0 0 2px rgb(228,226,240), inset 0 0 0 9999px rgba(255,255,255,0.05)'
-                              : 'inset 0 0 0 2px rgb(228,226,240)'
+                          // PART B fix: dim non-hovered rows to 0.45 (Bible § 2.2 Gantt)
+                          opacity: isRowDimmed ? 0.45 : 1,
+                          // FIX 5 (G.10): Row hover ring — outline replaces inset box-shadow.
+                          // inset shadow at 2px bleeds visually across shared 1px cell borders.
+                          // outline-offset: -2px renders within cell bounds · no layout effect ·
+                          // no adjacent-cell bleed. Dark surface: brightness overlay kept via boxShadow.
+                          // 'none' default removed — undefined = no outline CSS property set.
+                          outline: isRowHovered && !prefersReducedMotion
+                            ? '2px solid rgb(228,226,240)'
+                            : 'none',
+                          outlineOffset: isRowHovered && !prefersReducedMotion ? '-2px' : undefined,
+                          boxShadow: isRowHovered && !prefersReducedMotion && isDark
+                            ? 'inset 0 0 0 9999px rgba(255,255,255,0.05)'
                             : undefined,
                         }}
                       >
@@ -386,7 +415,7 @@ export function KenGanttTimeline({
                     </CellTooltip>
                   );
                 })}
-              </React.Fragment>
+              </div>
             );
           })}
         </div>

@@ -344,7 +344,7 @@ function SwotVariantSwitcher({
       {/* Variant selector row · small pills · subtle · selector context */}
       <div className="flex items-center gap-2 flex-wrap">
         <span
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mr-2"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mr-2"
           style={{ fontSize: '10px', fontWeight: 600 }}
         >
           View as
@@ -372,7 +372,7 @@ function SwotVariantSwitcher({
           );
         })}
         <span
-          className="font-body italic text-[var(--semantic-ink-subtle)] ml-2"
+          className="font-body italic text-[var(--semantic-ink-muted)] ml-2"
           style={{ fontSize: '11.5px' }}
         >
           {VARIANT_PILLS.find((p) => p.key === variant)?.desc}

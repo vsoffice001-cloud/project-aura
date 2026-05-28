@@ -29,23 +29,23 @@ export function VariantToggle({
   return (
     <div className="flex items-center gap-2 flex-wrap">
       <span
-        className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+        className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
         style={{ fontSize: '10px', fontWeight: 600, flexShrink: 0 }}
       >
         {label}
       </span>
       {variants.map((v) => (
-        <HitArea key={v.id}>
-          <Button
-            variant={activeId === v.id ? 'primary' : 'secondary'}
-            size="xs"
-            onClick={() => onChange(v.id)}
-            aria-pressed={activeId === v.id}
-            pill
-          >
-            {v.label}
-          </Button>
-        </HitArea>
+        <Button
+          key={v.id}
+          variant={activeId === v.id ? 'primary' : 'secondary'}
+          size="sm"
+          onClick={() => onChange(v.id)}
+          aria-pressed={activeId === v.id}
+          pill
+          className="!min-h-[44px] !px-4"
+        >
+          {v.label}
+        </Button>
       ))}
     </div>
   );

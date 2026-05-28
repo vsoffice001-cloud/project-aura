@@ -129,7 +129,7 @@ export function MobileTOC({ activeChapter, onChapterClick }: MobileTOCProps) {
                   className="p-2 rounded-[5px] hover:bg-[var(--black-50,#fafafa)] transition-colors"
                   aria-label="Close"
                 >
-                  <X className="h-4 w-4 text-[var(--black-500,#a3a3a3)]" />
+                  <X className="h-4 w-4 text-[var(--semantic-ink-subtle)]" />
                 </button>
               </div>
 
@@ -149,9 +149,9 @@ export function MobileTOC({ activeChapter, onChapterClick }: MobileTOCProps) {
                           className="flex items-center gap-3 px-3 py-3 rounded-[5px] opacity-40"
                         >
                           <div className="w-7 h-7 rounded-full flex items-center justify-center bg-[var(--black-100,#f5f5f5)]">
-                            <Lock size={14} className="text-[var(--black-400,#a3a3a3)]" />
+                            <Lock size={14} className="text-[var(--semantic-ink-muted)]" />
                           </div>
-                          <span className="text-[0.875rem] text-[var(--black-400,#a3a3a3)]">
+                          <span className="text-[0.875rem] text-[var(--semantic-ink-muted)]">
                             {item.title}
                           </span>
                         </div>
@@ -178,7 +178,7 @@ export function MobileTOC({ activeChapter, onChapterClick }: MobileTOCProps) {
                                 ? 'bg-white/20 text-white'
                                 : chapterState === 'past'
                                 ? 'bg-black text-white'
-                                : 'bg-[var(--black-100,#f5f5f5)] text-[var(--black-500,#a3a3a3)]'
+                                : 'bg-[var(--black-100,#f5f5f5)] text-[var(--semantic-ink-subtle)]'
                             }`}
                         >
                           {chapterState === 'past' ? (

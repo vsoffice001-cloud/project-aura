@@ -41,7 +41,7 @@
  * @relatedDoc design-system/core-v2/src/charts/theme/tokens.ts
  */
 
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
@@ -129,9 +129,43 @@ export function KenDonutChart({
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
+  // G.7 Phase 5 Task 1 fix: viewport matchMedia for ≤320 compress rule.
+  // Bible § 4.1: responsive.rules fires on CONTAINER width — catches compare mode (~370px cells).
+  // matchMedia('(max-width: 320px)') fires only on true narrow viewport · compare-safe.
+  // At ≤320: drop name label · keep percentage only (connector + pct) per Bible § 4.2 KenDonutChart spec.
+  const [isNarrowViewport, setIsNarrowViewport] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(max-width: 320px)').matches
+      : false
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 320px)');
+    setIsNarrowViewport(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsNarrowViewport(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time (tooltip text)
+  const inkStrong = surface === 'dark' ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = surface === 'dark' ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  // BUG C fix: tooltip bg is WHITE on both surfaces — text must always be dark ink
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
+
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
     const surfOpts = surfaceOverrides(surface);
+    // At ≤320px viewport: formatter drops name · shows pct+connector only (per Bible § 4.2).
+    // Controlled via isNarrowViewport (matchMedia · viewport) NOT responsive.rules (container-width).
+    const narrowFormatter = isNarrowViewport
+      ? function (this: Highcharts.PointLabelObject) {
+          const pct = this.percentage ?? 0;
+          const valueColor = surface === 'dark' ? 'rgba(255,255,255,0.92)' : KEN_INK.strong;
+          return `<span style="font-variant-numeric:tabular-nums;color:${valueColor};font-weight:500;">${pct.toFixed(pct < 10 ? 1 : 0)}%</span>`;
+        }
+      : undefined;
     return deepMerge(deepMerge(base, surfOpts), {
       chart: {
         type: 'pie',
@@ -146,16 +180,18 @@ export function KenDonutChart({
       yAxis: { gridLineWidth: 0, lineColor: 'transparent', labels: { enabled: false } },
       tooltip: {
         useHTML: true,
+        // PART A fix: surface-aware tooltip text via closure (bg stays WHITE per Bible § 9.14)
         formatter: function () {
           const v = (this.y as number).toLocaleString('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 1,
           });
           const name = this.point?.name ?? this.key;
+          // BUG C fix: tooltipInk* always dark — white tooltip bg on both surfaces
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:2px;">${name}</div>
-              <div style="font-size:12px;font-weight:500;color:rgb(26,26,46);font-variant-numeric:tabular-nums;">${v}${unit ? ` ${unit}` : ''}</div>
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:2px;">${name}</div>
+              <div style="font-size:12px;font-weight:500;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;">${v}${unit ? ` ${unit}` : ''}</div>
             </div>
           `;
         },
@@ -168,33 +204,45 @@ export function KenDonutChart({
           center: ['50%', '50%'],
           // Consistent sizing relative to chart area (was auto-shrinking on narrow containers)
           size: '85%',
-          borderWidth: 2,
-          borderColor: '#ffffff',
+          borderWidth: 1,
+          // BUG 2 fix (Sprint G.7): was hardcoded '#ffffff' — bright white on dark surface.
+          // Surface-aware: subtle separator on both surfaces.
+          borderColor: surface === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)',
           colors: [...KEN_CHART_SERIES_ARRAY],
           dataLabels: {
             enabled: showLabels,
             distance: 20,  // slightly more clearance than 14 · prevents label overlap with outer border
             style: {
-              color: KEN_INK.strong,
+              // BUG 1 fix (Sprint G.7): was KEN_INK.strong (hardcoded light constant).
+              // Surface-aware inline colors for Highcharts dataLabels (not CSS cascade).
+              color: surface === 'dark' ? 'rgba(255,255,255,0.92)' : KEN_INK.strong,
               fontFamily: KEN_CHART_FONT.sans,
               fontSize: '11px',
               fontWeight: '500',
               textOutline: 'none',
             },
-            formatter: function () {
+            // G.7 Phase 5 Task 1: narrowFormatter active at ≤320 viewport (matchMedia-driven).
+            // Drops name label · keeps pct connector only per Bible § 4.2 KenDonutChart spec.
+            // Fallback = full name+pct formatter.
+            formatter: narrowFormatter ?? function () {
               const pct = this.percentage ?? 0;
-              return `<span style="color:${KEN_INK.muted};">${this.point?.name}</span><br/><span style="font-variant-numeric:tabular-nums;color:${KEN_INK.strong};font-weight:500;">${pct.toFixed(pct < 10 ? 1 : 0)}%</span>`;
+              // BUG 1 fix: surface-aware label colors — KEN_INK constants are light-only TS values.
+              const nameColor  = surface === 'dark' ? 'rgba(255,255,255,0.62)' : KEN_INK.muted;
+              const valueColor = surface === 'dark' ? 'rgba(255,255,255,0.92)' : KEN_INK.strong;
+              return `<span style="color:${nameColor};">${this.point?.name}</span><br/><span style="font-variant-numeric:tabular-nums;color:${valueColor};font-weight:500;">${pct.toFixed(pct < 10 ? 1 : 0)}%</span>`;
             },
             useHTML: true,
           },
           states: {
+            // PART B fix: Bible § 2.2 Donut · inactive 0.5 · slicedOffset 6px translate-out
+            // brightness 0 to avoid built-in brightness mutation (only opacity matters)
             hover: {
-              brightness: -0.08,
-              halo: { size: 4, opacity: 0.2 },
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
             },
-            // Hover dim-others: non-hovered slices dim to 0.3 opacity (Highcharts built-in)
-            inactive: { opacity: 0.3 },
+            inactive: { opacity: 0.5 },
           },
+          slicedOffset: 6,
         },
       },
       series: [
@@ -204,26 +252,14 @@ export function KenDonutChart({
           data: data.map((d) => ({ name: d.name, y: d.value })),
         },
       ],
-      // Mobile strategy: SIMPLIFY · drop dataLabels at <640px (overlap at narrow)
-      // ChartFigure legend below handles identification — no info loss
-      responsive: {
-        rules: [
-          {
-            condition: { maxWidth: 640 },
-            chartOptions: {
-              plotOptions: {
-                pie: {
-                  dataLabels: { enabled: false },
-                  // Expand donut to use freed label space
-                  size: '95%',
-                },
-              },
-            },
-          },
-        ],
-      },
+      // G.7 Phase 5 Task 1: responsive.rules REMOVED for Donut.
+      // Bible § 4.1: responsive.rules fires on CONTAINER width — catches compare mode (~370px cells).
+      // Label compression at ≤320 viewport is now viewport-matchMedia driven (isNarrowViewport state
+      // above). No container-width responsive rules needed — compare-safe, viewport-accurate.
+      // Full label drop (dataLabels: false) ALSO removed per Bible § 4.2: "compress · not drop".
+      // At ≤320: formatter switches to pct-only (no name). At >320: full name+pct shown.
     } as Partial<Highcharts.Options>);
-  }, [data, height, showLabels, unit, surface]);
+  }, [data, height, showLabels, unit, surface, inkStrong, inkMuted, isNarrowViewport]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
@@ -281,7 +317,7 @@ export function KenDonutChart({
             )}
             {centerSubLabel && (
               <p
-                className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mt-1.5"
+                className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mt-1.5"
                 style={{ fontSize: '10px', fontWeight: 600 }}
               >
                 {centerSubLabel}

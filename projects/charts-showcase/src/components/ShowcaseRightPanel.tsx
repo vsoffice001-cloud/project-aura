@@ -33,7 +33,7 @@ function PanelSection({
     >
       {/* mb-3 (12px) panel section heading per spacing spec */}
       <summary
-        className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+        className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
         style={{
           fontSize: '9px',
           fontWeight: 700,
@@ -80,7 +80,7 @@ export function ShowcaseRightPanel() {
           style={{ padding: '24px 16px' }}
         >
           <p
-            className="font-body italic text-[var(--semantic-ink-subtle)]"
+            className="font-body italic text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '12px', lineHeight: 1.6 }}
           >
             Scroll to a component to inspect its props, code, and a11y notes.
@@ -97,7 +97,7 @@ export function ShowcaseRightPanel() {
             }}
           >
             <p
-              className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+              className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
               style={{ fontSize: '9px', fontWeight: 700, marginBottom: '4px' }}
             >
               {activeDemo.category}
@@ -198,7 +198,7 @@ export function ShowcaseRightPanel() {
                       className="font-body"
                       style={{
                         fontSize: '9px',
-                        color: 'var(--semantic-ink-subtle)',
+                        color: 'var(--semantic-ink-muted)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
                       }}
@@ -211,7 +211,7 @@ export function ShowcaseRightPanel() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <p
-                  className="font-body text-[var(--semantic-ink-subtle)] italic"
+                  className="font-body text-[var(--semantic-ink-muted)] italic"
                   style={{ fontSize: '11px', marginBottom: '6px' }}
                 >
                   Common shared tokens:

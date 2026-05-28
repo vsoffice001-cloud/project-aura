@@ -146,7 +146,7 @@ export function MethodologySection() {
         {/* Tab 2 · Process · 4-step flow */}
         <TabsContent value="process" className="mt-0">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-4"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-4"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Research process · 4-step framework
@@ -157,7 +157,7 @@ export function MethodologySection() {
         {/* Tab 3 · Pillars · 3-col grid */}
         <TabsContent value="pillars" className="mt-0">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-1.5"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-1.5"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Three research pillars
@@ -174,7 +174,7 @@ export function MethodologySection() {
         {/* Tab 4 · Sample · donut chart */}
         <TabsContent value="sample" className="mt-0">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-1.5"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-1.5"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Primary research · respondent composition

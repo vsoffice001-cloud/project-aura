@@ -113,7 +113,7 @@ export function OpportunityHeatmap({
       <div className="flex">
         <div className="flex-none flex flex-col items-center justify-center pr-3 py-12" style={{ width: '36px' }}>
           <span
-            className="font-body uppercase tracking-[0.16em] text-[var(--semantic-ink-subtle)]"
+            className="font-body uppercase tracking-[0.16em] text-[var(--semantic-ink-muted)]"
             style={{
               fontSize: '10px',
               fontWeight: 600,
@@ -196,7 +196,7 @@ export function OpportunityHeatmap({
             {(['low', 'medium', 'high'] as Tier[]).map((t) => (
               <p
                 key={t}
-                className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)] text-center"
+                className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)] text-center"
                 style={{ fontSize: '10px', fontWeight: 600 }}
               >
                 {TIER_LABEL[t]}
@@ -206,7 +206,7 @@ export function OpportunityHeatmap({
 
           {/* X-axis title */}
           <p
-            className="font-body uppercase tracking-[0.16em] text-[var(--semantic-ink-subtle)] text-center mt-1"
+            className="font-body uppercase tracking-[0.16em] text-[var(--semantic-ink-muted)] text-center mt-1"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             {xLabel} →

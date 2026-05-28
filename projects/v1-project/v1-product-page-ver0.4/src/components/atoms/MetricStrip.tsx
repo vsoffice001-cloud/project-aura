@@ -124,7 +124,7 @@ export function MetricStrip({
         return (
           <div key={`${m.eyebrow}-${i}`} className="min-w-0">
             <p
-              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)] mb-2"
+              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)] mb-2"
               style={{ fontSize: '10px', fontWeight: 600 }}
             >
               {m.eyebrow}
@@ -144,7 +144,7 @@ export function MetricStrip({
               {m.value}
               {m.unit && (
                 <span
-                  className="text-[var(--semantic-ink-subtle)] ml-1"
+                  className="text-[var(--semantic-ink-muted)] ml-1"
                   style={{ fontSize: '0.55em', letterSpacing: '0' }}
                 >
                   {m.unit}

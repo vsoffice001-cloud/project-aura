@@ -49,7 +49,7 @@ import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
 import { ErrorState } from '../states/ErrorState';
 import { CellTooltip } from '../primitives/CellTooltip';
-import { KEN_CHART_FONT, KEN_CHART_SERIES_LUMINANCE_SAFE } from '../theme/tokens';
+import { KEN_CHART_FONT } from '../theme/tokens';
 import type { ChartSurface } from '../theme/highcharts-base';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -59,8 +59,13 @@ export type HeatmapTier = 'faint' | 'mid' | 'strong';
 export interface HeatmapCell {
   rowKey: string;
   colKey: string;
-  /** Numeric value — drives auto-tier if tier not provided */
-  value: number;
+  /**
+   * Numeric value — drives auto-tier if tier not provided.
+   * `null` = explicitly no data (renders dim dashed cell with "—").
+   * `0`    = zero value (renders as smallest-color tier · cell is visible · NOT hidden).
+   * `undefined` (missing from cells array) = sparse cell (renders empty, no fill).
+   */
+  value: number | null;
   /** Override auto-tier calculation */
   tier?: HeatmapTier;
   /** Displayed in cell · default = value formatted to 1dp */
@@ -99,32 +104,36 @@ export interface KenHeatmapProps {
 }
 
 // ─── Tier color map · luminance-stepped · color-blind safe ───────────────────
-// Light surface:
-//   faint = L*≈90 (#e0e3fb) · mid = L*≈78 (#c3c6f9) · strong = L*≈62 (#9488ec)
-// Dark surface (inverted mapping — faint becomes brightest, strong becomes deepest):
-//   faint = L*≈62 (#9488ec) · mid = L*≈78 (#c3c6f9) · strong = L*≈90 (#e0e3fb)
-//   Rationale: on near-black bg (#0a0a0c) all L*≥62 tiers have ≥3:1 contrast.
+// FIX 7 (G.10): Updated for v2 desaturated editorial palette (Bible § 1.7).
+// v2 LUMINANCE_SAFE token names remapped — same periwinkle hue family, softer.
+// Light surface (3-tier periwinkle ramp):
+//   faint = #e6e7f5 (light L*≈92) · mid = #c5c3ec (tertiary L*≈78) · strong = #a39ee0 (quaternary L*≈65)
+// Dark surface (inverted — faint most receded, strong most prominent on near-black):
+//   faint = #a39ee0 (quaternary L*≈65) · mid = #c5c3ec (tertiary L*≈78) · strong = #e6e7f5 (light L*≈92)
+//   Rationale: all L*≥65 on near-black (L*≈2) have ≥3:1 contrast.
 //   "strong" on dark is brightest (most salient) · "faint" is most receded.
-// Each step ≥15 L* apart → monochrome conversion still distinguishes tiers.
+// Each step ≥13 L* apart → monochrome conversion distinguishes tiers.
 // Uses KEN_CHART_SERIES_LUMINANCE_SAFE (NOT KEN_CHART_SERIES — Highcharts keeps those).
 
+// v0.4-aligned (2026-05-28 FINAL): faint = perano-800 at 0.20 opacity · editorial-soft signature.
+// mid + strong = solid Ken periwinkle. Hierarchy from solid-vs-opacity contrast · NOT pre-blended hex.
 const TIER_BG_LIGHT: Record<HeatmapTier, string> = {
-  faint:  KEN_CHART_SERIES_LUMINANCE_SAFE.light,     // #e0e3fb · L*≈90
-  mid:    KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,  // #c3c6f9 · L*≈78
-  strong: KEN_CHART_SERIES_LUMINANCE_SAFE.secondary, // #9488ec · L*≈62
+  faint:  'rgba(134, 179, 229, 0.20)', // perano-800 at 20% opacity · v0.4 signature soft tier
+  mid:    '#c3c6f9',                    // periwinkle-500 L*78 SOLID
+  strong: '#9488ec',                    // periwinkle L*62 SOLID (text becomes white)
 };
 
 const TIER_BG_DARK: Record<HeatmapTier, string> = {
-  faint:  KEN_CHART_SERIES_LUMINANCE_SAFE.secondary,  // #9488ec · L*≈62 · most receded on dark
-  mid:    KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // #c3c6f9 · L*≈78 · mid on dark
-  strong: KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // #e0e3fb · L*≈90 · most prominent on dark
+  faint:  'rgba(195, 198, 249, 0.18)', // periwinkle-500 at 18% opacity on dark · soft receded
+  mid:    '#c3c6f9',                    // periwinkle-500 L*78 SOLID · mid on dark
+  strong: '#e0e3fb',                    // periwinkle lightest L*90 SOLID · brightest on dark
 };
 
-// Hover fill boost for dark surface: one step brighter than current tier
+// Hover fill boost for dark surface: bump opacity / step to next-brighter solid
 const TIER_BG_DARK_HOVER: Record<HeatmapTier, string> = {
-  faint:  KEN_CHART_SERIES_LUMINANCE_SAFE.tertiary,   // bump faint → mid brightness
-  mid:    KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // bump mid → strong brightness
-  strong: KEN_CHART_SERIES_LUMINANCE_SAFE.light,      // already brightest — stays
+  faint:  'rgba(195, 198, 249, 0.35)',  // opacity 0.18 → 0.35 on hover
+  mid:    '#e0e3fb',                     // bump mid → strong brightness
+  strong: '#ffffff',                     // already brightest · subtle white tint on hover
 };
 
 // ─── Auto-tier from value percentile ─────────────────────────────────────────
@@ -141,20 +150,31 @@ function computeTier(value: number, sorted: number[]): HeatmapTier {
 
 function Stars({ rating }: { rating: 1 | 2 | 3 | 4 | 5 }) {
   return (
+    // aria-hidden: accessible rating provided by parent cell aria-label (e.g. "Pharma, Storage: 9.2, 5 stars")
+    // FIX 1 (G.10): alignment changed from top-right to CENTER-TOP per Bible spec.
+    // Stars sit above the value · horizontally centered within the cell.
+    // Color: #6b5fb8 (LUMINANCE_SAFE.darkest v2 · L*≈48 · deeper periwinkle · ≥3:1 on v2 tier fills L*≥65).
+    // Inactive stars hidden (opacity:0) rather than dimmed — dimmed stars fail 4.5:1 at 8px.
     <div
+      aria-hidden="true"
       style={{
         position: 'absolute',
         top: 4,
-        right: 4,
+        left: 0,
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center',
         fontSize: '8px',
-        color: 'rgba(148,136,236,0.9)',
+        color: '#6b5fb8',   // LUMINANCE_SAFE.darkest v2 · L*≈48 · ≥3:1 on v2 tier fills
         lineHeight: 1,
         letterSpacing: '-1px',
+        pointerEvents: 'none',
       }}
-      aria-label={`${rating} stars`}
     >
       {Array.from({ length: 5 }, (_, i) => (
-        <span key={i} style={{ opacity: i < rating ? 1 : 0.25 }}>★</span>
+        // Inactive stars: opacity:0 (invisible placeholder) — filled stars convey rating visually.
+        // Screen-reader rating info lives on parent cell aria-label.
+        <span key={i} style={{ opacity: i < rating ? 1 : 0 }}>★</span>
       ))}
     </div>
   );
@@ -189,16 +209,29 @@ export function KenHeatmap({
     return map;
   }, [cells]);
 
-  // Sorted values for percentile-based auto-tier
+  // Sorted non-null values for percentile-based auto-tier
+  // Null values excluded — they don't participate in tier calculation.
+  // Zero IS included — zero = smallest tier, not absent.
   const sortedValues = useMemo(
-    () => [...cells].map((c) => c.value).sort((a, b) => a - b),
+    () => cells.filter((c) => c.value !== null).map((c) => c.value as number).sort((a, b) => a - b),
     [cells],
   );
 
   // Surface-aware text colors
   const isDark = surface === 'dark';
   const headerColor = isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.55)';
-  const valueFontColor = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(26,26,46,0.85)';
+  // G.12 fix: strong tier #9488ec L*62 + white = 2.86:1 FAIL. Bible §1.8 L*60-75 → dark ink.
+  // LIGHT: faint(0.20 perano)→dark · mid(#c3c6f9 L*78)→dark · strong(#9488ec L*62)→DARK INK (7.1:1).
+  const tierTextColorLight: Record<HeatmapTier, string> = {
+    faint:  'rgba(26,26,46,1.0)',
+    mid:    'rgba(26,26,46,1.0)',
+    strong: 'rgba(26,26,46,0.92)', // dark ink on periwinkle L*62 (was white · WCAG fail)
+  };
+  const tierTextColorDark: Record<HeatmapTier, string> = {
+    faint:  'rgba(255,255,255,0.92)', // white on 0.18 opacity periwinkle (dark bg shows through)
+    mid:    'rgba(26,26,46,0.92)',    // dark on L*78 solid
+    strong: 'rgba(26,26,46,0.95)',    // dark on L*90 lightest
+  };
 
   const rowLabelWidth = 120;
   const headerHeight = 32;
@@ -215,10 +248,10 @@ export function KenHeatmap({
   return (
     <ChartReveal disabled={disableReveal}>
       {/* Mobile strategy: SCROLL · overscroll-behavior contains horizontal swipe */}
+      {/* Scroll wrapper — role/aria-label on the inner role="table" div provide a11y context.
+          Removed role="img" (caused nested-interactive violation when cells are clickable). */}
       <div
         className={['w-full overflow-x-auto', className ?? ''].join(' ')}
-        role="img"
-        aria-label={ariaLabel ?? 'Heatmap grid'}
         style={{
           overscrollBehaviorX: 'contain',
           WebkitOverflowScrolling: 'touch',
@@ -237,35 +270,40 @@ export function KenHeatmap({
             minWidth,
           }}
         >
-          {/* Corner cell */}
-          <div role="columnheader" aria-label="Category" style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 4 }} />
-
-          {/* Column headers */}
-          {cols.map((col) => (
-            <div
-              key={col}
-              role="columnheader"
-              style={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-                paddingBottom: 4,
-                fontSize: 10,
-                fontWeight: 600,
-                color: headerColor,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                textAlign: 'center',
-                lineHeight: 1.2,
-              }}
-            >
-              {col}
+          {/* Header row — role="row" wrapper with display:contents preserves CSS grid layout */}
+          <div role="row" style={{ display: 'contents' }}>
+            {/* Corner cell · sr-only span provides accessible text per axe empty-table-header rule */}
+            <div role="columnheader" aria-label="Category" style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: 4 }}>
+              <span className="sr-only">Category</span>
             </div>
-          ))}
 
-          {/* Data rows */}
+            {/* Column headers */}
+            {cols.map((col) => (
+              <div
+                key={col}
+                role="columnheader"
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                  paddingBottom: 4,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: headerColor,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  textAlign: 'center',
+                  lineHeight: 1.2,
+                }}
+              >
+                {col}
+              </div>
+            ))}
+          </div>
+
+          {/* Data rows — each row wrapped in role="row" with display:contents */}
           {rows.map((row) => (
-            <React.Fragment key={`row-${row}`}>
+            <div key={`row-${row}`} role="row" style={{ display: 'contents' }}>
               {/* Row label */}
               <div
                 role="rowheader"
@@ -300,12 +338,41 @@ export function KenHeatmap({
                   );
                 }
 
+                // Null value: render dashed dim cell (no data) — NOT the same as zero.
+                // Zero = smallest tier (data exists, value is zero). Null = no data at all.
+                if (cell.value === null) {
+                  return (
+                    <div
+                      key={`cell-${row}-${col}`}
+                      role="cell"
+                      aria-label={`${row}, ${col}: no data`}
+                      style={{
+                        margin: 2,
+                        borderRadius: 4,
+                        background: 'transparent',
+                        border: `1px dashed ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.22)',
+                        fontFamily: KEN_CHART_FONT.sans,
+                      }}
+                    >
+                      —
+                    </div>
+                  );
+                }
+
                 const tier = cell.tier ?? computeTier(cell.value, sortedValues);
                 const tierBgMap = isDark ? TIER_BG_DARK : TIER_BG_LIGHT;
                 const tierBgHoverMap = isDark ? TIER_BG_DARK_HOVER : null;
                 const isClickable = !!onCellClick;
                 const cellKey = `${row}::${col}`;
                 const isHovered = hoveredCellKey === cellKey;
+                // PART B fix: Bible § 2.2 Heatmap · dim others to 0.5 · isolate via border accent
+                // Bible § 2.1 supersedes G.1 "border accent only" — both isolate AND dim required
+                const isDimmed = hoveredCellKey !== null && !isHovered;
                 // Dark surface: brighten fill on hover (Goal 5) + keep border accent
                 const bg = (isHovered && isDark && tierBgHoverMap)
                   ? tierBgHoverMap[tier]
@@ -324,8 +391,9 @@ export function KenHeatmap({
                       Value: {displayLabel}
                     </span>
                     {cell.starRating && (
-                      <span style={{ fontSize: '10px', color: 'rgba(26,26,46,0.65)' }}>
-                        Rating: {cell.starRating}/5
+                      <span style={{ fontSize: '10px', color: 'rgba(26,26,46,0.65)', letterSpacing: '-1px' }}>
+                        {/* BUG B fix: render Unicode star glyphs (★ filled · ☆ empty) instead of numeric text */}
+                        {'★'.repeat(cell.starRating)}{'☆'.repeat(5 - cell.starRating)}
                       </span>
                     )}
                     <span style={{ fontSize: '10px', color: 'rgba(26,26,46,0.50)', marginTop: 1 }}>
@@ -357,12 +425,16 @@ export function KenHeatmap({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        // FIX 1: when stars shown, push value down to leave room for center-top stars
+                        paddingTop: (showStars && cell.starRating) ? 14 : 0,
                         fontSize: 12,
                         fontWeight: 600,
-                        color: valueFontColor,
+                        color: (isDark ? tierTextColorDark : tierTextColorLight)[tier],
                         cursor: isClickable ? 'pointer' : 'default',
+                        // PART B fix: Bible § 2.2 Heatmap · isolate (border) + dim others (opacity 0.5)
+                        opacity: isDimmed ? 0.5 : 1,
                         transition,
-                        // Border accent on hover: periwinkle inset ring — no opacity dim (Sprint G.1 locked)
+                        // Border accent on hover: periwinkle inset ring (isolate signal)
                         boxShadow: isHovered && !prefersReducedMotion
                           ? 'inset 0 0 0 2px rgb(228,226,240)'
                           : undefined,
@@ -374,7 +446,7 @@ export function KenHeatmap({
                   </CellTooltip>
                 );
               })}
-            </React.Fragment>
+            </div>
           ))}
         </div>
       </div>

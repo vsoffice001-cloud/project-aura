@@ -101,7 +101,7 @@ function PlayerCard({ player }: { player: ColdStoragePlayer }) {
         >
           {player.pallets.toLocaleString()}
         </span>
-        <span className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]">
+        <span className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]">
           pallets
         </span>
       </div>
@@ -122,10 +122,10 @@ function TierGroup({ title, totalRange, players }: { title: string; totalRange: 
         >
           {title}
         </h3>
-        <span className="font-body text-[12px] text-[var(--semantic-ink-subtle)]">
+        <span className="font-body text-[12px] text-[var(--semantic-ink-muted)]">
           {totalRange}
         </span>
-        <span className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] ml-auto">
+        <span className="font-body text-[11px] uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] ml-auto">
           {players.length} {players.length === 1 ? 'player' : 'players'}
         </span>
       </div>
@@ -191,7 +191,7 @@ export function EcosystemSection() {
         <TabsContent value="cold-chain" className="mt-0">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <article className="rounded-[var(--radius-sm,10px)] border border-[var(--black-100)] bg-[var(--color-foundation-white)] p-5">
-              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
+              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
                 Total players
               </p>
               <p className="font-display font-light text-[var(--semantic-ink-strong)] tabular-nums" style={{ fontSize: '32px', lineHeight: 1.1 }}>
@@ -202,7 +202,7 @@ export function EcosystemSection() {
               </p>
             </article>
             <article className="rounded-[var(--radius-sm,10px)] border border-[var(--black-100)] bg-[var(--color-foundation-white)] p-5">
-              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
+              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
                 Top 4 share
               </p>
               <p className="font-display font-light text-[var(--semantic-ink-strong)] tabular-nums" style={{ fontSize: '32px', lineHeight: 1.1 }}>
@@ -213,7 +213,7 @@ export function EcosystemSection() {
               </p>
             </article>
             <article className="rounded-[var(--radius-sm,10px)] border border-[var(--black-100)] bg-[var(--color-foundation-white)] p-5">
-              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
+              <p className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-2" style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}>
                 Long tail
               </p>
               <p className="font-display font-light text-[var(--semantic-ink-strong)] tabular-nums" style={{ fontSize: '32px', lineHeight: 1.1 }}>
@@ -224,7 +224,7 @@ export function EcosystemSection() {
               </p>
             </article>
           </div>
-          <p className="font-body text-[14px] text-[var(--semantic-ink-muted)] italic mt-6">
+          <p className="font-body text-[14px] text-[var(--semantic-ink-body)] italic mt-6">
             Switch to <strong className="text-[var(--semantic-ink-strong)] not-italic font-medium">Cold Storage Players</strong> for the full tier breakdown by pallet capacity.
           </p>
         </TabsContent>
@@ -266,7 +266,7 @@ export function EcosystemSection() {
 
         {/* Tab 3 · Cold Transport Players · simple card grid */}
         <TabsContent value="cold-transport" className="mt-0">
-          <p className="font-body text-[14px] text-[var(--semantic-ink-muted)] italic mb-5">
+          <p className="font-body text-[14px] text-[var(--semantic-ink-body)] italic mb-5">
             13 named cold-transport operators · pallet/share data deferred to content team.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">

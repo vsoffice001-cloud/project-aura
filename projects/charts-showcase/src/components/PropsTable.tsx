@@ -22,7 +22,7 @@ export function PropsTable({ props }: PropsTableProps) {
   if (!props || props.length === 0) {
     return (
       <p
-        className="font-body italic text-[var(--semantic-ink-subtle)]"
+        className="font-body italic text-[var(--semantic-ink-muted)]"
         style={{ fontSize: '12px' }}
       >
         No props documented.
@@ -53,7 +53,7 @@ export function PropsTable({ props }: PropsTableProps) {
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.1em',
-                color: 'var(--semantic-ink-subtle)',
+                color: 'var(--semantic-ink-muted)',
                 whiteSpace: 'nowrap',
               }}
             >

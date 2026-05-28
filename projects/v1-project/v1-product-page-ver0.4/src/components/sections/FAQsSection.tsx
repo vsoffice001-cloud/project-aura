@@ -134,12 +134,14 @@ export function FAQsSection() {
           </SectionLabel>
         </div>
         <h2
-          className="font-display font-light text-[clamp(24px,2.6vw,36px)] leading-[1.1] tracking-tight text-[var(--semantic-ink-strong)] mb-3"
-          style={{ letterSpacing: '-0.015em' }}
+          className="font-display font-light text-[clamp(28px,3vw,39px)] leading-[1.15] tracking-[-0.015em] text-[var(--semantic-ink-strong)] mb-3"
         >
           Frequently Asked Questions
         </h2>
-        <p className="text-[1rem] text-[var(--black-500)] mt-4 leading-relaxed">
+        {/* ink-roles: SUBTITLE_LEAD_IN · single line directly below h2 · muted intentional per Bible §1.12.1 */}
+        {/* G.13.3 · subtitle/lead-in (first <p> after h2) · subtle creates rhythmic variation */}
+        {/* G.13.3 final · user direction · standalone subtitle = body */}
+        <p className="text-[1rem] text-[var(--semantic-ink-body)] mt-4 leading-relaxed">
           12 questions answered · sourced from sales calls, client onboarding, and analyst conversations.
         </p>
       </div>
@@ -162,11 +164,11 @@ export function FAQsSection() {
                 aria-expanded={isOpen}
                 aria-controls={`faq-answer-${faq.id}`}
               >
-                <span className="text-[1rem] font-medium text-black pr-4 leading-relaxed">
+                <span className="text-[1rem] font-medium text-[var(--semantic-ink-strong)] pr-4 leading-relaxed">
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`h-5 w-5 flex-shrink-0 transition-transform duration-300 text-[var(--black-500)] ${
+                  className={`h-5 w-5 flex-shrink-0 transition-transform duration-300 text-[var(--semantic-ink-subtle)] ${
                     isOpen ? 'rotate-180' : ''
                   }`}
                   strokeWidth={2}
@@ -186,7 +188,7 @@ export function FAQsSection() {
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <div className="px-4 sm:px-6 pb-4 sm:pb-5 text-[1rem] text-[var(--black-500)] leading-relaxed pt-4">
+                    <div className="px-4 sm:px-6 pb-4 sm:pb-5 text-[1rem] text-[var(--semantic-ink-subtle)] leading-relaxed pt-4">
                       {faq.answer}
                     </div>
                   </motion.div>
@@ -200,10 +202,10 @@ export function FAQsSection() {
       {/* Contact CTA */}
       <div className="mt-10 sm:mt-12 text-left p-5 sm:p-8 rounded-[10px] bg-black/[0.02] border border-black/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-[1rem] text-black mb-2">
+          <p className="text-[1rem] text-[var(--semantic-ink-strong)] mb-2">
             Still have questions?
           </p>
-          <p className="text-[0.875rem] text-[var(--black-500)]">
+          <p className="text-[0.875rem] text-[var(--semantic-ink-muted)]">
             Our research team is here to help you find the right solution
           </p>
         </div>

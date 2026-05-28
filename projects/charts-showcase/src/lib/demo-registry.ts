@@ -30,6 +30,14 @@ import {
   KenHeatmap,
   KenKeywordScatter,
   KenGanttTimeline,
+  KenWaterfallChart,
+  KenStackedBarChart,
+  KenSparklineChart,
+  KenRadarChart,
+  KenMatrixComparisonTable,
+  KenTimeSeriesTable,
+  KenScorecardTable,
+  KenHierarchyTable,
   PropertyTable,
   RankingTable,
   ChartSkeleton,
@@ -69,6 +77,28 @@ import {
   KEYWORD_DATA,
   GANTT_PERIODS,
   GANTT_ENTRIES,
+  WATERFALL_REVENUE_BRIDGE,
+  WATERFALL_COST_BREAKDOWN,
+  WATERFALL_PROFIT_WALK,
+  STACKED_BAR_LABELS,
+  STACKED_BAR_SERIES_PCT,
+  STACKED_BAR_SERIES_ABS,
+  SPARKLINE_STORAGE_REVENUE,
+  SPARKLINE_TRANSPORT_REVENUE,
+  SPARKLINE_UTILISATION,
+  SPARKLINE_NPS,
+  RADAR_AXES,
+  RADAR_SERIES,
+  RADAR_AXES_MARKET,
+  RADAR_SERIES_MARKET,
+  MATRIX_COLUMNS,
+  MATRIX_ROWS,
+  TIME_SERIES_PERIODS,
+  TIME_SERIES_ROWS,
+  SCORECARD_COLUMNS,
+  SCORECARD_ROWS,
+  HIERARCHY_COLUMNS,
+  HIERARCHY_ROWS,
   PROPERTY_PROPS,
   PROPERTY_PLAYERS,
   RANKING_COLUMNS,
@@ -169,6 +199,19 @@ export const DEMOS: Demo[] = [
       ],
       figcaption: 'Anchored 2017–2022 per PRD V2.1 §6.3. Forward 2023–2027F compounded at CAGR per Ken Forecast Model.',
       source: { primary: 'Ken Forecast Model 2025', cross: ['Oxford Economics'], date: '2025-Q2' },
+      // G.5: data freshness + CSV export demos
+      dataAsOf: 'Q2 2025',
+      enableExport: true,
+      exportFilename: 'revenue-aud-mn',
+      dataTable: {
+        caption: 'Revenue · AUD Mn · 2017–2027F',
+        headers: ['Year', 'Revenue (AUD Mn)'],
+        rows: [
+          ['2017', 1820], ['2018', 1990], ['2019', 2180], ['2020', 2250],
+          ['2021', 2440], ['2022', 2680], ['2023F', 2940], ['2024F', 3240],
+          ['2025F', 3560], ['2026F', 3920], ['2027F', 4310],
+        ],
+      },
     },
     importSnippet: `import { ChartFigure } from '@kenresearch/design-system/charts';`,
     exampleSnippet: `<ChartFigure
@@ -634,6 +677,10 @@ export const DEMOS: Demo[] = [
       series: LINE_SERIES,
       height: 300,
       unit: '% YoY',
+      // BUG 4 fix (Sprint G.7): forecast portion (2025F–2029F = index 7) was solid
+      // — no visual distinction from historical. projectionStartIndex=7 triggers
+      // Highcharts zones in KenMultiLineChart → dashed LongDashDot after this index.
+      projectionStartIndex: 7,
       ariaLabel: 'Macro multi-line overlay chart',
     },
     surfaces: ['light', 'dark'],
@@ -1439,6 +1486,682 @@ useEffect(() => {
       { name: '--space-3', category: 'spacing', usage: 'Cell padding (standard row height)' },
     ],
   },
+  // ══════════════════════════════════════════════════════════════════════════
+  // CHARTS · Sprint G.11 additions
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: 'waterfall-revenue-bridge',
+    category: 'chart',
+    name: 'KenWaterfallChart',
+    description: 'Revenue bridge · contribution decomposition · positive/negative/total bars · §17 variance analysis · "from A to B via X Y Z" narrative.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenWaterfallChart,
+    defaultProps: {
+      data: WATERFALL_REVENUE_BRIDGE,
+      height: 360,
+      unit: 'AUD Mn',
+      ariaLabel: 'Revenue bridge waterfall chart 2024 to 2025',
+    },
+    variants: [
+      {
+        id: 'revenue-bridge',
+        label: 'Revenue bridge',
+        props: {
+          data: WATERFALL_REVENUE_BRIDGE,
+          unit: 'AUD Mn',
+          ariaLabel: 'Cold-chain AU revenue bridge 2024 to 2025',
+        },
+      },
+      {
+        id: 'cost-breakdown',
+        label: 'Cost breakdown',
+        props: {
+          data: WATERFALL_COST_BREAKDOWN,
+          unit: 'AUD Mn',
+          ariaLabel: 'Operating cost breakdown FY23 to FY24',
+        },
+      },
+      {
+        id: 'profit-walk',
+        label: 'Profit walk',
+        props: {
+          data: WATERFALL_PROFIT_WALK,
+          unit: 'AUD Mn',
+          ariaLabel: 'EBIT contribution walk by division FY24 to FY25',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    skeletonType: 'bar',
+    importSnippet: `import { KenWaterfallChart } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenWaterfallChart
+  data={[
+    { name: '2024 Revenue', value: 6548, isTotal: true },
+    { name: 'New customers', value: 480 },
+    { name: 'Volume growth', value: 320 },
+    { name: 'Churn', value: -180 },
+    { name: '2025 Revenue', value: 0, isTotal: true },
+  ]}
+  unit="AUD Mn"
+  ariaLabel="Revenue bridge 2024 to 2025"
+/>`,
+    propsTable: [
+      { name: 'data', type: 'WaterfallPoint[]', required: true, description: 'Ordered points: { name, value, isTotal? }. isTotal renders sage neutral bar — Highcharts auto-sums.' },
+      { name: 'height', type: 'number', default: '360', description: 'Chart height in px' },
+      { name: 'unit', type: 'string', description: 'Tooltip unit suffix — e.g. "AUD Mn"' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+      { name: 'ariaLabel', type: 'string', description: 'Accessible label on figure element' },
+      { name: 'disableReveal', type: 'boolean', default: 'false', description: 'Skip ChartReveal entrance animation' },
+    ],
+    a11y: 'role="img" on outer <figure>. ariaLabel required from consumer. Data labels on bars provide non-hover value access. useReducedMotion respected via ChartReveal.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Positive bars (KEN_CHART_SERIES.primary)' },
+      { name: '--color-ramp-periwinkle-600', category: 'color', usage: 'Negative bars (KEN_CHART_SERIES.quaternary)' },
+      { name: '--semantic-ink-muted', category: 'color', usage: 'Axis tick labels + data label text' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — axis labels + tooltip + data labels' },
+    ],
+  },
+
+  {
+    id: 'stacked-bar-segment',
+    category: 'chart',
+    name: 'KenStackedBarChart',
+    description: 'Horizontal stacked bar · part-to-whole composition across categories · normal + percent stack modes · §10 Segment Intelligence · §11 Industry Analysis.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenStackedBarChart,
+    defaultProps: {
+      labels: STACKED_BAR_LABELS,
+      series: STACKED_BAR_SERIES_PCT,
+      height: 300,
+      stackType: 'percent',
+      unit: '%',
+      ariaLabel: 'Cold-chain segment composition by state stacked bar chart',
+    },
+    variants: [
+      {
+        id: 'percent-composition',
+        label: 'Percent composition',
+        props: {
+          labels: STACKED_BAR_LABELS,
+          series: STACKED_BAR_SERIES_PCT,
+          stackType: 'percent',
+          unit: '%',
+          ariaLabel: 'Segment share by state · percent mode',
+        },
+      },
+      {
+        id: 'absolute-values',
+        label: 'Absolute (AUD Mn)',
+        props: {
+          labels: STACKED_BAR_LABELS,
+          series: STACKED_BAR_SERIES_ABS,
+          stackType: 'normal',
+          unit: 'AUD Mn',
+          ariaLabel: 'Segment revenue by state · absolute mode',
+        },
+      },
+      {
+        id: 'two-segment',
+        label: 'Two-segment split',
+        props: {
+          labels: STACKED_BAR_LABELS,
+          series: [STACKED_BAR_SERIES_PCT[0], STACKED_BAR_SERIES_PCT[1]],
+          stackType: 'percent',
+          unit: '%',
+          ariaLabel: 'Storage vs Transport share by state',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    skeletonType: 'bar',
+    importSnippet: `import { KenStackedBarChart } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenStackedBarChart
+  labels={['NSW', 'VIC', 'QLD', 'WA', 'SA']}
+  series={[
+    { name: 'Storage',      data: [38, 41, 35, 32, 44] },
+    { name: 'Transport',    data: [29, 27, 33, 31, 26] },
+    { name: 'Last-mile',    data: [22, 21, 20, 24, 19] },
+    { name: 'Cross-border', data: [11, 11, 12, 13, 11] },
+  ]}
+  stackType="percent"
+  unit="%"
+/>`,
+    propsTable: [
+      { name: 'labels', type: 'string[]', required: true, description: 'Category labels · one per stacked bar (Y-axis · horizontal bars)' },
+      { name: 'series', type: 'StackedSeries[]', required: true, description: '2–5 series: { name, data }. Colors assigned from KEN_CHART_SERIES_ARRAY in order.' },
+      { name: 'stackType', type: "'normal' | 'percent'", default: "'normal'", description: 'normal: absolute values. percent: 100% normalized composition.' },
+      { name: 'height', type: 'number', default: '300', description: 'Chart height in px' },
+      { name: 'unit', type: 'string', description: 'Tooltip unit — "%" or "AUD Mn"' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+      { name: 'ariaLabel', type: 'string', description: 'Accessible label on figure element' },
+    ],
+    a11y: 'role="img" on <figure>. Internal legend shown when >1 series. KEN_CHART_SERIES_ARRAY ensures L*-separated colors for contrast + color-blind safety.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Series 1 bar (KEN_CHART_SERIES_ARRAY[0])' },
+      { name: '--color-ramp-periwinkle-300', category: 'color', usage: 'Series 2 bar (KEN_CHART_SERIES_ARRAY[1])' },
+      { name: '--color-ramp-periwinkle-200', category: 'color', usage: 'Series 3 bar (KEN_CHART_SERIES_ARRAY[2])' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — axis labels + legend + tooltip' },
+    ],
+  },
+
+  {
+    id: 'sparkline-kpi-grid',
+    category: 'chart',
+    name: 'KenSparklineChart',
+    // BUG-FIX G.12: description updated — 320×80 for showcase clarity. Default (80×24) is KPI-inline size.
+    description: 'Inline SVG micro-trend · no axes · no tooltip · pure presentational. Used at 80×24px in KPI cards + table cells. Showcase uses 320×80 for variant legibility. Supports surface prop for dark-surface stroke.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenSparklineChart,
+    defaultProps: {
+      // BUG-FIX G.12: 320×80 for showcase demo card — variants clearly show distinct trend shapes.
+      // Real-world usage: 80×24 (table cells) or 120×32 (KPI cards). Size is caller-controlled.
+      data: SPARKLINE_STORAGE_REVENUE,
+      width: 320,
+      height: 80,
+      ariaLabel: 'Cold Storage revenue trend · 6 quarters · up 40%',
+    },
+    variants: [
+      {
+        id: 'growth-trend',
+        label: 'Growth trend (+40%)',
+        props: {
+          data: SPARKLINE_STORAGE_REVENUE,
+          width: 320,
+          height: 80,
+          ariaLabel: 'Cold Storage revenue · 6Q · up 40%',
+        },
+      },
+      {
+        id: 'flat-volatile',
+        label: 'Flat volatile',
+        props: {
+          // BUG-FIX G.12: SPARKLINE_TRANSPORT_REVENUE has small range (3.0–3.5) → looks flat
+          // at 80×24 · but at 320×80 the dip at index 2 + recovery pattern is clearly visible.
+          data: SPARKLINE_TRANSPORT_REVENUE,
+          width: 320,
+          height: 80,
+          ariaLabel: 'Cold Transport revenue · 6Q · flat with volatility',
+        },
+      },
+      {
+        id: 'utilisation-rising',
+        label: 'Utilisation rising',
+        props: {
+          data: SPARKLINE_UTILISATION,
+          width: 320,
+          height: 80,
+          ariaLabel: 'Capacity utilisation · 6 periods · up from 72% to 84%',
+        },
+      },
+      {
+        id: 'no-area',
+        label: 'Line only (no area)',
+        props: {
+          data: SPARKLINE_NPS,
+          width: 320,
+          height: 80,
+          showArea: false,
+          ariaLabel: 'Customer NPS · 6 periods · ending 49',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    importSnippet: `import { KenSparklineChart } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `// In a KPI card (standard size)
+<KenSparklineChart
+  data={[4.2, 4.6, 4.9, 5.0, 5.4, 5.9]}
+  width={80}
+  height={24}
+  ariaLabel="Revenue trend · 6 quarters · up 40%"
+/>
+
+// Dark surface override
+<KenSparklineChart
+  data={[4.2, 4.6, 4.9, 5.0, 5.4, 5.9]}
+  width={120}
+  height={32}
+  surface="dark"
+  ariaLabel="Revenue trend · dark surface"
+/>`,
+    propsTable: [
+      { name: 'data', type: 'number[]', required: true, description: 'At least 2 values · left-to-right oldest-first' },
+      { name: 'width', type: 'number', default: '80', description: 'SVG viewport width px · 80 for table cells · 120 for KPI cards · 320 for showcase' },
+      { name: 'height', type: 'number', default: '24', description: 'SVG viewport height px · 24 for table cells · 32 for KPI cards · 80 for showcase' },
+      { name: 'color', type: 'string', description: 'Explicit stroke color override — skips surface-derived default' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context — drives default stroke: light=#9488ec · dark=rgba(255,255,255,0.75)' },
+      { name: 'showLastPoint', type: 'boolean', default: 'true', description: 'Terminal circle on last data point' },
+      { name: 'showArea', type: 'boolean', default: 'true', description: 'Soft area fill at 0.15 opacity below line' },
+      { name: 'ariaLabel', type: 'string', required: true, description: 'REQUIRED — WCAG 1.1.1. No fallback provided. Good: "Revenue trend · 6Q · up 8%"' },
+    ],
+    a11y: 'aria-label on SVG element — required, no fallback. useReducedMotion via Framer Motion hook disables transition when user prefers. No interactive elements — presentational only.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Line stroke + terminal circle on light surface (KEN_CHART_SERIES.primary)' },
+    ],
+  },
+
+  {
+    id: 'radar-competitor-capability',
+    category: 'chart',
+    name: 'KenRadarChart',
+    description: 'Polar area chart · multi-dimension scoring · 1-3 series overlay · §14 Competitor Comparison · §15 Capability Matrix · 4-8 axes.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenRadarChart,
+    defaultProps: {
+      axes: RADAR_AXES,
+      series: RADAR_SERIES,
+      height: 380,
+      max: 100,
+      ariaLabel: 'Competitor capability radar chart',
+    },
+    variants: [
+      {
+        id: 'competitor-capability',
+        label: 'Competitor capability',
+        props: {
+          axes: RADAR_AXES,
+          series: RADAR_SERIES,
+          max: 100,
+          ariaLabel: 'Cold-chain operator capability scoring · 6 dimensions',
+        },
+      },
+      {
+        id: 'market-readiness',
+        label: 'Market readiness',
+        props: {
+          axes: RADAR_AXES_MARKET,
+          series: RADAR_SERIES_MARKET,
+          max: 100,
+          ariaLabel: 'AU state market readiness scoring · 6 dimensions',
+        },
+      },
+      {
+        id: 'single-profile',
+        label: 'Single company profile',
+        props: {
+          axes: RADAR_AXES,
+          series: [RADAR_SERIES[0]],
+          max: 100,
+          ariaLabel: 'Lineage Logistics capability profile',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    skeletonType: 'line',
+    importSnippet: `import { KenRadarChart } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenRadarChart
+  axes={['Capacity', 'Coverage', 'Technology', 'Service', 'Price', 'Sustainability']}
+  series={[
+    { name: 'Lineage',   data: [88, 82, 74, 86, 62, 58] },
+    { name: 'Americold', data: [76, 90, 68, 78, 70, 52] },
+    { name: 'Linfox',    data: [64, 72, 56, 82, 84, 74] },
+  ]}
+  max={100}
+/>`,
+    propsTable: [
+      { name: 'axes', type: 'string[]', required: true, description: '4–8 axis labels — more than 8 creates visual clutter' },
+      { name: 'series', type: 'RadarSeries[]', required: true, description: '1–3 series: { name, data }. data length MUST equal axes.length.' },
+      { name: 'height', type: 'number', default: '380', description: 'Chart height in px' },
+      { name: 'max', type: 'number', description: 'Y-axis maximum (all axes share same scale). Auto-computed if omitted.' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+      { name: 'ariaLabel', type: 'string', description: 'Accessible label on figure element' },
+      { name: 'disableReveal', type: 'boolean', default: 'false', description: 'Skip ChartReveal entrance animation' },
+    ],
+    a11y: 'role="img" on <figure>. Legend shown when >1 series. KEN_CHART_SERIES_ARRAY fill at 0.25 opacity ensures polygon shapes distinguishable without relying on color alone.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Series 1 stroke + fill (KEN_CHART_SERIES_ARRAY[0])' },
+      { name: '--color-ramp-periwinkle-200', category: 'color', usage: 'Series 2 stroke + fill (KEN_CHART_SERIES_ARRAY[1])' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — axis labels + legend + tooltip' },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // TABLES · Sprint G.11 additions
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: 'matrix-provider-features',
+    category: 'table',
+    name: 'KenMatrixComparisonTable',
+    description: '2-axis feature/property comparison grid · accent-coded cells (positive/negative/neutral/highlight) · icon-only mode · §14 Competitor matrices · §15 Coverage grids.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenMatrixComparisonTable,
+    defaultProps: {
+      columns: MATRIX_COLUMNS,
+      rows: MATRIX_ROWS,
+      variant: 'card',
+      headerStyle: 'wash',
+      density: 'comfortable',
+      ariaLabel: 'Cold-chain provider feature comparison matrix',
+    },
+    variants: [
+      {
+        id: 'card-wash',
+        label: 'Card · Wash header',
+        props: {
+          columns: MATRIX_COLUMNS,
+          rows: MATRIX_ROWS,
+          variant: 'card',
+          headerStyle: 'wash',
+          density: 'comfortable',
+        },
+      },
+      {
+        id: 'card-inverted',
+        label: 'Card · Inverted header',
+        props: {
+          columns: MATRIX_COLUMNS,
+          rows: MATRIX_ROWS,
+          variant: 'card',
+          headerStyle: 'inverted',
+          density: 'comfortable',
+        },
+      },
+      {
+        id: 'open-transparent',
+        label: 'Open · Transparent',
+        props: {
+          columns: MATRIX_COLUMNS,
+          rows: MATRIX_ROWS,
+          variant: 'open',
+          headerStyle: 'transparent',
+          density: 'standard',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    importSnippet: `import { KenMatrixComparisonTable } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenMatrixComparisonTable
+  columns={[
+    { label: 'Temp control' },
+    { label: 'GPS tracking' },
+    { label: 'Blockchain' },
+  ]}
+  rows={[{
+    rowLabel: 'Lineage Logistics',
+    cells: [
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { value: 'Partial', accent: 'highlight' },
+    ],
+  }]}
+  variant="card"
+  headerStyle="wash"
+/>`,
+    propsTable: [
+      { name: 'columns', type: 'Array<{ label: string; subtitle?: string }>', required: true, description: 'Column header definitions' },
+      { name: 'rows', type: 'MatrixRow[]', required: true, description: 'Each row.cells.length MUST equal columns.length. Cells: { value?, accent?, tooltip? }' },
+      { name: 'variant', type: "'card' | 'open'", default: "'card'", description: 'Card: bordered + rounded. Open: flush editorial.' },
+      { name: 'headerStyle', type: "'wash' | 'transparent' | 'inverted'", default: "'wash'", description: 'Header background style' },
+      { name: 'density', type: 'TableDensity', default: "'comfortable'", description: 'Row density: compact / standard / comfortable / spacious' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+      { name: 'ariaLabel', type: 'string', description: 'aria-label on table wrapper' },
+    ],
+    a11y: '<caption> visually hidden. scope="col" on th. scope="row" on row headers. Icon-only cells have aria-label. Row hover visible via focus-visible outline. WCAG AA contrast on all accent cell combinations.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-50', category: 'color', usage: 'Header wash background' },
+      { name: '--semantic-ink-strong', category: 'color', usage: 'Header text + row labels' },
+      { name: '--semantic-ink-body', category: 'color', usage: 'Cell body text' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — all text' },
+      { name: '--space-4', category: 'spacing', usage: 'Comfortable density padding' },
+    ],
+  },
+
+  {
+    id: 'time-series-regional',
+    category: 'table',
+    name: 'KenTimeSeriesTable',
+    description: 'Time-period table with inline sparkline trend + change % column · FY series precision for analysts · §11 Market Size summary tables.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenTimeSeriesTable,
+    defaultProps: {
+      periods: TIME_SERIES_PERIODS,
+      rows: TIME_SERIES_ROWS,
+      unit: 'AUD Mn',
+      showSparkline: true,
+      showChange: true,
+      variant: 'card',
+      headerStyle: 'wash',
+      density: 'comfortable',
+      ariaLabel: 'Regional cold-chain revenue FY20–FY24',
+    },
+    variants: [
+      {
+        id: 'with-sparkline-change',
+        label: 'Sparkline + Change %',
+        props: {
+          periods: TIME_SERIES_PERIODS,
+          rows: TIME_SERIES_ROWS,
+          unit: 'AUD Mn',
+          showSparkline: true,
+          showChange: true,
+        },
+      },
+      {
+        id: 'numbers-only',
+        label: 'Numbers only',
+        props: {
+          periods: TIME_SERIES_PERIODS,
+          rows: TIME_SERIES_ROWS,
+          unit: 'AUD Mn',
+          showSparkline: false,
+          showChange: false,
+        },
+      },
+      {
+        id: 'change-no-sparkline',
+        label: 'Change % only',
+        props: {
+          periods: TIME_SERIES_PERIODS,
+          rows: TIME_SERIES_ROWS,
+          unit: 'AUD Mn',
+          showSparkline: false,
+          showChange: true,
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    importSnippet: `import { KenTimeSeriesTable } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenTimeSeriesTable
+  periods={['FY20', 'FY21', 'FY22', 'FY23', 'FY24']}
+  rows={[
+    { label: 'NSW / ACT', values: [842, 921, 1038, 1164, 1296] },
+    { label: 'Victoria',  values: [720, 789, 892, 1002, 1122] },
+  ]}
+  unit="AUD Mn"
+  showSparkline
+  showChange
+/>`,
+    propsTable: [
+      { name: 'periods', type: 'string[]', required: true, description: 'Period column headers — e.g. ["FY20", "FY21", ...]' },
+      { name: 'rows', type: 'TimeSeriesRow[]', required: true, description: 'Each row.values.length MUST equal periods.length' },
+      { name: 'showSparkline', type: 'boolean', default: 'true', description: 'Inline 80×24 sparkline column (rightmost before change %)' },
+      { name: 'showChange', type: 'boolean', default: 'true', description: 'Change % column — auto-computed first→last or explicit row.changePct' },
+      { name: 'unit', type: 'string', description: 'Appended to each value in tooltip/header' },
+      { name: 'variant', type: "'card' | 'open'", default: "'card'", description: 'Table shell variant' },
+      { name: 'headerStyle', type: 'TableHeaderStyle', default: "'wash'", description: 'wash / transparent / inverted' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+    ],
+    a11y: 'scope="col" on period headers. scope="row" on row labels. Sparkline SVG has aria-label. Change arrows are aria-hidden — change % text has aria-label. Values right-aligned tabular-nums.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Sparkline stroke (KEN_CHART_SERIES.primary)' },
+      { name: '--semantic-ink-strong', category: 'color', usage: 'Row label text' },
+      { name: '--semantic-ink-body', category: 'color', usage: 'Period value cells' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — all text + tabular-nums' },
+    ],
+  },
+
+  {
+    id: 'scorecard-operator-kpi',
+    category: 'table',
+    name: 'KenScorecardTable',
+    description: 'KPI scorecard grid · periwinkle opacity ramp encoding (poor→fair→good→excellent) · auto-tier from value vs thresholds · §08 Executive scorecard · market readiness matrices.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenScorecardTable,
+    defaultProps: {
+      columns: SCORECARD_COLUMNS,
+      rows: SCORECARD_ROWS,
+      variant: 'card',
+      headerStyle: 'wash',
+      density: 'comfortable',
+      ariaLabel: 'Cold-chain operator KPI scorecard',
+    },
+    variants: [
+      {
+        id: 'card-wash',
+        label: 'Card · Wash header',
+        props: {
+          columns: SCORECARD_COLUMNS,
+          rows: SCORECARD_ROWS,
+          variant: 'card',
+          headerStyle: 'wash',
+          density: 'comfortable',
+        },
+      },
+      {
+        id: 'card-inverted',
+        label: 'Card · Inverted header',
+        props: {
+          columns: SCORECARD_COLUMNS,
+          rows: SCORECARD_ROWS,
+          variant: 'card',
+          headerStyle: 'inverted',
+          density: 'comfortable',
+        },
+      },
+      {
+        id: 'compact-open',
+        label: 'Compact open',
+        props: {
+          columns: SCORECARD_COLUMNS,
+          rows: SCORECARD_ROWS,
+          variant: 'open',
+          headerStyle: 'transparent',
+          density: 'compact',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    importSnippet: `import { KenScorecardTable } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenScorecardTable
+  columns={[
+    { label: 'Capacity util.' },
+    { label: 'On-time %' },
+    { label: 'NPS' },
+  ]}
+  rows={[{
+    rowLabel: 'Lineage Logistics',
+    scores: [{ value: 88 }, { value: 94 }, { value: 78 }],
+  }]}
+  tierThresholds={[25, 50, 75, 100]}
+/>`,
+    propsTable: [
+      { name: 'columns', type: 'Array<{ label: string; subtitle?: string }>', required: true, description: 'KPI dimension column headers' },
+      { name: 'rows', type: 'ScorecardRow[]', required: true, description: 'Each row.scores.length MUST equal columns.length' },
+      { name: 'tierThresholds', type: 'number[]', default: '[25, 50, 75, 100]', description: 'Thresholds: [poor_max, fair_max, good_max, excellent_max]' },
+      { name: 'variant', type: "'card' | 'open'", default: "'card'", description: 'Table shell variant' },
+      { name: 'headerStyle', type: 'TableHeaderStyle', default: "'wash'", description: 'wash / transparent / inverted' },
+      { name: 'density', type: 'TableDensity', default: "'comfortable'", description: 'Row density' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context — tier inverted on dark per Bible § G.2' },
+      { name: 'onCellClick', type: '(row, col, value) => void', description: 'Optional drill-down callback' },
+    ],
+    a11y: 'scope="col" on th. scope="row" on row headers. Each score cell has aria-label including value and tier. Clickable cells have role="button" + keyboard Enter/Space. Focus-visible ring.',
+    tokensUsed: [
+      { name: '--color-ramp-periwinkle-400', category: 'color', usage: 'Excellent tier cell bg (primary periwinkle)' },
+      { name: '--color-ramp-periwinkle-200', category: 'color', usage: 'Good tier cell bg' },
+      { name: '--semantic-ink-strong', category: 'color', usage: 'Row labels + excellent cell text' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — all text + tabular-nums' },
+      { name: '--space-4', category: 'spacing', usage: 'Comfortable density padding' },
+    ],
+  },
+
+  {
+    id: 'hierarchy-category-breakdown',
+    category: 'table',
+    name: 'KenHierarchyTable',
+    description: 'Expandable parent-child tree table · chevron expand/collapse · indent visual hierarchy · §10 Category breakdowns · geographic drill-downs · segment hierarchies.',
+    importPath: '@kenresearch/design-system/charts',
+    Component: KenHierarchyTable,
+    defaultProps: {
+      columns: HIERARCHY_COLUMNS,
+      rows: HIERARCHY_ROWS,
+      variant: 'card',
+      headerStyle: 'wash',
+      density: 'comfortable',
+      ariaLabel: 'Cold-chain category revenue breakdown with drill-down',
+    },
+    variants: [
+      {
+        id: 'card-wash-expanded',
+        label: 'Card · first row expanded',
+        props: {
+          columns: HIERARCHY_COLUMNS,
+          rows: HIERARCHY_ROWS,
+          variant: 'card',
+          headerStyle: 'wash',
+          density: 'comfortable',
+        },
+      },
+      {
+        id: 'compact-all-collapsed',
+        label: 'Compact · all collapsed',
+        props: {
+          columns: HIERARCHY_COLUMNS,
+          rows: HIERARCHY_ROWS.map(r => ({ ...r, defaultExpanded: false })),
+          variant: 'card',
+          headerStyle: 'wash',
+          density: 'compact',
+        },
+      },
+      {
+        id: 'open-transparent',
+        label: 'Open · Transparent header',
+        props: {
+          columns: HIERARCHY_COLUMNS,
+          rows: HIERARCHY_ROWS,
+          variant: 'open',
+          headerStyle: 'transparent',
+          density: 'standard',
+        },
+      },
+    ],
+    surfaces: ['light', 'dark'],
+    importSnippet: `import { KenHierarchyTable } from '@kenresearch/design-system/charts';`,
+    exampleSnippet: `<KenHierarchyTable
+  columns={[
+    { label: 'Revenue AUD Mn', align: 'right' },
+    { label: 'YoY %',          align: 'right' },
+  ]}
+  rows={[{
+    id: 'storage',
+    label: 'Cold Storage',
+    values: ['3,621', '+10.8%'],
+    defaultExpanded: true,
+    children: [
+      { id: 'blast',   label: 'Blast-freeze',  values: ['1,210', '+13.2%'] },
+      { id: 'ambient', label: 'Ambient',        values: ['1,580', '+9.4%'] },
+    ],
+  }]}
+/>`,
+    propsTable: [
+      { name: 'columns', type: 'Array<{ label: string; align? }>', required: true, description: 'Data column headers. align defaults to right for numeric, left for string.' },
+      { name: 'rows', type: 'HierarchyNode[]', required: true, description: 'Root rows. Each may have children array for drill-down. values.length MUST equal columns.length.' },
+      { name: 'variant', type: "'card' | 'open'", default: "'card'", description: 'Table shell variant' },
+      { name: 'headerStyle', type: 'TableHeaderStyle', default: "'wash'", description: 'wash / transparent / inverted' },
+      { name: 'density', type: 'TableDensity', default: "'comfortable'", description: 'Row density' },
+      { name: 'surface', type: "'light' | 'dark'", default: "'light'", description: 'Surface context' },
+      { name: 'ariaLabel', type: 'string', description: 'aria-label on table element' },
+    ],
+    a11y: 'role="treegrid". aria-expanded + aria-level per row. aria-controls on chevron button. Keyboard: Tab focus · Enter/Space toggle · Arrow Right/Left expand-collapse + child navigation. scope="col" on th · scope="row" on row labels.',
+    tokensUsed: [
+      { name: '--semantic-ink-strong', category: 'color', usage: 'Parent row labels (higher weight)' },
+      { name: '--semantic-ink-body', category: 'color', usage: 'Child row labels + data cells' },
+      { name: '--semantic-ink-muted', category: 'color', usage: 'Chevron icon + indent visual' },
+      { name: '--font-body', category: 'typography', usage: 'DM Sans — all text + tabular-nums for values' },
+      { name: '--space-3', category: 'spacing', usage: 'Indent per level (×level depth)' },
+    ],
+  },
+
 ];
 
 // ─── Category meta ────────────────────────────────────────────────────────────
@@ -1450,11 +2173,11 @@ export const CATEGORY_META: Record<DemoCategory, { label: string; description: s
   },
   chart: {
     label: 'Charts',
-    description: '11 chart wrappers — Column · Bar · Dual Column · Bubble · Donut · Multi-line · Scenario Fan · Treemap · Heatmap · Keyword Scatter · Gantt Timeline.',
+    description: '15 chart wrappers — Column · Bar · Dual Column · Bubble · Donut · Multi-line · Scenario Fan · Treemap · Heatmap · Keyword Scatter · Gantt · Waterfall · Stacked Bar · Sparkline · Radar.',
   },
   table: {
     label: 'Tables',
-    description: 'PropertyTable (comparison matrix) · RankingTable (opportunity ranking) — both via TableShell.',
+    description: '6 table components — PropertyTable · RankingTable · MatrixComparison · TimeSeries · Scorecard · HierarchyTable.',
   },
   state: {
     label: 'States',

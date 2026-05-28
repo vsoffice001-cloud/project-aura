@@ -297,7 +297,7 @@ export function FutureOutlookSection() {
       {/* Scenario Driver Matrix */}
       <div className="mb-12">
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-1.5"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-1.5"
           style={{ fontSize: '10px', fontWeight: 600 }}
         >
           Driver assumptions by scenario
@@ -314,7 +314,7 @@ export function FutureOutlookSection() {
       {/* Scenario summary cards · 1 visible · 2 gated */}
       <div className="mb-12">
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-5"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-5"
           style={{ fontSize: '10px', fontWeight: 600 }}
         >
           Scenario details · key drivers

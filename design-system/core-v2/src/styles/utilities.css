@@ -9,6 +9,25 @@
 
 @layer atoms {
 
+  /* ── Screen-reader only ────────────────────────────────────
+     INTENT: Visually hide element while keeping it accessible to assistive tech.
+     Use for: chart data tables · skip links (before :focus override) · icon labels.
+     Revealed in @media print via print.css override (tables become primary).
+     ANTI-PATTERN: Never use sr-only for content that sighted users also need.
+     NOTE: matches Tailwind's .sr-only spec exactly for compatibility.
+  ────────────────────────────────────────────────────────── */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* ── Glassmorphism ─────────────────────────────────────────
      INTENT: Frosted overlay for cards/modals on light backgrounds.
      Use on elements layered over imagery or patterned surfaces.

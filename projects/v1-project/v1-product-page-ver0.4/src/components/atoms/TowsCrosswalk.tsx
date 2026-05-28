@@ -201,7 +201,7 @@ export function TowsCrosswalk({ so, st, wo, wt, className }: TowsCrosswalkProps)
         <div className="flex items-center gap-2 px-2">
           <TrendingUp size={13} className="flex-none" style={{ color: '#7075c8' }} aria-hidden="true" />
           <p
-            className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)]"
+            className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Opportunities
@@ -210,7 +210,7 @@ export function TowsCrosswalk({ so, st, wo, wt, className }: TowsCrosswalkProps)
         <div className="flex items-center gap-2 px-2">
           <AlertTriangle size={13} className="flex-none" style={{ color: '#c46147' }} aria-hidden="true" />
           <p
-            className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)]"
+            className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Threats
@@ -224,7 +224,7 @@ export function TowsCrosswalk({ so, st, wo, wt, className }: TowsCrosswalkProps)
           <div className="flex items-center gap-2 mb-1">
             <Sparkles size={13} className="flex-none" style={{ color: '#9488ec' }} aria-hidden="true" />
             <p
-              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)]"
+              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)]"
               style={{ fontSize: '10px', fontWeight: 600 }}
             >
               Strengths
@@ -241,7 +241,7 @@ export function TowsCrosswalk({ so, st, wo, wt, className }: TowsCrosswalkProps)
           <div className="flex items-center gap-2 mb-1">
             <TrendingDown size={13} className="flex-none" style={{ color: '#525252' }} aria-hidden="true" />
             <p
-              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-subtle)]"
+              className="font-body uppercase tracking-[0.14em] text-[var(--semantic-ink-muted)]"
               style={{ fontSize: '10px', fontWeight: 600 }}
             >
               Weaknesses

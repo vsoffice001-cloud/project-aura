@@ -37,7 +37,8 @@ import {
   type FilterOption,
 } from './data';
 
-const ICON_COLOR = 'var(--purple-600, #806ce0)';
+// G.13 fix · purple-600 drift removed · semantic-ink-subtle matches §19 Methodology icon discipline
+const ICON_COLOR = 'var(--semantic-ink-subtle)';
 
 export function ChapterExtendedTOC() {
   const [variant, setVariant] = useState<TocVariant>('2-phase');
@@ -104,13 +105,14 @@ export function ChapterExtendedTOC() {
       {/* Title row + Variant Switcher (right-aligned) */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4 relative">
         <div className="flex-1">
-          <h2 className="font-display font-light text-[clamp(24px,2.6vw,36px)] leading-[1.1] tracking-tight text-[var(--semantic-ink-strong)]" style={{ letterSpacing: '-0.015em' }}>
+          {/* G.13 fix · align to v0.4 canonical h2 scale (was 24-36 v0-lite legacy · now 28-39 Major Third) */}
+          <h2 className="font-display font-light text-[clamp(28px,3vw,39px)] leading-[1.15] tracking-[-0.015em] text-[var(--semantic-ink-strong)]">
             Australia Cold Chain Report Structure
           </h2>
           {/* S7 2026-05-22 · secondary meta eyebrow · clarifies this is the extended TOC with interactive features */}
           <p
             className="font-body uppercase mt-2"
-            style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', color: 'var(--semantic-ink-subtle)', marginBottom: '0' }}
+            style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em', color: 'var(--semantic-ink-muted)', marginBottom: '0' }}
           >
             Extended Table of Contents · Interactive View
           </p>
@@ -123,7 +125,7 @@ export function ChapterExtendedTOC() {
             className={`px-3 py-1.5 text-[0.8rem] rounded-[2.5px] transition-all duration-200 whitespace-nowrap cursor-pointer ${
               variant === '2-phase'
                 ? 'bg-black text-white'
-                : 'text-[var(--black-500)] hover:text-black'
+                : 'text-[var(--semantic-ink-subtle)] hover:text-[var(--semantic-ink-strong)]'
             }`}
             aria-pressed={variant === '2-phase'}
           >
@@ -134,7 +136,7 @@ export function ChapterExtendedTOC() {
             className={`px-3 py-1.5 text-[0.8rem] rounded-[2.5px] transition-all duration-200 whitespace-nowrap cursor-pointer ${
               variant === '3-phase'
                 ? 'bg-black text-white'
-                : 'text-[var(--black-500)] hover:text-black'
+                : 'text-[var(--semantic-ink-subtle)] hover:text-[var(--semantic-ink-strong)]'
             }`}
             aria-pressed={variant === '3-phase'}
           >
@@ -143,8 +145,8 @@ export function ChapterExtendedTOC() {
         </div>
       </div>
 
-      {/* Description */}
-      <p className="font-body text-[var(--semantic-ink-body)] leading-[1.6] max-w-[60ch] mb-8" style={{ fontSize: '15px' }}>
+      {/* Description · G.13 fix · 15px → text-sm 16px canonical body scale */}
+      <p className="font-body text-[var(--semantic-ink-body)] leading-[1.6] max-w-[60ch] mb-8 text-[1rem]">
         {description}
       </p>
 
@@ -162,7 +164,7 @@ export function ChapterExtendedTOC() {
           {/* Search */}
           <div className="relative w-full sm:max-w-[22rem]">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--black-400)]"
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--semantic-ink-muted)]"
             />
             <input
               type="text"
@@ -170,9 +172,9 @@ export function ChapterExtendedTOC() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-10 pl-10 pr-4 text-[0.8rem] border border-black/10 rounded-[5px]
-                bg-white text-black placeholder:text-[var(--black-400)]
-                hover:border-black/20 focus:border-[var(--purple-600)] focus:outline-none
-                focus:ring-[3px] focus:ring-[var(--purple-600,#806ce0)]/10 transition-all duration-200"
+                bg-white text-[var(--semantic-ink-strong)] placeholder:text-[var(--semantic-ink-muted)]
+                hover:border-black/20 focus:border-[var(--semantic-ink-strong)] focus:outline-none
+                focus:ring-[3px] focus:ring-[rgba(148,136,236,0.20)] transition-all duration-200"
             />
           </div>
 
@@ -188,7 +190,7 @@ export function ChapterExtendedTOC() {
         <div className="hidden sm:flex gap-4 shrink-0">
           <button
             onClick={toggleExpandAll}
-            className="flex items-center gap-2 px-3 py-2 text-[0.8rem] text-[var(--black-500)] hover:text-black transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 text-[0.8rem] text-[var(--semantic-ink-subtle)] hover:text-[var(--semantic-ink-strong)] transition-colors cursor-pointer"
           >
             {allExpanded ? (
               <Minimize2 className="h-4 w-4" />
@@ -199,7 +201,7 @@ export function ChapterExtendedTOC() {
           </button>
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-3 py-2 text-[0.8rem] text-[var(--black-500)] hover:text-black transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 py-2 text-[0.8rem] text-[var(--semantic-ink-subtle)] hover:text-[var(--semantic-ink-strong)] transition-colors cursor-pointer"
           >
             <Printer className="h-4 w-4" />
             Print / Export
@@ -235,20 +237,21 @@ export function ChapterExtendedTOC() {
         }}
       >
         <div className="flex-1 min-w-0">
-          <h3 className="font-sans font-medium text-[1.25rem] text-black mb-2">
+          <h3 className="font-sans font-medium text-[1.25rem] text-[var(--semantic-ink-strong)] mb-2">
             {footerSummary.title}
           </h3>
-          <p className="font-sans text-[0.8rem] text-[var(--black-500)]">
+          {/* Card-internal body · subtle per user direction (cards use receded ink) */}
+          <p className="font-sans text-[0.8rem] text-[var(--semantic-ink-subtle)]">
             {footerSummary.description}
           </p>
         </div>
         <div className="flex flex-wrap gap-4 sm:gap-6 md:gap-10">
           {footerSummary.sections.map((item) => (
             <div key={item.label} className="text-center">
-              <span className="block font-serif font-light tabular-nums text-[1.953rem] sm:text-[2.441rem] md:text-[3.052rem] text-black leading-none">
+              <span className="block font-serif font-light tabular-nums text-[1.953rem] sm:text-[2.441rem] md:text-[3.052rem] text-[var(--semantic-ink-strong)] leading-none">
                 {item.value}
               </span>
-              <span className="block font-sans text-[0.8rem] text-[var(--black-500)] mt-2">
+              <span className="block font-sans text-[0.8rem] text-[var(--semantic-ink-muted)] mt-2">
                 {item.label}
               </span>
             </div>
@@ -272,8 +275,8 @@ function InlineStat({ icon: Icon, value, label, iconColor }: InlineStatProps) {
   return (
     <div className="flex items-center gap-1.5 sm:gap-2">
       <Icon className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" strokeWidth={2} color={iconColor} />
-      <span className="text-[0.8rem] sm:text-[1rem] font-semibold text-black">{value}</span>
-      <span className="text-[0.8rem] text-[var(--black-500)]">{label}</span>
+      <span className="text-[0.8rem] sm:text-[1rem] font-semibold text-[var(--semantic-ink-strong)]">{value}</span>
+      <span className="text-[0.8rem] text-[var(--semantic-ink-muted)]">{label}</span>
     </div>
   );
 }
@@ -323,7 +326,7 @@ function FilterPillScroll({ filters, activeFilter, onFilterChange }: FilterPillS
           className="flex-shrink-0 size-8 rounded-full border border-[var(--black-200)] bg-white flex items-center justify-center hover:bg-[var(--black-50)] transition-colors cursor-pointer"
           aria-label="Scroll filters left"
         >
-          <ChevronLeft className="h-3.5 w-3.5 text-[var(--black-500)]" />
+          <ChevronLeft className="h-3.5 w-3.5 text-[var(--semantic-ink-subtle)]" />
         </button>
       )}
 
@@ -349,7 +352,7 @@ function FilterPillScroll({ filters, activeFilter, onFilterChange }: FilterPillS
               className={`h-10 px-5 text-[0.8rem] rounded-[5px] transition-all duration-200 whitespace-nowrap cursor-pointer ${
                 activeFilter === filter.id
                   ? 'bg-black text-white font-medium'
-                  : 'bg-white text-black border border-[var(--warm-500)] hover:border-black hover:bg-[var(--coral-50)] active:bg-[var(--coral-100)]'
+                  : 'bg-white text-[var(--semantic-ink-strong)] border border-[var(--warm-500)] hover:border-[var(--semantic-ink-strong)] hover:bg-[var(--coral-50)] active:bg-[var(--coral-100)]'
               }`}
             >
               {filter.label}
@@ -365,7 +368,7 @@ function FilterPillScroll({ filters, activeFilter, onFilterChange }: FilterPillS
           className="flex-shrink-0 size-8 rounded-full border border-[var(--black-200)] bg-white flex items-center justify-center hover:bg-[var(--black-50)] transition-colors cursor-pointer"
           aria-label="Scroll filters right"
         >
-          <ChevronRight className="h-3.5 w-3.5 text-[var(--black-500)]" />
+          <ChevronRight className="h-3.5 w-3.5 text-[var(--semantic-ink-subtle)]" />
         </button>
       )}
     </div>

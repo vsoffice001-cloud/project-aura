@@ -124,7 +124,7 @@ export function PipelineTimeline({
           {years.map((yr) => (
             <div
               key={yr}
-              className="text-center font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+              className="text-center font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
               style={{ fontSize: '10px', fontWeight: 600 }}
             >
               {yr}
@@ -153,14 +153,14 @@ export function PipelineTimeline({
                 </p>
                 {item.descriptor && (
                   <p
-                    className="font-body text-[var(--semantic-ink-subtle)] italic truncate"
+                    className="font-body text-[var(--semantic-ink-muted)] italic truncate"
                     style={{ fontSize: '10px', lineHeight: 1.25 }}
                   >
                     {item.descriptor}
                   </p>
                 )}
                 <p
-                  className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)] mt-0.5"
+                  className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)] mt-0.5"
                   style={{ fontSize: '9.5px', fontWeight: 600 }}
                 >
                   {item.body}
@@ -229,7 +229,7 @@ export function PipelineTimeline({
 
       {/* F = forecast note */}
       <p
-        className="font-body italic text-[var(--semantic-ink-subtle)] mt-3"
+        className="font-body italic text-[var(--semantic-ink-muted)] mt-3"
         style={{ fontSize: '10.5px' }}
       >
         F = forecast / projected timeline · subject to legislative process. 2026F–2027F phases based on Ken regulatory tracking + public consultation timetables.

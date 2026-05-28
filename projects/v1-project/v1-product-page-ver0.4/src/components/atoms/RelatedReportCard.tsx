@@ -95,7 +95,7 @@ export function RelatedReportCard({
             fontSize: '10px',
             fontWeight: 600,
             letterSpacing: '0.12em',
-            color: 'var(--semantic-ink-subtle)',
+            color: 'var(--semantic-ink-muted)',
           }}
         >
           {category}
@@ -143,19 +143,19 @@ export function RelatedReportCard({
         {/* Meta row · pages · year · price band */}
         <div className="flex items-center gap-3">
           <span
-            className="font-body text-[var(--semantic-ink-subtle)]"
+            className="font-body text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '11px', fontVariantNumeric: 'tabular-nums' }}
           >
             {meta.pages}pp
           </span>
           <span
-            className="font-body text-[var(--semantic-ink-subtle)]"
+            className="font-body text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '11px', fontVariantNumeric: 'tabular-nums' }}
           >
             {meta.year}
           </span>
           <span
-            className="font-body text-[var(--semantic-ink-subtle)]"
+            className="font-body text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '11px' }}
           >
             {meta.priceBand}

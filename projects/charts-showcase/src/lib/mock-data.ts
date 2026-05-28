@@ -170,6 +170,9 @@ export const HEATMAP_CELLS: HeatmapCell[] = [
   { rowKey: 'Meat & Seafood', colKey: 'Storage',     value: 8.7, starRating: 5 },
   { rowKey: 'Meat & Seafood', colKey: 'Transport',   value: 7.9, starRating: 4 },
   { rowKey: 'Meat & Seafood', colKey: 'Cross-border', value: 7.3, starRating: 4 },
+  // G.5 null semantics demo: null = no data (dashed cell) · 0 = zero value (faint tier)
+  { rowKey: 'Floral',        colKey: 'Cross-border', value: null },  // null → dashed "—"
+  { rowKey: 'Meat & Seafood', colKey: 'Last-mile',   value: 0 },    // 0 → faint tier (data exists)
 ];
 
 // ─── KenKeywordScatter ────────────────────────────────────────────
@@ -277,6 +280,273 @@ export const GANTT_ENTRIES: GanttEntry[] = [
       { period: 'FY28', phase: 'planning' },
       { period: 'FY29', phase: 'build' },
       { period: 'FY30', phase: 'commissioning' },
+    ],
+  },
+];
+
+// ─── KenWaterfallChart ────────────────────────────────────────────
+
+/** Revenue bridge 2024 → 2025 · cold-chain AU market */
+export const WATERFALL_REVENUE_BRIDGE = [
+  { name: '2024 Revenue', value: 6548, isTotal: true },
+  { name: 'New customers', value: 480 },
+  { name: 'Volume growth', value: 320 },
+  { name: 'Price increase', value: 220 },
+  { name: 'Churn', value: -180 },
+  { name: 'FX impact', value: -90 },
+  { name: '2025 Revenue', value: 0, isTotal: true },
+];
+
+/** Cost breakdown variance FY23 → FY24 */
+export const WATERFALL_COST_BREAKDOWN = [
+  { name: 'FY23 OpEx', value: 4120, isTotal: true },
+  { name: 'Labour +6%', value: 248 },
+  { name: 'Fuel +11%', value: 185 },
+  { name: 'Maintenance', value: 92 },
+  { name: 'Tech savings', value: -140 },
+  { name: 'Volume rebate', value: -75 },
+  { name: 'FY24 OpEx', value: 0, isTotal: true },
+];
+
+/** Profit walk · contribution by division */
+export const WATERFALL_PROFIT_WALK = [
+  { name: 'FY24 EBIT', value: 312, isTotal: true },
+  { name: 'Cold Storage', value: 145 },
+  { name: 'Transport', value: 88 },
+  { name: 'Last-mile', value: 62 },
+  { name: 'Pharma', value: 34 },
+  { name: 'Corporate overhead', value: -118 },
+  { name: 'FY25 EBIT', value: 0, isTotal: true },
+];
+
+// ─── KenStackedBarChart ───────────────────────────────────────────
+
+/** Cold-chain segment composition by state (% share) */
+export const STACKED_BAR_LABELS = ['NSW', 'VIC', 'QLD', 'WA', 'SA'];
+
+export const STACKED_BAR_SERIES_PCT = [
+  { name: 'Storage',       data: [38, 41, 35, 32, 44] },
+  { name: 'Transport',     data: [29, 27, 33, 31, 26] },
+  { name: 'Last-mile',     data: [22, 21, 20, 24, 19] },
+  { name: 'Cross-border',  data: [11, 11, 12, 13, 11] },
+];
+
+/** Absolute AUD Mn by segment */
+export const STACKED_BAR_SERIES_ABS = [
+  { name: 'Storage',       data: [820, 760, 540, 310, 195] },
+  { name: 'Transport',     data: [625, 500, 510, 300, 115] },
+  { name: 'Last-mile',     data: [475, 390, 310, 232, 84] },
+  { name: 'Cross-border',  data: [237, 204, 185, 126, 49] },
+];
+
+// ─── KenSparklineChart ────────────────────────────────────────────
+
+/** KPI sparkline grid · 4 metrics */
+export const SPARKLINE_STORAGE_REVENUE = [4.2, 4.6, 4.9, 5.0, 5.4, 5.9];
+export const SPARKLINE_TRANSPORT_REVENUE = [3.1, 3.0, 3.2, 3.5, 3.3, 3.4];
+export const SPARKLINE_UTILISATION = [72, 74, 73, 78, 81, 84];
+export const SPARKLINE_NPS = [42, 38, 45, 48, 51, 49];
+
+// ─── KenRadarChart ────────────────────────────────────────────────
+
+/** Competitor capability scoring · 6 axes · 3 operators */
+export const RADAR_AXES = ['Capacity', 'Coverage', 'Technology', 'Service', 'Price', 'Sustainability'];
+
+export const RADAR_SERIES = [
+  { name: 'Lineage',    data: [88, 82, 74, 86, 62, 58] },
+  { name: 'Americold',  data: [76, 90, 68, 78, 70, 52] },
+  { name: 'Linfox',     data: [64, 72, 56, 82, 84, 74] },
+];
+
+/** Market readiness scoring · AU regions */
+export const RADAR_AXES_MARKET = ['Market Size', 'Growth Rate', 'Infrastructure', 'Regulation', 'Competition', 'ESG Demand'];
+
+export const RADAR_SERIES_MARKET = [
+  { name: 'NSW / ACT', data: [92, 78, 85, 72, 68, 80] },
+  { name: 'VIC',       data: [84, 82, 80, 75, 72, 76] },
+  { name: 'QLD',       data: [68, 88, 64, 70, 58, 70] },
+];
+
+// ─── KenMatrixComparisonTable ────────────────────────────────────
+
+import type { MatrixRow } from '@kenresearch/design-system/charts';
+
+/** Provider feature matrix · 5 operators × 5 capabilities */
+export const MATRIX_COLUMNS = [
+  { label: 'Temp control',     subtitle: 'Multi-zone' },
+  { label: 'GPS tracking',     subtitle: 'Real-time' },
+  { label: 'Blockchain',       subtitle: 'Provenance' },
+  { label: 'IoT sensors',      subtitle: 'In-transit' },
+  { label: 'Carbon reporting', subtitle: 'Scope 1–3' },
+];
+
+export const MATRIX_ROWS: MatrixRow[] = [
+  {
+    rowLabel: 'Lineage Logistics',
+    rowSubtitle: 'Pan-AU · 38 facilities',
+    cells: [
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { value: 'Scope 1–2', accent: 'highlight' },
+    ],
+  },
+  {
+    rowLabel: 'Americold',
+    rowSubtitle: 'AU/NZ operations',
+    cells: [
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'neutral' },
+      { accent: 'positive' },
+      { accent: 'negative' },
+    ],
+  },
+  {
+    rowLabel: 'Linfox Logistics',
+    rowSubtitle: 'Transport-led',
+    cells: [
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'negative' },
+      { value: 'Partial', accent: 'highlight' },
+      { value: 'Scope 1', accent: 'highlight' },
+    ],
+  },
+  {
+    rowLabel: 'NewCold',
+    rowSubtitle: 'Automated WA hub',
+    cells: [
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'positive' },
+      { accent: 'positive' },
+    ],
+  },
+  {
+    rowLabel: 'Emergent Cold',
+    rowSubtitle: 'Regional entrant',
+    cells: [
+      { value: 'Single-zone', accent: 'highlight' },
+      { accent: 'neutral' },
+      { accent: 'negative' },
+      { accent: 'negative' },
+      { accent: 'negative' },
+    ],
+  },
+];
+
+// ─── KenTimeSeriesTable ───────────────────────────────────────────
+
+import type { TimeSeriesRow } from '@kenresearch/design-system/charts';
+
+/** Regional revenue trends FY20–FY24 · AUD Mn */
+export const TIME_SERIES_PERIODS = ['FY20', 'FY21', 'FY22', 'FY23', 'FY24'];
+
+export const TIME_SERIES_ROWS: TimeSeriesRow[] = [
+  { label: 'NSW / ACT',  sublabel: 'Cold Storage + Transport', values: [842, 921, 1038, 1164, 1296] },
+  { label: 'Victoria',   sublabel: 'Cold Storage + Transport', values: [720, 789, 892, 1002, 1122] },
+  { label: 'Queensland', sublabel: 'Cold Storage + Transport', values: [524, 578, 648, 724, 816] },
+  { label: 'W. Australia', sublabel: 'Cold Storage + Transport', values: [398, 432, 484, 538, 606] },
+  { label: 'S. Australia', sublabel: 'Cold Storage + Transport', values: [186, 202, 228, 256, 288] },
+];
+
+// ─── KenScorecardTable ────────────────────────────────────────────
+
+import type { ScorecardRow } from '@kenresearch/design-system/charts';
+
+/** Operator KPI scorecard · 5 operators × 4 KPIs */
+export const SCORECARD_COLUMNS = [
+  { label: 'Capacity util.', subtitle: '% of total' },
+  { label: 'On-time %',      subtitle: 'FY24 avg' },
+  { label: 'Cost / pallet',  subtitle: 'AUD · lower = better (inverted)' },
+  { label: 'Customer NPS',   subtitle: '0–100 scale' },
+];
+
+export const SCORECARD_ROWS: ScorecardRow[] = [
+  {
+    rowLabel: 'Lineage Logistics',
+    rowSubtitle: 'Pan-AU leader',
+    scores: [{ value: 88 }, { value: 94 }, { value: 62 }, { value: 78 }],
+  },
+  {
+    rowLabel: 'Americold',
+    rowSubtitle: 'AU/NZ',
+    scores: [{ value: 82 }, { value: 91 }, { value: 68 }, { value: 71 }],
+  },
+  {
+    rowLabel: 'NewCold WA',
+    rowSubtitle: 'Automated hub',
+    scores: [{ value: 95 }, { value: 97 }, { value: 45 }, { value: 85 }],
+  },
+  {
+    rowLabel: 'Linfox Logistics',
+    rowSubtitle: 'Transport-led',
+    scores: [{ value: 74 }, { value: 88 }, { value: 58 }, { value: 64 }],
+  },
+  {
+    rowLabel: 'Emergent Cold',
+    rowSubtitle: 'Regional entrant',
+    scores: [{ value: 52 }, { value: 76 }, { value: 42 }, { value: 48 }],
+  },
+];
+
+// ─── KenHierarchyTable ────────────────────────────────────────────
+
+import type { HierarchyNode } from '@kenresearch/design-system/charts';
+
+/** Cold-chain category breakdown · Revenue AUD Mn · YoY % · Margin % */
+export const HIERARCHY_COLUMNS = [
+  { label: 'Revenue AUD Mn', align: 'right' as const },
+  { label: 'YoY %',          align: 'right' as const },
+  { label: 'Margin %',       align: 'right' as const },
+];
+
+export const HIERARCHY_ROWS: HierarchyNode[] = [
+  {
+    id: 'storage',
+    label: 'Cold Storage',
+    sublabel: 'Warehousing & blast-freeze',
+    values: ['3,621', '+10.8%', '18.2%'],
+    defaultExpanded: true,
+    children: [
+      { id: 'storage-blast',   label: 'Blast-freeze',  values: ['1,210', '+13.2%', '22.4%'] },
+      { id: 'storage-ambient', label: 'Controlled ambient', values: ['1,580', '+9.4%', '16.8%'] },
+      { id: 'storage-pharma',  label: 'Pharma grade',  values: ['831',   '+10.1%', '19.6%'] },
+    ],
+  },
+  {
+    id: 'transport',
+    label: 'Cold Transport',
+    sublabel: 'Primary & secondary distribution',
+    values: ['5,107', '+9.4%', '11.6%'],
+    children: [
+      { id: 'transport-primary',   label: 'Primary haul',     values: ['2,840', '+8.8%', '10.4%'] },
+      { id: 'transport-secondary', label: 'Secondary distribution', values: ['1,620', '+10.2%', '12.8%'] },
+      { id: 'transport-intermodal',label: 'Intermodal / rail', values: ['647',   '+11.5%', '13.2%'] },
+    ],
+  },
+  {
+    id: 'lastmile',
+    label: 'Last-mile Delivery',
+    sublabel: 'Urban & e-grocery',
+    values: ['1,181', '+18.4%', '8.2%'],
+    children: [
+      { id: 'lastmile-grocery', label: 'E-grocery',    values: ['642', '+24.0%', '7.8%'] },
+      { id: 'lastmile-pharma',  label: 'Pharma DTC',   values: ['330', '+14.2%', '9.6%'] },
+      { id: 'lastmile-qsr',     label: 'QSR / foodservice', values: ['209', '+10.8%', '7.2%'] },
+    ],
+  },
+  {
+    id: 'crossborder',
+    label: 'Cross-border',
+    sublabel: 'AU exports + NZ intra-Trans-Tasman',
+    values: ['601', '+7.2%', '14.8%'],
+    children: [
+      { id: 'cross-export',   label: 'AU ag exports', values: ['420', '+6.8%', '15.6%'] },
+      { id: 'cross-nz',       label: 'NZ Trans-Tasman', values: ['181', '+8.4%', '13.2%'] },
     ],
   },
 ];

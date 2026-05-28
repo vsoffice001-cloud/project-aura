@@ -79,7 +79,7 @@ export function CodeSnippet({ code, label }: CodeSnippetProps) {
       >
         <span
           className="font-body uppercase tracking-[0.1em]"
-          style={{ fontSize: '9px', fontWeight: 700, color: 'var(--semantic-ink-subtle)' }}
+          style={{ fontSize: '9px', fontWeight: 700, color: 'var(--semantic-ink-muted)' }}
         >
           {label ?? 'tsx'}
         </span>

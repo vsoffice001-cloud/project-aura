@@ -23,7 +23,7 @@ export function ChapterMarketOverview() {
       {/* Chapter Label */}
       <div className="mb-4">
         <span
-          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle,#a3a3a3)]"
+          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle)]"
           style={{ fontSize: '10.5px', fontWeight: 600 }}
         >
           Chapter 2 · Market Overview
@@ -37,7 +37,7 @@ export function ChapterMarketOverview() {
 
       {/* Progressive fade paragraphs */}
       <div className="relative">
-        <div className="space-y-4 text-[1rem] text-[var(--black-500,#a3a3a3)] leading-[1.7]">
+        <div className="space-y-4 text-[1rem] text-[var(--semantic-ink-subtle)] leading-[1.7]">
           <p>
             The Australia Cold Chain Market encompasses temperature-controlled storage and
             transportation services — including cold storage facilities, refrigerated transport,
@@ -70,7 +70,7 @@ export function ChapterMarketOverview() {
           >
             <Lock size={22} style={{ color: '#806ce0' }} />
           </div>
-          <p className="text-[0.875rem] text-[var(--black-500,#a3a3a3)] mb-3 text-center">
+          <p className="text-[0.875rem] text-[var(--semantic-ink-subtle)] mb-3 text-center">
             Full chapter available in the complete report
           </p>
           <a

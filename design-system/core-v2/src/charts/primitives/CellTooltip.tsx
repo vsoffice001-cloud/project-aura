@@ -141,15 +141,31 @@ export function CellTooltip({
   useEffect(() => {
     setMounted(true);
     return () => {
+      // FIX 2 (G.10): Clear all timers + hide tooltip on unmount.
+      // Without this, tooltip state persists across surface toggle
+      // and appears at (0,0) when the anchor ref is stale.
       if (delayTimer.current) clearTimeout(delayTimer.current);
       if (touchStateRef.current.longPressTimer) clearTimeout(touchStateRef.current.longPressTimer);
       if (touchStateRef.current.autoDismissTimer) clearTimeout(touchStateRef.current.autoDismissTimer);
+      setVisible(false);
     };
   }, []);
 
   const computePosition = useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
+
+    // FIX 2 REVISED (G.11): Guard for unmounted / invisible anchors only.
+    // Previous guard `top+bottom+left+right === 0` had FALSE POSITIVE: a valid
+    // visible cell at viewport position (0,0,W,H) would also satisfy that condition
+    // (left=0, top=0) and tooltip was suppressed for ALL real hovers.
+    // Correct guard: check actual dimensions · width > 0 AND height > 0.
+    // Width/height zero ONLY when element is detached / display:none / not measured.
+    if (rect.width === 0 && rect.height === 0) {
+      setVisible(false);
+      return;
+    }
+
     const tooltipWidth = tooltipRef.current?.offsetWidth ?? 200;
     const tooltipHeight = tooltipRef.current?.offsetHeight ?? 60;
     const gap = 6;
@@ -166,9 +182,20 @@ export function CellTooltip({
     if (effectivePosition === 'top') {
       top = rect.top - tooltipHeight - gap;
       left = rect.left + rect.width / 2 - tooltipWidth / 2;
+      // BUG A fix: if computed top would clip into viewport top (< 8px safety margin),
+      // flip to BELOW the anchor rather than just clamping at 8px.
+      // Clamping-only caused tooltip to render over/inside nav bar at near-top anchors.
+      if (top < 8) {
+        top = rect.bottom + gap;
+      }
     } else if (effectivePosition === 'bottom') {
       top = rect.bottom + gap;
       left = rect.left + rect.width / 2 - tooltipWidth / 2;
+      // Mirror flip: if bottom placement would overflow viewport bottom, flip above.
+      const vpHeight = window.innerHeight;
+      if (top + tooltipHeight + 8 > vpHeight) {
+        top = rect.top - tooltipHeight - gap;
+      }
     } else if (effectivePosition === 'left') {
       top = rect.top + rect.height / 2 - tooltipHeight / 2;
       left = rect.left - tooltipWidth - gap;
@@ -178,7 +205,7 @@ export function CellTooltip({
       left = rect.right + gap;
     }
 
-    // Clamp to viewport
+    // Clamp horizontal to viewport (vertical flip already handled above)
     const vpWidth = window.innerWidth;
     const vpHeight = window.innerHeight;
     left = Math.max(8, Math.min(left, vpWidth - tooltipWidth - 8));
@@ -278,6 +305,24 @@ export function CellTooltip({
     }
     // If long-press already fired (persistent=true), don't auto-dismiss on release
   }, [disabled, visible, showWithAutoDismiss]);
+
+  // Dismiss persistent tooltip when user taps outside trigger element
+  // Only registered when tooltip is visible AND persistent (long-press) mode is active
+  useEffect(() => {
+    if (!visible || !touchStateRef.current.persistent) return;
+    const onOutsideTouchStart = (e: TouchEvent) => {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        if (touchStateRef.current.autoDismissTimer) {
+          clearTimeout(touchStateRef.current.autoDismissTimer);
+          touchStateRef.current.autoDismissTimer = null;
+        }
+        touchStateRef.current.persistent = false;
+        setVisible(false);
+      }
+    };
+    document.addEventListener('touchstart', onOutsideTouchStart, { passive: true });
+    return () => document.removeEventListener('touchstart', onOutsideTouchStart);
+  }, [visible]);
 
   const transitionStyle: CSSProperties = prefersReduced
     ? {}

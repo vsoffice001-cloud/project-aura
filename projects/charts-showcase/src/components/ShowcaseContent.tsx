@@ -37,7 +37,7 @@ export function ShowcaseContent() {
       {/* Page intro */}
       <div style={{ marginBottom: '40px' }}>
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '10px', fontWeight: 600, marginBottom: '8px' }}
         >
           @kenresearch/design-system/charts · Sprint B.2 · 2026-05-25
@@ -65,7 +65,7 @@ export function ShowcaseContent() {
       {/* No results */}
       {filtered.length === 0 && (
         <p
-          className="font-body italic text-[var(--semantic-ink-subtle)]"
+          className="font-body italic text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '14px' }}
         >
           No components match &ldquo;{search}&rdquo;. Try searching for a component name or category.
@@ -131,7 +131,7 @@ export function ShowcaseContent() {
         }}
       >
         <p
-          className="font-body text-[var(--semantic-ink-subtle)]"
+          className="font-body text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '11px' }}
         >
           @kenresearch/design-system · charts barrel · Sprint B.2 · 2026-05-25 · aura-builder Sonnet 4.6

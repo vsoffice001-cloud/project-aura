@@ -72,7 +72,7 @@ export function ChapterMethodology() {
       {/* Chapter Label */}
       <div className="mb-4">
         <span
-          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle,#a3a3a3)]"
+          className="inline-flex items-center rounded-[var(--radius-xs,5px)] border border-[var(--black-100,#f5f5f5)] px-2.5 py-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle)]"
           style={{ fontSize: '10.5px', fontWeight: 600 }}
         >
           Chapter 11 · Research Methodology
@@ -82,7 +82,7 @@ export function ChapterMethodology() {
       <h2 className="text-[1.953rem] sm:text-[2.441rem] font-light font-serif text-black leading-[1.25] mb-4">
         Research Methodology
       </h2>
-      <p className="text-[1rem] text-[var(--black-500,#a3a3a3)] leading-[1.7] max-w-[50rem] mb-10">
+      <p className="text-[1rem] text-[var(--semantic-ink-subtle)] leading-[1.7] max-w-[50rem] mb-10">
         Our multi-layered approach combines rigorous desk research with primary data collection
         across 240+ executive interviews and expert validation to ensure accuracy and
         reliability across all 8 Australian states and territories.
@@ -115,7 +115,7 @@ export function ChapterMethodology() {
                     ${
                       activeStep === step.id
                         ? 'bg-white/20 text-white'
-                        : 'bg-[var(--black-100,#f5f5f5)] text-[var(--black-500,#a3a3a3)]'
+                        : 'bg-[var(--black-100,#f5f5f5)] text-[var(--semantic-ink-subtle)]'
                     }
                   `}
                 >
@@ -125,7 +125,7 @@ export function ChapterMethodology() {
               </button>
 
               {idx < methodologySteps.length - 1 && (
-                <ChevronRight className="h-5 w-5 text-[var(--black-300,#d4d4d4)] mx-1 sm:mx-2 flex-shrink-0" />
+                <ChevronRight className="h-5 w-5 text-[var(--semantic-ink-muted)] mx-1 sm:mx-2 flex-shrink-0" />
               )}
             </div>
           ))}
@@ -168,7 +168,7 @@ export function ChapterMethodology() {
                     <h3 className="font-body font-medium text-[1rem] text-black leading-tight">
                       {step.title}
                     </h3>
-                    <p className="text-[0.813rem] text-[var(--black-500,#a3a3a3)] leading-snug mt-0.5">
+                    <p className="text-[0.813rem] text-[var(--semantic-ink-subtle)] leading-snug mt-0.5">
                       {step.subtitle}
                     </p>
                   </div>
@@ -178,7 +178,7 @@ export function ChapterMethodology() {
                   {step.bullets.map((bullet, bIdx) => (
                     <li
                       key={bIdx}
-                      className="flex items-start gap-2 text-[0.813rem] text-[var(--black-500,#a3a3a3)] group-hover:text-black transition-colors duration-200"
+                      className="flex items-start gap-2 text-[0.813rem] text-[var(--semantic-ink-subtle)] group-hover:text-black transition-colors duration-200"
                     >
                       <ChevronRight
                         className="h-3.5 w-3.5 mt-[3px] flex-shrink-0"

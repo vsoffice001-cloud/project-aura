@@ -4,16 +4,20 @@
  * ShowcaseSidebar · TOC with category groups + active highlight + hash sync.
  *
  * Groups demos by category (primitive · chart · table · state).
- * Per-demo: anchor link <a href="#demo-id"> scrolls-into-view.
+ * Per-demo: anchor link <a href="#demo-id"> scrolls-into-view + focuses target.
  * Active demo: periwinkle wash bg + brand-red 3px left border.
  * IntersectionObserver driven (set by DemoCanvas) via DemoActiveContext.
  * Hash sync: update URL on click · read URL hash on mount + scroll to anchor.
  * Search filter from context.
  *
+ * A11y · Anchor click scrolls AND focuses target section so keyboard users land
+ *        in the right place (not left on sidebar link). Respects prefers-reduced-motion.
+ *
  * @module charts-showcase/components/ShowcaseSidebar
  */
 
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import type { Demo, DemoCategory } from '@/lib/demo-registry';
 import { CATEGORY_META, CATEGORY_ORDER } from '@/lib/demo-registry';
 import { useDemoActive, useSearch, useSidebar, useCategoryFilter } from '@/lib/context';
@@ -26,7 +30,7 @@ import { X } from 'lucide-react';
 function CategoryHeader({ label, count }: { label: string; count: number }) {
   return (
     <h3
-      className="flex items-center justify-between font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+      className="flex items-center justify-between font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
       style={{
         padding: '10px 16px 6px',
         marginTop: '8px',
@@ -36,7 +40,7 @@ function CategoryHeader({ label, count }: { label: string; count: number }) {
     >
       <span>{label}</span>
       <span
-        className="font-body text-[var(--semantic-ink-subtle)]"
+        className="font-body text-[var(--semantic-ink-muted)]"
         style={{ fontSize: '10px', fontWeight: 400 }}
       >
         {count}
@@ -57,13 +61,17 @@ function DemoLink({
   onClick: () => void;
 }) {
   const linkRef = useRef<HTMLAnchorElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   // Scroll active link into view in sidebar
   useEffect(() => {
     if (isActive && linkRef.current) {
-      linkRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      linkRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: prefersReducedMotion ? 'instant' : 'smooth',
+      });
     }
-  }, [isActive]);
+  }, [isActive, prefersReducedMotion]);
 
   return (
     <a
@@ -71,10 +79,21 @@ function DemoLink({
       href={`#${demo.id}`}
       onClick={(e) => {
         e.preventDefault();
-        const el = document.getElementById(demo.id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const target = document.getElementById(demo.id);
+        if (target) {
+          // Scroll to target with reduced-motion respect
+          target.scrollIntoView({
+            behavior: prefersReducedMotion ? 'instant' : 'smooth',
+            block: 'start',
+          });
           history.replaceState(null, '', `#${demo.id}`);
+          // Move keyboard focus to target section so SR users land in content.
+          // tabindex="-1" added transiently — target already has scrollMarginTop
+          // and aria-labelledby from DemoCanvas, so focus is meaningful.
+          if (!target.hasAttribute('tabindex')) {
+            target.setAttribute('tabindex', '-1');
+          }
+          target.focus({ preventScroll: true });
         }
         onClick();
       }}
@@ -118,7 +137,7 @@ function CategoryFilter() {
         style={{ padding: '10px 16px 8px' }}
       >
         <span
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '9px', fontWeight: 700 }}
         >
           Filter
@@ -253,7 +272,7 @@ export function ShowcaseSidebar({ demos, allDemos }: ShowcaseSidebarProps) {
         style={{ padding: '12px 16px 4px' }}
       >
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '9px', fontWeight: 700 }}
         >
           @kenresearch/design-system
@@ -272,7 +291,7 @@ export function ShowcaseSidebar({ demos, allDemos }: ShowcaseSidebarProps) {
       {search && (
         <div style={{ padding: '6px 16px' }}>
           <p
-            className="font-body text-[var(--semantic-ink-subtle)]"
+            className="font-body text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '10px' }}
           >
             {demos.length} result{demos.length !== 1 ? 's' : ''} for &ldquo;{search}&rdquo;
@@ -283,7 +302,7 @@ export function ShowcaseSidebar({ demos, allDemos }: ShowcaseSidebarProps) {
       {demos.length === 0 && (
         <div style={{ padding: '16px' }}>
           <p
-            className="font-body italic text-[var(--semantic-ink-subtle)]"
+            className="font-body italic text-[var(--semantic-ink-muted)]"
             style={{ fontSize: '12px' }}
           >
             No demos match search.

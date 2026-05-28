@@ -14,9 +14,9 @@
  * @module charts-showcase/components/DemoCanvas
  */
 
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { ChartFigure, ChartReveal, KEN_CHART_SERIES_ARRAY } from '@kenresearch/design-system/charts';
+import { ChartFigure, ChartReveal, LazyChart, KEN_CHART_SERIES_ARRAY } from '@kenresearch/design-system/charts';
 import { Button } from '@kenresearch/design-system/atoms';
 import { DEMOS } from '@/lib/demo-registry';
 import type { Demo, DemoSurface } from '@/lib/demo-registry';
@@ -43,6 +43,15 @@ const KenKeywordScatter  = dynamic(() => import('@kenresearch/design-system/char
 const KenGanttTimeline   = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenGanttTimeline),   { ssr: false });
 const PropertyTable      = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.PropertyTable),      { ssr: false });
 const RankingTable       = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.RankingTable),       { ssr: false });
+// Sprint G.11: 4 new Highcharts charts + 4 new DS tables
+const KenWaterfallChart        = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenWaterfallChart),        { ssr: false });
+const KenStackedBarChart       = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenStackedBarChart),       { ssr: false });
+const KenSparklineChart        = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenSparklineChart),        { ssr: false });
+const KenRadarChart            = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenRadarChart),            { ssr: false });
+const KenMatrixComparisonTable = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenMatrixComparisonTable), { ssr: false });
+const KenTimeSeriesTable       = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenTimeSeriesTable),       { ssr: false });
+const KenScorecardTable        = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenScorecardTable),        { ssr: false });
+const KenHierarchyTable        = dynamic(() => import('@kenresearch/design-system/charts').then(m => m.KenHierarchyTable),        { ssr: false });
 
 // ─── Map: demo.name → dynamic component ──────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,6 +69,14 @@ const DYNAMIC_MAP: Record<string, AnyComponent> = {
   KenHeatmap,
   KenKeywordScatter,
   KenGanttTimeline,
+  KenWaterfallChart,
+  KenStackedBarChart,
+  KenSparklineChart,
+  KenRadarChart,
+  KenMatrixComparisonTable,
+  KenTimeSeriesTable,
+  KenScorecardTable,
+  KenHierarchyTable,
   PropertyTable,
   RankingTable,
 };
@@ -77,7 +94,7 @@ const CATEGORY_TEXT_COLORS: Record<string, string> = {
   primitive: 'rgb(91, 79, 207)',
   chart:     'rgb(60, 80, 180)',
   table:     'rgb(126, 34, 206)',
-  state:     'var(--semantic-ink-subtle)',
+  state:     'var(--semantic-ink-muted)',
 };
 
 // ─── ChartFigure wrapper data ─────────────────────────────────────────────────
@@ -166,6 +183,10 @@ function PrimitiveCanvas({ demo }: { demo: Demo }) {
         legend={demo.defaultProps.legend as Parameters<typeof ChartFigure>[0]['legend']}
         figcaption={demo.defaultProps.figcaption as string}
         source={demo.defaultProps.source as Parameters<typeof ChartFigure>[0]['source']}
+        dataAsOf={demo.defaultProps.dataAsOf as Parameters<typeof ChartFigure>[0]['dataAsOf']}
+        enableExport={demo.defaultProps.enableExport as boolean}
+        exportFilename={demo.defaultProps.exportFilename as string}
+        dataTable={demo.defaultProps.dataTable as Parameters<typeof ChartFigure>[0]['dataTable']}
       >
         <div
           style={{
@@ -178,7 +199,7 @@ function PrimitiveCanvas({ demo }: { demo: Demo }) {
           }}
           aria-hidden="true"
         >
-          <span className="font-body" style={{ fontSize: '12px', color: 'var(--semantic-ink-subtle)' }}>
+          <span className="font-body" style={{ fontSize: '12px', color: 'var(--semantic-ink-muted)' }}>
             Chart slot · inner content renders here
           </span>
         </div>
@@ -200,7 +221,7 @@ function PrimitiveCanvas({ demo }: { demo: Demo }) {
           }}
           aria-hidden="true"
         >
-          <span className="font-body" style={{ fontSize: '12px', color: 'var(--semantic-ink-subtle)' }}>
+          <span className="font-body" style={{ fontSize: '12px', color: 'var(--semantic-ink-muted)' }}>
             Inner content — fades in on scroll entrance
           </span>
         </div>
@@ -396,6 +417,9 @@ function A11yOverlay({ demo, containerRef }: { demo: Demo; containerRef: React.R
 export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  // Ref for the chart canvas region — focus moves here after variant/surface switch
+  // so keyboard users land on updated content (not left on toggle button).
+  const contentRegionRef = useRef<HTMLDivElement>(null);
   const { setActiveDemo } = useDemoActive();
   const { a11yOverlay } = useA11yOverlay();
 
@@ -403,6 +427,33 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
     demo.variants?.[0]?.id ?? ''
   );
   const [activeSurface, setActiveSurface] = useState<DemoSurface>('light');
+
+  // Focus-shift: move focus to content region after variant change.
+  // tabIndex={-1} on contentRegionRef div makes it programmatically focusable
+  // without entering natural tab order. preventScroll avoids jarring scroll jump.
+  const handleVariantChange = useCallback((id: string) => {
+    setActiveVariantId(id);
+    // Defer to next tick so React has committed the new variant render
+    requestAnimationFrame(() => {
+      contentRegionRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
+
+  // Focus-shift: move focus to content region after surface change.
+  const handleSurfaceChange = useCallback((surface: DemoSurface) => {
+    setActiveSurface(surface);
+    setSideBySideState(false);
+    requestAnimationFrame(() => {
+      contentRegionRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
+
+  const handleSideBySideToggle = useCallback(() => {
+    setSideBySideState(prev => !prev);
+    requestAnimationFrame(() => {
+      contentRegionRef.current?.focus({ preventScroll: true });
+    });
+  }, []);
 
   // Intersection observer: set active demo when section enters viewport
   useEffect(() => {
@@ -422,7 +473,7 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
     return { ...demo.defaultProps, ...variantProps };
   }, [demo.defaultProps, demo.variants, activeVariantId]);
 
-  const [sideBySide, setSideBySide] = useState(false);
+  const [sideBySide, setSideBySideState] = useState(false);
   const isDarkSurface = activeSurface === 'dark' && !sideBySide;
   const hasSurfaces = (demo.surfaces?.length ?? 0) > 1;
   const hasVariants = (demo.variants?.length ?? 0) > 0;
@@ -511,14 +562,14 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
             <VariantToggle
               variants={demo.variants}
               activeId={activeVariantId}
-              onChange={setActiveVariantId}
+              onChange={handleVariantChange}
               label="Variant"
             />
           )}
           {hasSurfaces && (
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+                className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
                 style={{ fontSize: '10px', fontWeight: 600 }}
               >
                 Surface
@@ -528,7 +579,7 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
                   <Button
                     variant={(activeSurface === s && !sideBySide) ? 'primary' : 'secondary'}
                     size="xs"
-                    onClick={() => { setActiveSurface(s); setSideBySide(false); }}
+                    onClick={() => handleSurfaceChange(s)}
                     ariaLabel={`Preview on ${s} surface`}
                     aria-pressed={activeSurface === s && !sideBySide}
                     pill
@@ -542,7 +593,7 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
                 <Button
                   variant={sideBySide ? 'primary' : 'secondary'}
                   size="xs"
-                  onClick={() => setSideBySide(!sideBySide)}
+                  onClick={handleSideBySideToggle}
                   ariaLabel={sideBySide ? 'Disable side-by-side comparison' : 'Enable side-by-side comparison'}
                   aria-pressed={sideBySide}
                   pill
@@ -556,6 +607,20 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
       )}
 
       {/* ── Demo canvas ─────────────────────────────────────────────── */}
+      {/*
+        contentRegionRef: programmatically focused after variant/surface switch
+        so keyboard users land on updated content (not left on toggle button).
+        tabIndex={-1}: focusable via JS without entering tab order.
+        aria-live="polite": screen reader announces content changes.
+      */}
+      <div
+        ref={contentRegionRef}
+        tabIndex={-1}
+        role="region"
+        aria-live="polite"
+        aria-label={`${demo.name} demo canvas — ${activeVariantId || 'default'} variant`}
+        style={{ outline: 'none' }}
+      >
       {sideBySide && demo.category === 'chart' && DynComponent ? (
         // Side-by-side surface comparison layout
         <div
@@ -570,14 +635,41 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
           {(['light', 'dark'] as DemoSurface[]).map((s) => (
             <div
               key={s}
+              // Bible § 5.1: each compare cell owns its own surface attribute + CSS var scope.
+              // data-surface drives chart-internal CSS cascade where selector-based overrides apply.
+              // CSS vars injected at cell level (NOT outer wrapper) — independent surface adapt.
+              data-surface={s}
+              data-variant-section={s === 'dark' ? 'cinematic' : undefined}
               style={{
                 background: s === 'dark' ? '#0a0a0c' : '#ffffff',
                 border: s === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.08)',
                 borderRadius: '8px',
                 padding: s === 'dark' ? '32px 20px 20px' : '20px',
                 position: 'relative',
+                // G.5: native scrollbar + form control color-scheme per surface
+                colorScheme: s === 'dark' ? 'dark' : 'light',
+                // Bible § 5.1: own CSS variable scope per cell — light and dark inject independently.
+                // Both sides declared so cascade is self-contained regardless of outer page theme.
+                ...(s === 'dark' ? {
+                  '--semantic-ink-strong':  'rgba(255, 255, 255, 0.92)',
+                  '--semantic-ink-body':    'rgba(255, 255, 255, 0.75)',
+                  '--semantic-ink-muted':   'rgba(255, 255, 255, 0.62)',
+                  '--semantic-ink-subtle':  'rgba(255, 255, 255, 0.42)',
+                  '--semantic-ink-faint':   'rgba(255, 255, 255, 0.25)',
+                  '--border-hairline':      'rgba(255, 255, 255, 0.12)',
+                  '--border-default':       'rgba(255, 255, 255, 0.18)',
+                  '--surface-text':         'rgba(255, 255, 255, 0.92)',
+                  '--surface-text-muted':   'rgba(255, 255, 255, 0.65)',
+                } as React.CSSProperties : {
+                  '--semantic-ink-strong':  'rgba(0, 0, 0, 0.92)',
+                  '--semantic-ink-body':    'rgba(0, 0, 0, 0.75)',
+                  '--semantic-ink-muted':   'rgba(0, 0, 0, 0.62)',
+                  '--semantic-ink-subtle':  'rgba(0, 0, 0, 0.42)',
+                  '--semantic-ink-faint':   'rgba(0, 0, 0, 0.18)',
+                  '--border-hairline':      'rgba(0, 0, 0, 0.08)',
+                  '--border-default':       'rgba(0, 0, 0, 0.18)',
+                } as React.CSSProperties),
               }}
-              data-variant-section={s === 'dark' ? 'cinematic' : undefined}
             >
               {/* Surface label */}
               <div
@@ -601,7 +693,7 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
               {chartFigureProps
                 ? (
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  <ChartFigure {...(chartFigureProps as any)}>
+                  <ChartFigure {...(chartFigureProps as any)} surface={s}>
                     <DynComponent {...mergedProps} surface={s} />
                   </ChartFigure>
                 )
@@ -623,6 +715,25 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
             position: 'relative',
             // G.2: smooth canvas bg transition on surface toggle — no flash
             transition: 'background-color 200ms ease-out, border-color 200ms ease-out, padding 200ms ease-out',
+            // G.5: native scrollbar + form control color-scheme to match surface — no flash
+            colorScheme: isDarkSurface ? 'dark' : 'light',
+            // G.6 A11y fix: re-declare semantic-ink CSS vars for dark surface scope.
+            // DemoCanvas dark mode sets data-variant-section="cinematic" but the page
+            // html element lacks data-variant="cinematic-dark" (showcase is NOT a full
+            // cinematic-dark page). cinematic-dark.css [data-variant="cinematic-dark"]
+            // selector never fires — semantic-ink tokens stay at near-black light values.
+            // Fix: inline var overrides on the card itself. ChartFigure uses these vars
+            // via Tailwind arbitrary-value classes on semantic-ink tokens — cascade resolves.
+            // WCAG 2.2 AA: on #0a0a0c bg — on-dark-strong 16.59:1 · on-dark-muted 7.66:1
+            ...(isDarkSurface ? {
+              '--semantic-ink-strong':  'rgba(255, 255, 255, 0.92)',
+              '--semantic-ink-body':    'rgba(255, 255, 255, 0.75)',
+              '--semantic-ink-muted':   'rgba(255, 255, 255, 0.62)',
+              '--semantic-ink-subtle':  'rgba(255, 255, 255, 0.42)',
+              '--semantic-ink-faint':   'rgba(255, 255, 255, 0.25)',
+              '--surface-text':         'rgba(255, 255, 255, 0.92)',
+              '--surface-text-muted':   'rgba(255, 255, 255, 0.65)',
+            } as React.CSSProperties : {}),
           }}
           data-variant-section={isDarkSurface ? 'cinematic' : undefined}
         >
@@ -638,32 +749,64 @@ export function DemoCanvas({ demo, cardIndex = 0 }: DemoCanvasProps) {
             <demo.Component {...mergedProps} />
           )}
 
-          {/* Chart demos */}
+          {/* Chart demos
+              G.5: LazyChart wraps below-fold charts (cardIndex ≥ 2) to defer
+              Highcharts/D3 render until chart approaches viewport.
+              First 2 cards in each category render immediately (above fold).
+              BUG-FIX G.12: sparkline uses 120px LazyChart placeholder (not 360px)
+              since SVG renders at 80px max height — avoids large empty whitespace. */}
           {demo.category === 'chart' && DynComponent && (
-            chartFigureProps
-              ? (
-                <ChartReveal>
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <ChartFigure {...(chartFigureProps as any)}>
-                    <DynComponent
-                      {...mergedProps}
-                      surface={isDarkSurface ? 'dark' : 'light'}
-                    />
-                  </ChartFigure>
-                </ChartReveal>
-              )
-              : <DynComponent {...mergedProps} surface={isDarkSurface ? 'dark' : 'light'} />
+            cardIndex >= 2 ? (
+              <LazyChart height={demo.id === 'sparkline-kpi-grid' ? 120 : 360} rootMargin="200px">
+                {chartFigureProps
+                  ? (
+                    <ChartReveal>
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      <ChartFigure {...(chartFigureProps as any)} surface={isDarkSurface ? 'dark' : 'light'}>
+                        <DynComponent
+                          {...mergedProps}
+                          surface={isDarkSurface ? 'dark' : 'light'}
+                        />
+                      </ChartFigure>
+                    </ChartReveal>
+                  )
+                  : <DynComponent {...mergedProps} surface={isDarkSurface ? 'dark' : 'light'} />
+                }
+              </LazyChart>
+            ) : (
+              chartFigureProps
+                ? (
+                  <ChartReveal>
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    <ChartFigure {...(chartFigureProps as any)} surface={isDarkSurface ? 'dark' : 'light'}>
+                      <DynComponent
+                        {...mergedProps}
+                        surface={isDarkSurface ? 'dark' : 'light'}
+                      />
+                    </ChartFigure>
+                  </ChartReveal>
+                )
+                : <DynComponent {...mergedProps} surface={isDarkSurface ? 'dark' : 'light'} />
+            )
           )}
 
-          {/* Table demos */}
+          {/* Table demos
+              G.5: LazyChart wraps below-fold table demos */}
           {isTable && DynComponent && (
-            <DynComponent {...mergedProps} />
+            cardIndex >= 2 ? (
+              <LazyChart height={300} rootMargin="200px">
+                <DynComponent {...mergedProps} />
+              </LazyChart>
+            ) : (
+              <DynComponent {...mergedProps} />
+            )
           )}
 
           {/* A11y overlay */}
           {a11yOverlay && <A11yOverlay demo={demo} containerRef={canvasRef} />}
         </div>
       )}
+      </div>{/* /contentRegionRef — focus target for variant/surface switch */}
 
       {/* ── State demo strip ─────────────────────────────────────────── */}
       {demo.stateDemos && (

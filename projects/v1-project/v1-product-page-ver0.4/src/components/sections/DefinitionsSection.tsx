@@ -198,7 +198,7 @@ function MarketDefCard({ def }: { def: MarketDef }) {
       {/* Revenue streams */}
       <div>
         <p
-          className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-2"
+          className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-2"
           style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}
         >
           Revenue streams included

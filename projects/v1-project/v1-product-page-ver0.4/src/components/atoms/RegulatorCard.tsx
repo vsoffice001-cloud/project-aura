@@ -69,7 +69,7 @@ export function RegulatorCard({
           {name}
         </p>
         <p
-          className="font-body italic text-[var(--semantic-ink-subtle)] mt-0.5"
+          className="font-body italic text-[var(--semantic-ink-muted)] mt-0.5"
           style={{ fontSize: '11px', lineHeight: 1.3 }}
         >
           {fullName}
@@ -87,7 +87,7 @@ export function RegulatorCard({
       {/* Key standards */}
       <div className="mb-3">
         <p
-          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)] mb-1.5"
+          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)] mb-1.5"
           style={{ fontSize: '9.5px', fontWeight: 600 }}
         >
           Key standards
@@ -112,7 +112,7 @@ export function RegulatorCard({
 
       {/* Last update */}
       <p
-        className="font-body text-[var(--semantic-ink-subtle)]"
+        className="font-body text-[var(--semantic-ink-muted)]"
         style={{ fontSize: '10.5px' }}
       >
         Last update:{' '}

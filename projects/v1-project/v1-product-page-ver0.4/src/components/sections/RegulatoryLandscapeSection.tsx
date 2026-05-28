@@ -246,7 +246,7 @@ export function RegulatoryLandscapeSection() {
         {/* Tab 1 · Regulators */}
         <TabsContent value="regulators">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-5"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-5"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Governing bodies · scope + key instruments
@@ -261,7 +261,7 @@ export function RegulatoryLandscapeSection() {
         {/* Tab 2 · Pipeline Gantt */}
         <TabsContent value="pipeline">
           <p
-            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-1.5"
+            className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-1.5"
             style={{ fontSize: '10px', fontWeight: 600 }}
           >
             Regulatory pipeline · 2022–2027

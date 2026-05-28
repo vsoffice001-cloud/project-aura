@@ -246,7 +246,7 @@ export function SideTOCV04({
         {/* Header label · subtle */}
         <div className="flex items-center gap-2 px-4 pb-3 pt-4 border-b border-[var(--black-100)]">
           <span
-            className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)]"
+            className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)]"
             style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600 }}
           >
             Table of Contents
@@ -274,7 +274,7 @@ export function SideTOCV04({
         >
           <SheetHeader className="border-b border-[var(--black-100)] p-4">
             <SheetTitle
-              className="text-[var(--semantic-ink-subtle)]"
+              className="text-[var(--semantic-ink-muted)]"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.12em' }}
             >
               Table of Contents

@@ -330,6 +330,11 @@
   --space-8:  var(--space-xl);    /* 32px · added 2026-05-15 */
   --space-10: 2.5rem;              /* 40px · added 2026-05-15 P0 fix · used by LongFormReader */
   --space-12: var(--space-2xl);   /* 48px */
+  /* Fractional half-step space aliases · Sprint G.8 · gap-closeout */
+  --space-1-5: 0.375rem;  /* 6px  · Tailwind space-1.5 parity */
+  --space-2-5: 0.625rem;  /* 10px · Tailwind space-2.5 parity */
+  --space-3-5: 0.875rem;  /* 14px · Tailwind space-3.5 parity */
+  --space-16:  4rem;       /* 64px · Tailwind space-16 parity · = --space-3xl */
   /* Card padding tokens · OG canonical */
   --card-padding-sm: 0.75rem;    /* 12px · compact card */
   --card-padding-md: 1rem;       /* 16px · default card */
@@ -354,6 +359,17 @@
   --text-compact:    0.875rem;   /* 14px · dense card body (4+ cards) */
   --text-nav:        0.875rem;   /* 14px · nav · eyebrows · button text */
   --text-card-micro: 0.625rem;   /* 10px · card micro-labels · dates · avatar initials */
+
+  /* G.13 Semantic font tokens (Bible §1.11 · 2026-05-28) · purpose-named aliases · NO new families.
+   * Use these in components instead of raw px to prevent drift.
+   * Pattern: --text-<purpose> · resolves to scale OR ref-justified mid-step. */
+  --text-eyebrow:           0.6875rem;     /* 11px · ref to --text-2xs · uppercase eyebrows */
+  --text-eyebrow-tracking:  0.10em;        /* Canonical eyebrow letter-spacing */
+  --text-paywall-title:     var(--text-md, 1.125rem);  /* 18px Noto Serif · paywall card title */
+  --text-paywall-body:      0.8125rem;     /* 13px · DM Sans 500 · paywall list items */
+  --text-paywall-cta:       var(--text-xs, 0.8rem);    /* 12.8px · paywall CTA buttons */
+  --text-source-citation:   0.6875rem;     /* 11px · DM Sans italic · source/footnote */
+  --text-data-label:        0.625rem;      /* 10px · DM Sans 600 tabular · chart axis/data labels */
   /* Weights · OG only ships 400 + 500 (light=300 in font-weight-light) */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -698,6 +714,9 @@
   --shadow-brand-button:        0 4px 12px rgba(176, 31, 36, 0.15);
   --shadow-brand-button-hover:  0 6px 16px rgba(176, 31, 36, 0.25);
   --shadow-search-hero:         0 20px 60px rgba(0, 0, 0, 0.3);
+  /* Brand periwinkle + purple shadows · Sprint G.8 gap-closeout */
+  --shadow-brand-periwinkle:    0 4px 16px rgba(94, 81, 200, 0.18);  /* TextCard · ScopeOfReport · TaxonomyTree */
+  --shadow-brand-purple:        0 4px 16px rgba(91, 79, 207, 0.16);  /* IconCard · SegmentationCard · MarketDataTable */
 
   /* ============================================================
      ADDED SPACING · 2026-05-19
@@ -734,12 +753,24 @@
 
   /* ============================================================
      SEMANTIC INK ALIASES · 2026-05-19 · Batch 3.2a addition
-     WHY · v0.3 consumer tokens use --semantic-ink-* · expose DS-wide
+     WHY · v0.3 consumer tokens (semantic-ink-strong, body, muted, subtle, faint) · expose DS-wide
      so organisms + consumers can share idiom regardless of light/dark layer
      ============================================================ */
   --semantic-ink-strong: var(--black-900);
   --semantic-ink-body:   var(--black-700);
+  --semantic-ink-muted:  var(--black-600);   /* #525252 · 7.4:1 on white · WCAG AA safe · eyebrows/units/captions */
   --semantic-ink-subtle: var(--black-500);
+  --semantic-ink-faint:  rgba(0, 0, 0, 0.35); /* decorative only · never on body text */
+
+  /* ============================================================
+     SEMANTIC BG ALIASES · Sprint G.8 2026-05-27
+     WHY · showcase + consumer components reference --semantic-bg-page
+     (editorial warm off-white) and --semantic-bg-surface (pure white card
+     surface). Defined here so check-tokens passes clean and consumers
+     don't rely solely on hardcoded fallbacks.
+     ============================================================ */
+  --semantic-bg-page:    var(--warm-bg, #f5f2f1);    /* editorial-light page bg */
+  --semantic-bg-surface: var(--white, #ffffff);       /* card / panel surface */
 
   /* Border-soft · base layer fallback */
   --border-soft: rgba(0, 0, 0, 0.08);
@@ -765,7 +796,7 @@
   /* ============================================================
      SEMANTIC INK ON DARK · Sprint E 2026-05-26
      Use on cinematic-dark surfaces (hero · FinalCTABanner · Slideshow).
-     DO NOT use --semantic-ink-* (those are light-surface tokens).
+     DO NOT use the semantic-ink tokens above (those are light-surface only · on-dark variants defined below).
      ============================================================ */
   --semantic-ink-on-dark-strong:  rgba(255, 255, 255, 0.92);
   --semantic-ink-on-dark-body:    rgba(255, 255, 255, 0.75);
@@ -789,6 +820,42 @@
   --color-surface-cinematic-mid:     #12101a;
   --color-surface-cinematic-end:     #1a0d0f;
   --color-surface-cinematic-accent:  rgba(176, 31, 36, 0.18);
+
+  /* ============================================================
+     DS GAP CLOSEOUT · Sprint G.8 2026-05-27
+     Missing vars discovered via verify-css-vars.mjs audit.
+     ============================================================ */
+
+  /* Dark border soft · lighter than --border-on-dark-hairline for softer dividers */
+  --border-on-dark-soft:         rgba(255, 255, 255, 0.06);
+
+  /* Warm bg token · editorial-light off-white surface */
+  --warm-bg:                     #f5f2f1;
+
+  /* Surface color aliases · used in ReportCard + IndustrySidebar (light-variant pages) */
+  --color-surface-primary:       var(--warm-bg);   /* warm off-white · editorial-light default */
+  --color-bg-primary:            var(--warm-bg);   /* alias for MarketOverview */
+
+  /* Deep black · cinematic bg base · KenTreemap dark surface bg */
+  --color-deep:                  #0a0a0c;
+
+  /* Secondary accent color · purple-weight · MultiCardGridTemplate accent */
+  --color-secondary:             var(--color-ramp-periwinkle-600, #5e51c8);
+
+  /* Font family body alias · used in atoms pre-migration to --font-sans */
+  --font-family-body:            var(--font-sans);
+
+  /* Font weight heading alias · strong display weight */
+  --font-weight-heading:         600;
+
+  /* Text-48 · display alias for 3rem scale level */
+  --text-48:                     3rem;   /* 48px · HeroCinematicTemplate display */
+
+  /* Section padding large · organism spacing (ScopeOfReport · TaxonomyTree) */
+  --section-py-lg:               var(--space-4xl, 6rem);    /* 96px desktop */
+
+  /* Surface text aliases · cinematic-dark consumer convenience */
+  --surface-text-primary:        var(--semantic-ink-strong);
 }
 
 /* ============================================================
@@ -824,3 +891,7 @@
     outline-offset: 2px;
   }
 }
+
+/* ── Print stylesheet ────────────────────────────────────── */
+/* Imported last so it can override sr-only + surface tokens  */
+@import "./print.css";

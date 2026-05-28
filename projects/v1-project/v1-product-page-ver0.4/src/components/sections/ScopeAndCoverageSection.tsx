@@ -109,7 +109,7 @@ export function ScopeAndCoverageSection() {
             className="rounded-[var(--radius-sm,10px)] border border-[var(--black-100)] bg-[var(--color-foundation-white)] p-5"
           >
             <p
-              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-3"
+              className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-3"
               style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', fontWeight: 600 }}
             >
               {g.label}

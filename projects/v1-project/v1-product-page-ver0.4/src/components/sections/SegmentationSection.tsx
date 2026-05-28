@@ -327,7 +327,7 @@ export function SegmentationSection() {
               >
                 Domestic vs International · cold transport revenue
               </p>
-              <p className="font-body text-[11px] italic text-[var(--semantic-ink-subtle)]">
+              <p className="font-body text-[11px] italic text-[var(--semantic-ink-muted)]">
                 Near-even split · diverging margin profiles
               </p>
             </div>

@@ -262,7 +262,7 @@ function SegmentSplitBar() {
         >
           2022 composition · AUD 6,547.8 Mn split
         </p>
-        <p className="font-body text-[11px] italic text-[var(--semantic-ink-subtle)]">
+        <p className="font-body text-[11px] italic text-[var(--semantic-ink-muted)]">
           Cold Transport leads · Cold Storage CAGR rising faster
         </p>
       </div>
@@ -326,7 +326,7 @@ function SegmentSplitBar() {
         </div>
       </div>
 
-      <p className="font-body text-[11px] text-[var(--semantic-ink-subtle)] italic mt-3 max-w-[60ch]">
+      <p className="font-body text-[11px] text-[var(--semantic-ink-muted)] italic mt-3 max-w-[60ch]">
         2022 split per Ken Primary segment survey + ABS freight movement data.
       </p>
 
@@ -339,7 +339,7 @@ function SegmentSplitBar() {
           >
             2027F composition · projected AUD 10,705 Mn split
           </p>
-          <p className="font-body text-[11px] italic text-[var(--semantic-ink-subtle)]">
+          <p className="font-body text-[11px] italic text-[var(--semantic-ink-muted)]">
             Forecast composition · premium content
           </p>
         </div>
@@ -397,7 +397,7 @@ function DatasetModalTrigger() {
       </DialogTrigger>
       <DialogContent className="max-w-[760px] w-[calc(100vw-32px)] max-h-[85vh] overflow-hidden flex flex-col p-0 gap-0">
         <DialogHeader className="px-6 pt-5 pb-4 border-b border-[var(--black-100)]">
-          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-1.5" style={{ fontSize: '10px', fontWeight: 600 }}>
+          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-1.5" style={{ fontSize: '10px', fontWeight: 600 }}>
             Section 08 · Market Size
           </p>
           <DialogTitle className="font-display font-light text-[var(--semantic-ink-strong)] tracking-tight" style={{ fontSize: '22px', lineHeight: 1.2 }}>
@@ -528,7 +528,7 @@ export function MarketSizeSection() {
         </strong>
         .
       </p>
-      <p className="font-body italic text-[var(--semantic-ink-muted)] max-w-[60ch] mb-10" style={{ fontSize: '14px', lineHeight: 1.55 }}>
+      <p className="font-body italic text-[var(--semantic-ink-body)] max-w-[60ch] mb-10" style={{ fontSize: '14px', lineHeight: 1.55 }}>
         The market sits in its growing phase — sustained, not slowing.
       </p>
 

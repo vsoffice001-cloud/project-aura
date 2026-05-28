@@ -13,7 +13,13 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { ExtendedPhase } from './data';
 
 // Purple-600 (#806ce0) — per v0.4 --pdp-accent-icon
-const ICON_COLOR = 'var(--purple-600, #806ce0)';
+// G.13 · purple-600 drift removed · canonical role split:
+// - ICON_COLOR (decorative leading icons) → semantic-ink-subtle
+// - LABEL_COLOR (eyebrow uppercase) → semantic-ink-muted
+// - VALUE_COLOR (data numbers like chapter count) → semantic-ink-strong
+const ICON_COLOR = 'var(--semantic-ink-subtle)';
+const LABEL_COLOR = 'var(--semantic-ink-muted)';
+const VALUE_COLOR = 'var(--semantic-ink-strong)';
 
 interface PhaseCardProps {
   phase: ExtendedPhase;
@@ -74,26 +80,27 @@ export function PhaseCard({
             <div>
               <span
                 className="text-[0.563rem] font-semibold uppercase tracking-[0.15em] block"
-                style={{ color: ICON_COLOR }}
+                style={{ color: LABEL_COLOR }}
               >
                 {phase.label}
               </span>
-              <span className="text-black text-[1rem] font-medium">
+              <span className="text-[var(--semantic-ink-strong)] text-[1rem] font-medium">
                 {phase.title}
               </span>
             </div>
           </h3>
           {/* Chapter Count */}
           <div className="text-right flex-shrink-0">
-            <p className="text-[1.563rem] font-semibold leading-none" style={{ color: ICON_COLOR }}>
+            <p className="text-[1.563rem] font-semibold leading-none" style={{ color: VALUE_COLOR }}>
               {phase.chapters}
             </p>
-            <p className="text-[0.563rem] text-[var(--black-600)] mt-1 uppercase tracking-[0.1em]">
+            <p className="text-[0.563rem] text-[var(--semantic-ink-muted)] mt-1 uppercase tracking-[0.1em]">
               Chapters
             </p>
           </div>
         </div>
-        <p className="text-[0.8rem] text-[var(--black-600)] mt-2 sm:mt-3 leading-[1.6]">
+        {/* Card-internal body · subtle per user direction (cards use receded ink · frame provides hierarchy) */}
+        <p className="text-[0.8rem] text-[var(--semantic-ink-subtle)] mt-2 sm:mt-3 leading-[1.6]">
           {phase.description}
         </p>
       </div>
@@ -128,17 +135,17 @@ export function PhaseCard({
                   {/* Expand chevron */}
                   {section.expandable ? (
                     <ChevronDown
-                      className={`h-4 w-4 text-[var(--black-500)] transition-transform duration-300 flex-shrink-0 ${
+                      className={`h-4 w-4 text-[var(--semantic-ink-subtle)] transition-transform duration-300 flex-shrink-0 ${
                         isExpanded ? 'rotate-0' : '-rotate-90'
                       }`}
                     />
                   ) : (
                     <span className="w-4 flex-shrink-0" />
                   )}
-                  <span className="text-[14px] w-6 text-[var(--black-500)] tabular-nums tracking-wider">
+                  <span className="text-[14px] w-6 text-[var(--semantic-ink-muted)] tabular-nums tracking-wider">
                     {section.number}
                   </span>
-                  <span className="flex-1 text-[14px] text-black hover:font-semibold transition-all">
+                  <span className="flex-1 text-[14px] text-[var(--semantic-ink-strong)] hover:font-semibold transition-all">
                     {section.title}
                   </span>
                 </button>
@@ -154,10 +161,10 @@ export function PhaseCard({
                         key={sub.number}
                         className="flex items-center py-2 px-3 cursor-pointer hover:bg-black/[0.02] rounded-[2.5px] transition-colors"
                       >
-                        <span className="text-[0.563rem] text-[var(--black-400)] min-w-[2.5rem] flex-shrink-0 tabular-nums tracking-wider">
+                        <span className="text-[0.563rem] text-[var(--semantic-ink-muted)] min-w-[2.5rem] flex-shrink-0 tabular-nums tracking-wider">
                           {sub.number}
                         </span>
-                        <span className="text-[0.8rem] leading-[1.5] flex-1 text-[var(--black-500)]">
+                        <span className="text-[0.8rem] leading-[1.5] flex-1 text-[var(--semantic-ink-subtle)]">
                           {sub.title}
                         </span>
                       </div>
@@ -169,7 +176,7 @@ export function PhaseCard({
           })}
 
           {sections.length === 0 && (
-            <div className="px-3 py-8 text-center text-[0.8rem] text-[var(--black-400)]">
+            <div className="px-3 py-8 text-center text-[0.8rem] text-[var(--semantic-ink-muted)]">
               No chapters match your search.
             </div>
           )}

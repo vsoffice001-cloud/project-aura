@@ -76,7 +76,7 @@ export function AsyncFetchDemo() {
         style={{ marginBottom: '16px' }}
       >
         <span
-          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '9px', fontWeight: 700 }}
         >
           Async demo
@@ -109,7 +109,8 @@ export function AsyncFetchDemo() {
         {/* Refetch */}
         <Button
           variant="secondary"
-          size="xs"
+          size="sm"
+          className="!min-h-[44px] !px-4"
           onClick={handleRefetch}
           disabled={fetchState === 'loading'}
           aria-label="Refetch chart data"
@@ -120,7 +121,8 @@ export function AsyncFetchDemo() {
         {/* Simulate error */}
         <Button
           variant="secondary"
-          size="xs"
+          size="sm"
+          className="!min-h-[44px] !px-4"
           onClick={handleSimulateError}
           disabled={fetchState === 'loading'}
           aria-label="Simulate fetch error"

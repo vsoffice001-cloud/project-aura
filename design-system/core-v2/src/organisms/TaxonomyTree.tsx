@@ -179,7 +179,7 @@ export function TaxonomyTree({
                 maxWidth: '48rem',
                 lineHeight: '1.6',
                 marginTop: 'var(--space-4)',
-                fontFamily: 'var(--font-body)',
+                fontFamily: 'var(--font-sans)',
               }}
             >
               {description}
@@ -201,7 +201,7 @@ export function TaxonomyTree({
                 style={{
                   padding: 'var(--space-2) var(--space-4)',
                   fontSize: 'var(--text-base)',
-                  fontFamily: 'var(--font-body)',
+                  fontFamily: 'var(--font-sans)',
                   color: 'var(--black-900)',
                   border: '1px solid var(--black-200)',
                   borderRadius: 'var(--radius-sm)',
@@ -246,7 +246,7 @@ export function TaxonomyTree({
               <p
                 style={{
                   fontSize: 'var(--text-sm)',
-                  fontFamily: 'var(--font-body)',
+                  fontFamily: 'var(--font-sans)',
                   color: 'var(--black-600)',
                   margin: 0,
                 }}
@@ -330,7 +330,7 @@ export function TaxonomyTree({
                         style={{
                           fontSize: 'var(--text-base)',
                           fontWeight: '700',
-                          fontFamily: 'var(--font-body)',
+                          fontFamily: 'var(--font-sans)',
                         }}
                       >
                         Click to Explore Interactive Taxonomy

@@ -94,7 +94,7 @@ export function StateDemo({ demo }: StateDemoProps) {
       >
         <span
           id={`state-label-${demo.id}`}
-          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-subtle)]"
+          className="font-body uppercase tracking-[0.1em] text-[var(--semantic-ink-muted)]"
           style={{ fontSize: '9px', fontWeight: 700 }}
         >
           States
@@ -106,11 +106,11 @@ export function StateDemo({ demo }: StateDemoProps) {
           className="flex gap-1.5"
         >
           {availableTabs.map((tab, idx) => (
-            <HitArea key={tab}>
               <Button
+                key={tab}
                 role="tab"
                 variant={activeTab === tab ? 'primary' : 'secondary'}
-                size="xs"
+                size="sm"
                 onClick={() => setActiveTab(tab)}
                 aria-selected={activeTab === tab}
                 aria-controls={`state-panel-${demo.id}`}
@@ -118,10 +118,10 @@ export function StateDemo({ demo }: StateDemoProps) {
                 tabIndex={activeTab === tab ? 0 : -1}
                 onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => handleTabKeyDown(e, idx)}
                 pill
+                className="!min-h-[44px] !px-4"
               >
                 {TAB_LABELS[tab]}
               </Button>
-            </HitArea>
           ))}
         </div>
       </div>

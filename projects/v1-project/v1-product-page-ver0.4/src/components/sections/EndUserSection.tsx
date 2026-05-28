@@ -181,7 +181,7 @@ function SectorCardEl({ data }: { data: SectorCard }) {
       {/* KPI row · revenue + CAGR · inline tabular */}
       <div className="flex items-baseline gap-x-6 gap-y-2 mb-3 flex-wrap">
         <div>
-          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-0.5" style={{ fontSize: '9.5px', fontWeight: 600 }}>
+          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-0.5" style={{ fontSize: '9.5px', fontWeight: 600 }}>
             2022 Revenue
           </p>
           <p
@@ -192,7 +192,7 @@ function SectorCardEl({ data }: { data: SectorCard }) {
           </p>
         </div>
         <div>
-          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-0.5" style={{ fontSize: '9.5px', fontWeight: 600 }}>
+          <p className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-0.5" style={{ fontSize: '9.5px', fontWeight: 600 }}>
             CAGR · 2022-27F
           </p>
           <p
@@ -383,7 +383,7 @@ export function EndUserSection() {
               >
                 3PL vs Owned · 2022 cold-chain revenue
               </p>
-              <p className="font-body text-[11px] italic text-[var(--semantic-ink-subtle)]">
+              <p className="font-body text-[11px] italic text-[var(--semantic-ink-muted)]">
                 Diverging margin profiles
               </p>
             </div>

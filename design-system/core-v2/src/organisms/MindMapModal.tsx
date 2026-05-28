@@ -221,7 +221,7 @@ export function MindMapModal({
                     fontSize: 'var(--text-xl)',
                     fontWeight: '700',
                     color: 'var(--black-900)',
-                    fontFamily: 'var(--font-body)',
+                    fontFamily: 'var(--font-sans)',
                     lineHeight: '1.25',
                   }}
                 >
@@ -232,7 +232,7 @@ export function MindMapModal({
                     fontSize: 'var(--text-sm)',
                     color: 'var(--black-500)',
                     marginTop: 'var(--space-1)',
-                    fontFamily: 'var(--font-body)',
+                    fontFamily: 'var(--font-sans)',
                   }}
                 >
                   {subtitle}
@@ -253,7 +253,7 @@ export function MindMapModal({
                     width: '14rem',
                     padding: 'var(--space-2) var(--space-4)',
                     fontSize: 'var(--text-sm)',
-                    fontFamily: 'var(--font-body)',
+                    fontFamily: 'var(--font-sans)',
                     color: 'var(--black-900)',
                     border: '1px solid var(--black-200)',
                     borderRadius: 'var(--radius-sm)',

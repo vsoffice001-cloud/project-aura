@@ -95,7 +95,7 @@ export function SourceCluster({
           className="transition-transform text-[var(--semantic-ink-subtle)]"
           style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)' }}
         />
-        <span className="uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] group-hover:text-[var(--color-brand-red,#b01f24)]" style={{ fontWeight: 600 }}>
+        <span className="uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] group-hover:text-[var(--color-brand-red,#b01f24)]" style={{ fontWeight: 600 }}>
           Sources · {totalCount}
         </span>
         {(['primary', 'secondary', 'derived'] as SourceTier[]).map((tier) => {
@@ -120,7 +120,7 @@ export function SourceCluster({
           );
         })}
         {methodologyHref && (
-          <span className="font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle)] ml-auto" style={{ fontWeight: 500 }}>
+          <span className="font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-muted)] ml-auto" style={{ fontWeight: 500 }}>
             view all →
           </span>
         )}
@@ -161,7 +161,7 @@ export function SourceCluster({
                     </>
                   )}
                   {c.internalNote && (
-                    <span className="block text-[var(--semantic-ink-subtle)] italic mt-0.5" style={{ fontSize: '10.5px' }}>
+                    <span className="block text-[var(--semantic-ink-muted)] italic mt-0.5" style={{ fontSize: '10.5px' }}>
                       {c.internalNote}
                     </span>
                   )}
@@ -173,7 +173,7 @@ export function SourceCluster({
             <li className="pt-2">
               <a
                 href={methodologyHref}
-                className="inline-flex items-center gap-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-subtle)] hover:text-[var(--color-brand-red,#b01f24)] transition-colors"
+                className="inline-flex items-center gap-1 font-body uppercase tracking-[0.08em] text-[var(--semantic-ink-muted)] hover:text-[var(--color-brand-red,#b01f24)] transition-colors"
                 style={{ fontSize: '10px', fontWeight: 600 }}
               >
                 Full methodology · §19

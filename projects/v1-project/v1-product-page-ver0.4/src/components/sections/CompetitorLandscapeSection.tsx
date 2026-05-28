@@ -7,7 +7,7 @@
  *        - Inline narrative lede w/ bold metrics (refs canonical)
  *        - MetricStrip: 4 stats (# players · top-3 share · avg fleet age · HHI)
  *        - KenBubbleChart: x=revenue · y=growth · z=fleet capacity · 8-10 players
- *          · top-3 named · rest gated via PremiumLockCard compact overlay on lower half
+ *          · top-3 named · rest gated via data redaction + visual blur + PremiumLockCard
  *        - PropertyTable: comparison matrix · top 3 visible · 2 cols gated
  *        - SourceCluster (IBISWorld · company filings · Ken estimate)
  *        - InsightBox closer: concentration play + 3PL pharma opportunity
@@ -22,6 +22,18 @@
  *
  * @relatedDoc projects/v1-product-page-ver0.4/docs/CHARTS-TABLES-PATTERNS.md §3.5
  * @relatedDoc projects/v1-product-page-ver0.4/docs/REF-PATTERNS-ADOPTION.md §5
+ *
+ * PAYWALL · 3-LAYER DEFENSE-IN-DEPTH (Bible §1.13 · 2026-05-28):
+ *   Layer 1 · Data redaction  → gated players rendered w/ "Player X" names + approximate values
+ *                                Real competitor names and exact figures NEVER reach client DOM
+ *   Layer 2 · Visual obscure  → gated bubbles: gray fill · 0.35 opacity · dashed stroke
+ *   Layer 3 · Backend stub    → TODO[prod] below — real API MUST strip gated data server-side
+ *
+ * CSS blur/overlay is UI signal only, NOT enforcement. Data redaction is the primary gate.
+ *
+ * TODO[prod]: backend MUST redact gated player data before sending response.
+ *             Current client-side redaction is defense-in-depth only, NOT the primary gate.
+ *             API contract: top-3 players sent with real data; gated players sent as null/placeholder.
  */
 
 import { SectionLabel } from '@kenresearch/design-system/atoms';
@@ -44,6 +56,58 @@ import { getSources } from '@/lib/sources';
 // ─────────────────────────────────────────────────────────────────
 // Data · IBISWorld I5301 + company filings + Ken Primary survey 2024
 // ─────────────────────────────────────────────────────────────────
+
+// PAYWALL LAYER 1 — Data redaction constants
+// Gated bubble visual style: gray neutral, low opacity, dashed stroke signal
+const GATED_BUBBLE_COLOR = 'rgba(115, 115, 115, 0.35)'; // semantic-ink-subtle at low opacity · never chart series
+
+// Redaction tolerance ranges (per brief):
+//   revenue (x): ±20% of real value → jitter via deterministic offset per index
+//   growth  (y): ±2% of real value
+//   capacity(z): ±15% of real value
+// Deterministic jitter: index-based offsets so re-renders are stable (no Math.random)
+const JITTER_X = [0.92, 1.08, 0.85, 1.15, 0.94, 1.07]; // revenue multipliers per gated slot
+const JITTER_Y = [1.1, 0.9, 1.15, 0.85, 1.05, 0.95];   // growth multipliers
+const JITTER_Z = [1.12, 0.88, 0.95, 1.10, 0.87, 1.08];  // capacity multipliers
+
+/**
+ * BubblePointRaw — internal shape with `gated` flag.
+ * Raw data MUST never leave this module unredacted.
+ */
+interface BubblePointRaw {
+  name: string;
+  x: number;
+  y: number;
+  z: number;
+  color: string;
+  gated: boolean;
+}
+
+/**
+ * redactGatedData — Layer 1 paywall gate.
+ * Replaces gated player names with "Player N" and jitters values within tolerance ranges.
+ * Real competitor data NEVER reaches the chart component.
+ *
+ * TODO[prod]: This client-side redaction is defense-in-depth only.
+ *             Production API MUST send gated slots as null/placeholder — real values must not
+ *             reach the client bundle at all. See PAYWALL BIBLE §1.13.
+ */
+function redactGatedData(competitors: BubblePointRaw[]): BubblePoint[] {
+  let gatedIndex = 0;
+  return competitors.map((c) => {
+    if (!c.gated) {
+      return { name: c.name, x: c.x, y: c.y, z: c.z, color: c.color };
+    }
+    const i = gatedIndex++;
+    return {
+      name: `Player ${i + 4}`, // Player 4, Player 5, … Player 9
+      x: Math.round(c.x * JITTER_X[i % JITTER_X.length]),
+      y: parseFloat((c.y * JITTER_Y[i % JITTER_Y.length]).toFixed(1)),
+      z: Math.round(c.z * JITTER_Z[i % JITTER_Z.length]),
+      color: GATED_BUBBLE_COLOR,
+    };
+  });
+}
 
 const METRICS = [
   {
@@ -69,21 +133,26 @@ const METRICS = [
 ];
 
 // x = revenue band AUD Mn (midpoint) · y = YoY revenue growth % · z = fleet capacity (pallets 000s)
-// Top 3 named · rest gated blur applied below
-const BUBBLE_DATA: BubblePoint[] = [
-  { name: 'Linfox',         x: 850,  y: 8.2,  z: 280, color: KEN_CHART_SERIES_ARRAY[0] },
-  { name: 'Toll Group',     x: 720,  y: 6.8,  z: 210, color: KEN_CHART_SERIES_ARRAY[0] },
-  { name: 'Americold',      x: 480,  y: 11.4, z: 180, color: KEN_CHART_SERIES_ARRAY[1] },
-  { name: 'NewCold',        x: 210,  y: 18.2, z: 95,  color: KEN_CHART_SERIES_ARRAY[2] },
-  { name: 'Australia Post', x: 380,  y: 5.1,  z: 140, color: KEN_CHART_SERIES_ARRAY[2] },
-  { name: 'OOCL Logistics', x: 160,  y: 7.4,  z: 58,  color: KEN_CHART_SERIES_ARRAY[3] },
-  { name: 'Visy Logistics', x: 140,  y: 4.8,  z: 52,  color: KEN_CHART_SERIES_ARRAY[3] },
-  { name: 'DP World Aus',   x: 120,  y: 9.1,  z: 44,  color: KEN_CHART_SERIES_ARRAY[4] },
-  { name: 'Swire Cold',     x: 95,   y: 12.3, z: 36,  color: KEN_CHART_SERIES_ARRAY[4] },
+// Top-3 FREE: real names + values · 6 GATED: real values stored here for jitter math
+// PAYWALL NOTE: BUBBLE_DATA_RAW is module-private. Chart receives BUBBLE_DATA_REDACTED only.
+// TODO[prod]: gated entries must not exist in client bundle at all — backend sends only free-tier.
+const BUBBLE_DATA_RAW: BubblePointRaw[] = [
+  { name: 'Linfox',         x: 850,  y: 8.2,  z: 280, color: KEN_CHART_SERIES_ARRAY[0], gated: false },
+  { name: 'Toll Group',     x: 720,  y: 6.8,  z: 210, color: KEN_CHART_SERIES_ARRAY[0], gated: false },
+  { name: 'Americold',      x: 480,  y: 11.4, z: 180, color: KEN_CHART_SERIES_ARRAY[1], gated: false },
+  { name: 'NewCold',        x: 210,  y: 18.2, z: 95,  color: KEN_CHART_SERIES_ARRAY[2], gated: true  },
+  { name: 'Australia Post', x: 380,  y: 5.1,  z: 140, color: KEN_CHART_SERIES_ARRAY[2], gated: true  },
+  { name: 'OOCL Logistics', x: 160,  y: 7.4,  z: 58,  color: KEN_CHART_SERIES_ARRAY[3], gated: true  },
+  { name: 'Visy Logistics', x: 140,  y: 4.8,  z: 52,  color: KEN_CHART_SERIES_ARRAY[3], gated: true  },
+  { name: 'DP World Aus',   x: 120,  y: 9.1,  z: 44,  color: KEN_CHART_SERIES_ARRAY[4], gated: true  },
+  { name: 'Swire Cold',     x: 95,   y: 12.3, z: 36,  color: KEN_CHART_SERIES_ARRAY[4], gated: true  },
 ];
 
-// First 3 fully named · rest gated — split at index 3 for gated overlay
-const VISIBLE_BUBBLE_COUNT = 3;
+// Layer 1 gate applied here — chart ONLY ever sees redacted data
+const BUBBLE_DATA_REDACTED = redactGatedData(BUBBLE_DATA_RAW);
+
+// First 3 fully named · rest gated — used for overlay + pill messaging
+const VISIBLE_BUBBLE_COUNT = BUBBLE_DATA_RAW.filter((b) => !b.gated).length; // = 3
 
 // PropertyTable data
 const PROPERTIES: PlayerProperty[] = [
@@ -230,18 +299,21 @@ export function CompetitorLandscapeSection() {
           ]}
           figcaption="X = revenue band midpoint (AUD Mn) · Y = YoY revenue growth % · Bubble size = reefer pallet capacity (000s). Revenue estimates per Ken Primary survey + company filings."
         >
-          {/* Full chart visible · bottom-half gated overlay */}
+          {/* Full chart visible · gated bubbles are data-redacted + visually signaled */}
+          {/* PAYWALL LAYER 1: chart receives BUBBLE_DATA_REDACTED — no real names/values for gated */}
+          {/* PAYWALL LAYER 2: gated bubbles rendered in gray (GATED_BUBBLE_COLOR) via per-point color */}
+          {/* PAYWALL LAYER 3: overlay with PremiumLockCard + GatedBlock gauze positioned over gated zone */}
           <div className="relative">
             <KenBubbleChart
-              data={BUBBLE_DATA}
+              data={BUBBLE_DATA_REDACTED}
               height={400}
               xAxisTitle="Revenue (AUD Mn)"
               yAxisTitle="Revenue growth (% YoY)"
               bubbleOpacity={0.55}
               showLabels={true}
-              ariaLabel="Australia cold chain competitor bubble chart · revenue vs growth vs fleet capacity"
+              ariaLabel="Australia cold chain competitor bubble chart · top-3 players named · additional players redacted"
             />
-            {/* Gated overlay · covers lower 50% where smaller players cluster */}
+            {/* Layer 2+3: visual obscure overlay · covers lower 50% where gated players cluster */}
             <div
               className="absolute bottom-0 left-0 right-0"
               style={{ height: '50%' }}
@@ -253,7 +325,7 @@ export function CompetitorLandscapeSection() {
                   <PremiumLockCard
                     tier="lead"
                     variant="compact"
-                    headline={`${BUBBLE_DATA.length - VISIBLE_BUBBLE_COUNT} additional players · full positioning data`}
+                    headline={`${BUBBLE_DATA_RAW.length - VISIBLE_BUBBLE_COUNT} additional players · full positioning data`}
                     primaryCta={{ label: 'Talk to expert', href: '/contact-expert?ref=14-bubble-gated' }}
                   />
                 }
@@ -281,7 +353,7 @@ export function CompetitorLandscapeSection() {
       {/* PropertyTable · comparison matrix */}
       <div className="mb-3">
         <p
-          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-subtle)] mb-3"
+          className="font-body uppercase tracking-[0.12em] text-[var(--semantic-ink-muted)] mb-3"
           style={{ fontSize: '10px', fontWeight: 600 }}
         >
           Player comparison · key properties

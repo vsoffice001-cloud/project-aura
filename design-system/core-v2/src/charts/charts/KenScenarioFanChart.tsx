@@ -69,7 +69,7 @@ if (typeof window !== 'undefined' && typeof HighchartsMore === 'function') {
 
 import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
 import type { ChartSurface } from '../theme/highcharts-base';
-import { KEN_CHART_SERIES, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
+import { KEN_CHART_SERIES, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 
 // ─── Scenario palette · Ken DS data-viz ───────────────────────────────────────
@@ -108,6 +108,14 @@ export interface KenScenarioFanChartProps {
   empty?: boolean;
   /** Error message · renders ErrorState with message */
   errorMessage?: string;
+  /**
+   * Index of the first forecast data point (0-based).
+   * When provided, the Base line dashes after this index to signal uncertainty.
+   * Bear/Bull are already dashed throughout (they ARE forecast scenarios).
+   * Example: labels=['2022','2023','2024','2025','2026F','2027F'] → forecastFrom=4
+   * @default derived from labels ending in 'F'
+   */
+  forecastFrom?: number;
   /** Aria label for outer wrapper */
   ariaLabel?: string;
   /** Optional className */
@@ -149,6 +157,7 @@ export function KenScenarioFanChart({
   height = 380,
   unit = 'AUD Mn',
   surface = 'light' as ChartSurface,
+  forecastFrom,
   loading,
   empty,
   errorMessage,
@@ -156,8 +165,23 @@ export function KenScenarioFanChart({
   className,
   disableReveal = false,
 }: KenScenarioFanChartProps) {
+  // Derive forecastFrom from labels if not provided (first label ending in 'F')
+  const resolvedForecastFrom = forecastFrom ?? (labels as string[]).findIndex((l) => l.endsWith('F'));
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
+
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents KEN_INK.* constants (hardcoded light values) from leaking into dark surface formatters
+  const isDark = surface === 'dark';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  const inkBody   = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.75)';
+  // BUG C fix: tooltip text ALWAYS uses dark ink regardless of surface.
+  // Tooltip bg is white (canonical) on BOTH surfaces — white ink on white bg = invisible.
+  // These vars are for use inside the tooltip formatter HTML only.
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkBody   = 'rgba(26,26,46,0.75)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
 
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
@@ -183,7 +207,8 @@ export function KenScenarioFanChart({
           labels.length >= 2
             ? [
                 {
-                  color: 'rgba(0,0,0,0.12)',
+                  // Surface-aware plotLine · visible on both light + dark · Bible § 1.1
+                  color: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)',
                   dashStyle: 'Dot',
                   width: 1,
                   // Between index 3 (2025) and index 4 (2026F) · x = 3.5
@@ -195,7 +220,8 @@ export function KenScenarioFanChart({
                     x: 4,
                     y: -6,
                     style: {
-                      color: KEN_INK.muted,
+                      // PART A fix: inkMuted resolved at useMemo time · surface-aware
+                      color: inkMuted,
                       fontFamily: KEN_CHART_FONT.sans,
                       fontSize: '9px',
                       fontWeight: '600',
@@ -206,11 +232,11 @@ export function KenScenarioFanChart({
               ]
             : [],
         labels: {
-          // Style forecast year labels differently
+          // PART A fix: surface-aware colors via closure · no KEN_INK.* constants
           formatter: function () {
             const cat = String(this.value);
             const isProjected = cat.endsWith('F');
-            return `<span style="color:${isProjected ? KEN_INK.muted : 'rgba(0,0,0,0.6)'}; font-style:${isProjected ? 'italic' : 'normal'}">${cat}</span>`;
+            return `<span style="color:${isProjected ? inkMuted : inkBody}; font-style:${isProjected ? 'italic' : 'normal'}">${cat}</span>`;
           },
           useHTML: true,
         },
@@ -220,7 +246,8 @@ export function KenScenarioFanChart({
         title: {
           text: unit,
           style: {
-            color: KEN_INK.muted,
+            // PART A fix: inkMuted resolved at useMemo time · surface-aware
+            color: inkMuted,
             fontFamily: KEN_CHART_FONT.sans,
             fontSize: '10px',
             fontWeight: '600',
@@ -249,6 +276,8 @@ export function KenScenarioFanChart({
           const cat = (this as Highcharts.TooltipFormatterContextObject).x;
           // Filter out the arearange fan series from tooltip
           const scenarioPts = pts.filter((p) => p.series.type !== 'arearange');
+          // BUG C fix: tooltip text uses tooltipInk* vars (always dark) NOT surface-aware inkBody/inkStrong.
+          // Tooltip bg is always WHITE (canonical, both surfaces). White ink on white = invisible on dark surface.
           const rows = scenarioPts
             .map((p) => {
               const v = typeof p.y === 'number'
@@ -256,14 +285,14 @@ export function KenScenarioFanChart({
                 : '—';
               return `<div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
                 <span style="display:inline-block;width:10px;height:2px;background:${p.color};"></span>
-                <span style="font-size:10.5px;color:rgba(0,0,0,0.6);">${p.series.name}</span>
-                <span style="font-size:11.5px;color:rgb(26,26,46);font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v} ${unit}</span>
+                <span style="font-size:10.5px;color:${tooltipInkBody};">${p.series.name}</span>
+                <span style="font-size:11.5px;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v} ${unit}</span>
               </div>`;
             })
             .join('');
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};min-width:200px;">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:4px;">${cat}</div>
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:4px;">${cat}</div>
               ${rows}
             </div>
           `;
@@ -282,14 +311,20 @@ export function KenScenarioFanChart({
             // Each series sets its own marker fillColor = series color (not white)
           },
           states: {
-            hover: { lineWidthPlus: 1 },
-            // Hover dim-others: non-hovered lines dim to 0.3 opacity (Highcharts built-in)
-            inactive: { opacity: 0.3 },
+            // PART B fix: Bible § 2.2 Area/Scenario · inactive 0.35 fills · 0.3 strokes
+            // lineWidth 4 on hover per § 2.6 · halo included
+            hover: {
+              lineWidth: 4,
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
+            },
+            inactive: { opacity: 0.35 },
           },
         },
         arearange: {
           // FIX (Bug 2): fan fill uses light perano · was same as bear color
-          fillOpacity: 0.18,
+          // G.10 stop 7 (Bible § 1.5): bumped 0.18 → 0.22 · ref-aligned fan visibility
+          fillOpacity: 0.22,
           lineWidth: 0,
           color: SCENARIO_COLORS.fan,
           fillColor: SCENARIO_COLORS.fan,
@@ -304,18 +339,21 @@ export function KenScenarioFanChart({
       // Was: legend enabled at verticalAlign:'bottom' → labels touched each other.
       legend: { enabled: false },
 
-      // Mobile strategy: SIMPLIFY · drop forecast plot-line label + reduce font sizes at <640px
+      // Mobile strategy: SIMPLIFY · drop forecast plot-line label + reduce font sizes at ≤360px
+      // BUG FIX (Sprint G.7 Phase 4): was maxWidth:640 — fired in compare mode (~370px container).
+      // Bible § 4.1: threshold ≤360 prevents firing on compare mode cells (~370-380px each).
       responsive: {
         rules: [
           {
-            condition: { maxWidth: 640 },
+            condition: { maxWidth: 360 },
             chartOptions: {
               xAxis: {
                 // Keep plot lines but hide the "FORECAST" text label at narrow
                 plotLines: labels.length >= 2
                   ? [
                       {
-                        color: 'rgba(0,0,0,0.12)',
+                        // Surface-aware plotLine for mobile responsive rule
+                        color: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)',
                         dashStyle: 'Dot',
                         width: 1,
                         value: labels.length - 2 - 0.5,
@@ -368,15 +406,33 @@ export function KenScenarioFanChart({
             lineColor: SCENARIO_COLORS.bear,
           },
         },
-        // Base · solid accent · most prominent
+        // Base · solid historical → dashed forecast · most prominent
+        // BUG 4 fix (Sprint G.7): Base was solid throughout — no visual distinction
+        // between historical actuals and forecast. zones splits at resolvedForecastFrom:
+        //   historical portion → solid full opacity
+        //   forecast portion   → LongDash + 0.65 opacity (same style as Bear/Bull)
         {
           type: 'spline',
           name: 'Base',
           data: [...baseData],
           color: SCENARIO_COLORS.base,
-          dashStyle: 'Solid',
           lineWidth: 2.5,
           zIndex: 3,
+          // zones apply when forecastFrom is known (≥ 0)
+          ...(resolvedForecastFrom >= 0 ? {
+            zoneAxis: 'x',
+            zones: [
+              {
+                value: resolvedForecastFrom,
+                // historical: solid full-weight (default dashStyle)
+              },
+              {
+                // forecast: dashed + faded — visually signals uncertainty
+                dashStyle: 'LongDash' as const,
+                color: SCENARIO_COLORS.base,
+              },
+            ],
+          } : {}),
           marker: {
             enabled: true,
             symbol: 'circle',
@@ -408,7 +464,7 @@ export function KenScenarioFanChart({
         },
       ],
     } as Partial<Highcharts.Options>);
-  }, [labels, bearData, baseData, bullData, height, unit, surface]);
+  }, [labels, bearData, baseData, bullData, height, unit, surface, resolvedForecastFrom, inkStrong, inkMuted, inkBody]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();

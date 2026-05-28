@@ -46,7 +46,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import { buildKenChartBase, surfaceOverrides } from '../theme/highcharts-base';
 import type { ChartSurface } from '../theme/highcharts-base';
-import { KEN_CHART_SERIES_ARRAY, KEN_INK, KEN_CHART_FONT } from '../theme/tokens';
+import { KEN_CHART_SERIES_ARRAY, KEN_CHART_FONT } from '../theme/tokens';
 import { ChartReveal } from '../primitives/ChartReveal';
 import { ChartSkeleton } from '../states/ChartSkeleton';
 import { ChartEmptyState } from '../states/EmptyState';
@@ -142,6 +142,17 @@ export function KenMultiLineChart({
   const chartRef = useRef<HighchartsReact.RefObject | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
 
+  // PART A fix: resolve surface-aware ink colors at useMemo closure time
+  // Prevents KEN_INK.* constants (hardcoded light values) from leaking into dark surface formatters
+  const isDark = surface === 'dark';
+  const inkStrong = isDark ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.92)';
+  const inkMuted  = isDark ? 'rgba(255,255,255,0.62)' : 'rgba(0,0,0,0.62)';
+  const inkBody   = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(0,0,0,0.75)';
+  // BUG C fix: tooltip bg is WHITE on both surfaces — text must always be dark ink
+  const tooltipInkStrong = 'rgba(26,26,46,0.92)';
+  const tooltipInkMuted  = 'rgba(26,26,46,0.62)';
+  const tooltipInkBody   = 'rgba(26,26,46,0.75)';
+
   const options = useMemo<Highcharts.Options>(() => {
     const base = buildKenChartBase();
 
@@ -224,7 +235,8 @@ export function KenMultiLineChart({
           projectionStartIndex !== undefined
             ? [
                 {
-                  color: 'rgba(0,0,0,0.12)',
+                  // Surface-aware plotLine · visible on both light + dark · Bible § 1.1
+                  color: isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)',
                   dashStyle: 'Dot',
                   width: 1,
                   value: projectionStartIndex - 0.5,
@@ -235,7 +247,8 @@ export function KenMultiLineChart({
                     x: 4,
                     y: -6,
                     style: {
-                      color: KEN_INK.muted,
+                      // PART A fix: inkMuted resolved at useMemo time · surface-aware
+                      color: inkMuted,
                       fontFamily: KEN_CHART_FONT.sans,
                       fontSize: '9px',
                       fontWeight: '600',
@@ -246,10 +259,11 @@ export function KenMultiLineChart({
               ]
             : [],
         labels: {
+          // PART A fix: surface-aware colors via closure · no KEN_INK.* constants
           formatter: function () {
             const cat = String(this.value);
             const isProjected = cat.endsWith('F') || (projectionStartIndex !== undefined && (this.pos as number) >= projectionStartIndex);
-            return `<span style="color:${isProjected ? KEN_INK.muted : 'rgba(0,0,0,0.6)'};font-style:${isProjected ? 'italic' : 'normal'}">${cat}</span>`;
+            return `<span style="color:${isProjected ? inkMuted : inkBody};font-style:${isProjected ? 'italic' : 'normal'}">${cat}</span>`;
           },
           useHTML: true,
         },
@@ -277,6 +291,7 @@ export function KenMultiLineChart({
           const pts = (this as Highcharts.TooltipFormatterContextObject).points ?? [];
           const cat = (this as Highcharts.TooltipFormatterContextObject).x;
           const rows = pts
+            // PART A fix: surface-aware tooltip text via closure (bg stays WHITE per Bible § 9.14)
             .map((p) => {
               const v =
                 typeof p.y === 'number'
@@ -285,16 +300,17 @@ export function KenMultiLineChart({
                       maximumFractionDigits: 1,
                     })
                   : '—';
+              // BUG C fix: tooltipInk* always dark — white tooltip bg on both surfaces
               return `<div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
                 <span style="display:inline-block;width:14px;height:2px;background:${p.color};border-radius:1px;flex-none;"></span>
-                <span style="font-size:10.5px;color:rgba(0,0,0,0.6);">${p.series.name}</span>
-                <span style="font-size:11.5px;color:rgb(26,26,46);font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v}${unit ? ` ${unit}` : ''}</span>
+                <span style="font-size:10.5px;color:${tooltipInkBody};">${p.series.name}</span>
+                <span style="font-size:11.5px;color:${tooltipInkStrong};font-variant-numeric:tabular-nums;font-weight:500;margin-left:auto;">${v}${unit ? ` ${unit}` : ''}</span>
               </div>`;
             })
             .join('');
           return `
             <div style="font-family:${KEN_CHART_FONT.sans};min-width:200px;">
-              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(0,0,0,0.55);margin-bottom:4px;">${cat}</div>
+              <div style="font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:${tooltipInkMuted};margin-bottom:4px;">${cat}</div>
               ${rows}
             </div>
           `;
@@ -303,15 +319,20 @@ export function KenMultiLineChart({
 
       plotOptions: {
         spline: {
-          // Hover dim-others: non-hovered lines dim to 0.3 opacity (Highcharts built-in)
+          // PART B fix: Bible § 2.2 Line · inactive 0.3 · hover lineWidth 4 + halo per § 2.6
           states: {
+            hover: {
+              lineWidth: 4,
+              brightness: 0,
+              halo: { size: 8, opacity: 0.25 },
+            },
             inactive: { opacity: 0.3 },
           },
         },
       },
       series: hcSeries,
     } as Partial<Highcharts.Options>);
-  }, [labels, series, height, unit, projectionStartIndex, surface]);
+  }, [labels, series, height, unit, projectionStartIndex, surface, inkStrong, inkMuted, inkBody]);
 
   useEffect(() => {
     const onResize = () => chartRef.current?.chart?.reflow();
@@ -336,8 +357,10 @@ export function KenMultiLineChart({
 
   return (
     <ChartReveal disabled={disableReveal}>
-      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper · 6-series needs width to breathe */}
+      {/* Mobile strategy: SCROLL — overflow-x:auto wrapper · 6-series needs width to breathe.
+          tabIndex={0} per axe scrollable-region-focusable rule (WCAG 2.1.1). */}
       <div
+        tabIndex={0}
         style={{
           overflowX: 'auto',
           WebkitOverflowScrolling: 'touch' as unknown as undefined,

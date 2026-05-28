@@ -36,6 +36,48 @@ Co-Authored-By: Vishal Singh Chauhan <design@kenresearch.com>
 
 ---
 
+## 2026-05-26 G.3 PARTIAL · Mobile/touch (CSS only · spawn blocked by usage)
+**What landed:**
+- `projects/charts-showcase/src/app/globals.css` L96-114 · Sprint G.3 touch scroll: `[data-component="TableShell"]` + `.tableshell` `-webkit-overflow-scrolling: touch` + `overscroll-behavior-x: contain` · `[data-component="KenHeatmap"]` + `[data-component="KenGanttTimeline"]` touch scroll · `.showcase-main` `overscroll-behavior-y: contain` (iOS bounce prevention)
+
+**What did NOT land (spawn blocked · usage limit hit · reset 7:20pm Asia/Calcutta):**
+- Per-chart Highcharts `responsive.rules` (7 wrappers · -45° label rotation · dataLabels off · top-3 bubble)
+- CSS-grid + SVG mobile verify
+- CellTooltip long-press 500ms persistent + single-tap 3s auto-dismiss
+- Min-width breakpoints per chart
+- Tooltip flip at 390 verify
+- Screenshots + visual regression
+
+**Why:** User scope G.3 (mobile/touch interactions per chart) · spawn started but hit usage limit after CSS scroll task. Plan + remaining work saved to memory for next-spawn resume.
+
+**Reversal:** Revert globals.css L96-114.
+
+**Resume after reset:** Re-spawn aura-builder w/ "Sprint G.3 partial · CSS touch scroll already in globals.css L96-114 · skip CSS task · proceed: Highcharts responsive rules 7 wrappers · CellTooltip long-press + auto-dismiss · min-width breakpoints · tooltip flip verify · screenshots + TSC."
+
+**Carry-over:** G.4 (a11y deep · 1.5hr) + G.5 (perf + polish · 2hr) still pending.
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
+## 2026-05-26 G.2 · Dark surface viz behavior · forced-colors · theme transitions
+**What:**
+- Tier color inversion on dark surface (Treemap+Heatmap+Gantt · light tiers L*90 become dark on near-black · NO new tokens · uses existing KEN_CHART_SERIES_LUMINANCE_SAFE w/ inverted mapping per surface)
+- Forced-colors `@media (forced-colors: active)` block in `design-system/core-v2/src/styles/base.css` · TableShell borders + ken-heatmap-cell + tooltip Canvas/CanvasText + focus-visible Highlight outline · plus KenTreemap inline `<style>` for SVG-scoped
+- Theme switch transition: Highcharts via existing `useMemo(surface)` + `chart.update()` (no flash) · CSS-grid + SVG `transition: 200ms ease-out` on bg/color/stroke
+- Brighten-on-dark for focused: Treemap next-tier fill · Heatmap TIER_BG_DARK_HOVER · Gantt layered `inset 0 0 0 9999px rgba(255,255,255,0.05)` overlay (clean pattern · single style prop)
+- CellTooltip stays WHITE on both surfaces (ref-canonical · verified >14:1 contrast on dark)
+
+**Why:** User scope · "highlighter color already darker hue on dark · text/bg contrast both modes · how works on already darker backgrounds". G.1 disclosure foundation + G.2 dark behavior · 5 viz consistent cross-surface.
+
+**Reversal:** Revert 6 files · KenTreemap + KenHeatmap + KenGanttTimeline + base.css + DemoCanvas + qa-screenshots.
+
+**Locked rules (canonical):**
+- Tier inversion via existing tokens (NO new) · mapping flip per surface
+- Forced-colors via system tokens (Canvas · CanvasText · Highlight) · NOT custom
+- Highcharts theme transition · `chart.update()` via useMemo+allowChartUpdate · NOT remount
+- Inset-overlay brightness boost · `box-shadow: inset 0 0 0 9999px rgba(255,255,255,0.05)` · single style prop · transition automatic · no state
+
+**Live URLs:** showcase 3070 · v0.4 3040 (regression-free)
+
 ## 2026-05-26 G.1 · CellTooltip + TruncatedText + border accent + luminance-safe tiers
 **What:**
 - 2 NEW DS primitives: `CellTooltip` (createPortal · viewport-flip · 1-tap-show 2-tap-action · 100ms delay · reduced-motion · a11y) · `TruncatedText` (ResizeObserver scrollWidth detection · multi-line clamp · tooltipMeta secondary)
